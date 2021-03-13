@@ -10,7 +10,7 @@ public class MovingObject extends SpaceObject {
      * @param mass   - the mass of the object in kilograms
      * @param vector - the Vector Object with coordinates
      */
-    public MovingObject(int mass, Vector3dInterface vector, Vector3dInterface newVectorState) {
+    public MovingObject(double mass, Vector3dInterface vector, Vector3dInterface newVectorState) {
         super(mass, vector);
         this.newVectorState = newVectorState;
     }

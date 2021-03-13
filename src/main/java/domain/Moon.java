@@ -11,7 +11,7 @@ public class Moon extends Planet {
      * @param newVectorState - the vector containing the changes of position of the object
      * @param name           - the name of the planet
      */
-    public Moon(int mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name, Planet parent) {
+    public Moon(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name, Planet parent) {
         super(mass, vector, newVectorState, name);
 
         this.parent = parent;

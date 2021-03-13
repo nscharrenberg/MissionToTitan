@@ -9,7 +9,7 @@ public class SpaceCraft extends MovingObject {
      * @param vector         - the Vector Object with coordinates
      * @param newVectorState
      */
-    public SpaceCraft(int mass, Vector3dInterface vector, Vector3dInterface newVectorState) {
+    public SpaceCraft(double mass, Vector3dInterface vector, Vector3dInterface newVectorState) {
         super(mass, vector, newVectorState);
     }
 }

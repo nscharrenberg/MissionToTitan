@@ -3,7 +3,7 @@ package domain;
 import interfaces.Vector3dInterface;
 
 public class SpaceObject {
-    private int mass;
+    private double mass;
     /**
      * TODO: vector field did not have any assigned type, I've added it to the Vector3DInterface, however, this should be looked at.
      */
@@ -13,12 +13,12 @@ public class SpaceObject {
      * @param mass - the mass of the object in kilograms
      * @param vector - the Vector Object with coordinates
      */
-    public SpaceObject(int mass, Vector3dInterface vector){
+    public SpaceObject(double mass, Vector3dInterface vector){
         this.mass = mass;
         this.vector = vector;
     }
 
-    public int getMass() {
+    public double getMass() {
         return mass;
     }
 }

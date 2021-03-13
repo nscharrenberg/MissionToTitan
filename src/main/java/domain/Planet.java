@@ -15,7 +15,7 @@ public class Planet extends MovingObject {
      * @param newVectorState - the vector containing the changes of position of the object
      * @param name - the name of the planet
      */
-    public Planet(int mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
+    public Planet(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
         super(mass, vector, newVectorState);
         this.name = name;
     }
@@ -28,7 +28,7 @@ public class Planet extends MovingObject {
         this.moons = moons;
     }
 
-    public void addMoon(int mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
+    public void addMoon(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
         if (this.moons == null) {
             this.moons = new ArrayList<>();
         }
@@ -63,5 +63,10 @@ public class Planet extends MovingObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
