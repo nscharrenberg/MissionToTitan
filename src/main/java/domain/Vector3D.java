@@ -1,6 +1,6 @@
-package domain;
+package main.java.domain;
 
-import interfaces.Vector3dInterface;
+import main.java.interfaces.Vector3dInterface;
 
 public class Vector3D implements Vector3dInterface {
     private double x;
@@ -74,12 +74,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface add(Vector3dInterface other) {
-        // TODO: Ensure this is correct, especially the "return" as it was not present in the original code.
-        x += other.getX();
-        y += other.getY();
-        z += other.getZ();
-
-        return this;
+        return new Vector3D(x + other.getX(), y + other.getY(), z + other.getZ());
     }
 
     /**
@@ -89,12 +84,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface sub(Vector3dInterface other) {
-        // TODO: Ensure this is correct, especially the "return" as it was not present in the original code.
-        x -= other.getX();
-        y -= other.getY();
-        z -= other.getZ();
-
-        return this;
+        return new Vector3D(x - other.getX(), y - other.getY(), z - other.getZ());
     }
 
     /**
@@ -104,12 +94,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface mul(double scalar) {
-        // TODO: Ensure this is correct, especially the "return" as it was not present in the original code.
-        x *= scalar;
-        y *= scalar;
-        z *= scalar;
-
-        return this;
+        return new Vector3D(x * scalar, y * scalar, z * scalar);
     }
 
     /**
@@ -130,11 +115,10 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface addMul(double scalar, Vector3dInterface other) {
-        // TODO: Ensure this is correct, especially the "return" as it was not present in the original code.
-        add(other);
-        mul(scalar);
-
-        return this;
+        Vector3dInterface resultant = new Vector3D(this.x, this.y, this.z);
+        resultant.add(other);
+        resultant.mul(scalar);
+        return resultant;
     }
 
     /**
@@ -155,10 +139,10 @@ public class Vector3D implements Vector3dInterface {
 
     /**
      * @return A string in this format:
-     * Vector3d(-1.0, 2, -3.0) should print out (-1.0,2.0,-3.0)
+     * Vector3d(-1.0, 2, -3.0) should print out (-1.0, 2.0, -3.0)
      */
     @Override
     public String toString() {
-        return "(" + x + "," + y + "," + z + ")";
+        return "(" + x + ", " + y + ", " + z + ")";
     }
 }
