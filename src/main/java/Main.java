@@ -1,5 +1,7 @@
-import domain.Planet;
-import factory.FactoryProvider;
+package main.java;
+
+import main.java.domain.Planet;
+import main.java.factory.FactoryProvider;
 
 public class Main {
     public static void main(String[] args) {

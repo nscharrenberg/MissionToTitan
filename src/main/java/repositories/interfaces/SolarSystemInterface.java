@@ -1,6 +1,6 @@
-package repositories.interfaces;
+package main.java.repositories.interfaces;
 
-import domain.Planet;
+import main.java.domain.Planet;
 
 import java.util.List;
 

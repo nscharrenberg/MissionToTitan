@@ -1,6 +1,6 @@
-package domain;
+package main.java.domain;
 
-import interfaces.Vector3dInterface;
+import main.java.interfaces.Vector3dInterface;
 
 public class Moon extends Planet {
     private Planet parent;

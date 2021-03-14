@@ -1,5 +1,6 @@
-package interfaces;
+package main.java.interfaces;
 
+import main.java.interfaces.Vector3dInterface;
 /*
  * @author Pieter Collins, Christof Seiler, Katerina Stankova, Nico Roos, Katharina Schueller
  * @version 0.99.0
