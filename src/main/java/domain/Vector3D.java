@@ -1,6 +1,6 @@
-package main.java.domain;
+package domain;
 
-import main.java.interfaces.Vector3dInterface;
+import interfaces.Vector3dInterface;
 
 public class Vector3D implements Vector3dInterface {
     private double x;
@@ -14,6 +14,7 @@ public class Vector3D implements Vector3dInterface {
     }
 
     /**
+     *
      * get the x coordinate
      * @return x - the x coordinate
      */
