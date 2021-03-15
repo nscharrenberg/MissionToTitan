@@ -1,4 +1,4 @@
-package utils;
+package utils.gravitytest;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,58 +16,41 @@ import java.util.ResourceBundle;
 
 public class FXMLDocumentController implements Initializable {
 
-
+    // javaFx
     @FXML
     private LineChart<?, ?> LineChartEarthX;
-
     @FXML
     private CategoryAxis x;
-
     @FXML
     private NumberAxis y;
-
     @FXML
     private LineChart<?, ?> LineChartEarthY;
-
     @FXML
     private CategoryAxis x1;
-
     @FXML
     private NumberAxis y1;
-
     @FXML
     private LineChart<?, ?> LineChartSunX;
-
     @FXML
     private CategoryAxis x2;
-
     @FXML
     private NumberAxis y2;
-
     @FXML
     private LineChart<?, ?> LineChartSunY;
-
     @FXML
     private CategoryAxis x21;
-
     @FXML
     private NumberAxis y21;
-
     @FXML
     private LineChart<?, ?> LineChartMoonX;
-
     @FXML
     private CategoryAxis x3;
-
     @FXML
     private NumberAxis y3;
-
     @FXML
     private LineChart<?, ?> LineChartMoonY;
-
     @FXML
     private CategoryAxis x31;
-
     @FXML
     private NumberAxis y31;
     private static XYChart.Series seriesEX;
@@ -77,8 +60,6 @@ public class FXMLDocumentController implements Initializable {
     private static XYChart.Series seriesMX;
     private static XYChart.Series seriesMY;
 
-
-
     public static final double G = 6.67408e-11; // Gravitational Constant
     public static double dt; // delta time
     public static double t;
@@ -86,7 +67,6 @@ public class FXMLDocumentController implements Initializable {
     public static Planet moon;
     public static Planet sun;
     public static double daySec = 60*24*60; // total seconds in a day
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
