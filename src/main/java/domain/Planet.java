@@ -1,6 +1,6 @@
-package main.java.domain;
+package domain;
 
-import main.java.interfaces.Vector3dInterface;
+import interfaces.Vector3dInterface;
 
 import java.util.ArrayList;
 import java.util.List;

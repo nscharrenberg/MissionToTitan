@@ -1,4 +1,4 @@
-package main.java.interfaces;
+package interfaces;
 
 public interface Vector3dInterface {
     public double getX();

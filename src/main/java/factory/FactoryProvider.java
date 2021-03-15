@@ -1,6 +1,6 @@
-package main.java.factory;
+package factory;
 
-import main.java.repositories.SolarSystemRepository;
+import repositories.SolarSystemRepository;
 
 public class FactoryProvider {
     private static SolarSystemRepository solarSystemRepository = new SolarSystemRepository();

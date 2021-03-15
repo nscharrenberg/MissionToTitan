@@ -1,6 +1,6 @@
-package main.java.domain;
+package domain;
 
-import main.java.interfaces.Vector3dInterface;
+import interfaces.Vector3dInterface;
 
 // TODO: To further implement
 public class SpaceCraft extends MovingObject {

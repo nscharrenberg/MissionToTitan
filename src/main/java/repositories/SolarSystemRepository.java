@@ -1,8 +1,8 @@
-package main.java.repositories;
+package repositories;
 
-import main.java.domain.Planet;
-import main.java.domain.Vector3D;
-import main.java.repositories.interfaces.SolarSystemInterface;
+import domain.Planet;
+import domain.Vector3D;
+import repositories.interfaces.SolarSystemInterface;
 
 import java.util.*;
 
