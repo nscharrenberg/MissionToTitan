@@ -14,6 +14,7 @@ public class Vector3D implements Vector3dInterface {
     }
 
     /**
+     *
      * get the x coordinate
      * @return x - the x coordinate
      */
