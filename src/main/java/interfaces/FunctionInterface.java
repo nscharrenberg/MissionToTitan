@@ -19,9 +19,11 @@ public interface FunctionInterface {
      * then we can choose any function f whose derivative is a.
      * The simplest such f is
      * f(t, y(t)) = a.
-     *
      * @param   t   the time at which to evaluate the function
      * @param   s   the location at which to evaluate the function
      */
     public Vector3dInterface call(double t, Vector3dInterface s);
+
+
+
 }
