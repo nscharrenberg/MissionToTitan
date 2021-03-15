@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Planet extends MovingObject {
     private String name;
+    private double radius;
     private List<Moon> moons;
 
     /**
@@ -15,25 +16,29 @@ public class Planet extends MovingObject {
      * @param newVectorState - the vector containing the changes of position of the object
      * @param name - the name of the planet
      */
-    public Planet(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
+    public Planet(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name, double radius) {
         super(mass, vector, newVectorState);
         this.name = name;
+        this.radius = radius;
     }
 
     public List<Moon> getMoons() {
-        return moons;
+    	if(moons != null)
+    		return moons;
+    	else
+    		return new ArrayList<Moon>();
     }
 
     public void setMoons(List<Moon> moons) {
         this.moons = moons;
     }
 
-    public void addMoon(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
+    public void addMoon(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name, double radius) {
         if (this.moons == null) {
             this.moons = new ArrayList<>();
         }
 
-        this.moons.add(new Moon(mass, vector, newVectorState, name, this));
+        this.moons.add(new Moon(mass, vector, newVectorState, name, this, radius));
     }
 
     public boolean removeMoon(Moon moon) {
@@ -67,6 +72,15 @@ public class Planet extends MovingObject {
 
     @Override
     public String toString() {
-        return this.name;
+        return "Name: "+this.name+", Moons: " + getMoons().toString();
     }
+
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
+    
 }
