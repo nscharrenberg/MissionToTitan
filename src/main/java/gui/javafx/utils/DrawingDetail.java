@@ -29,6 +29,4 @@ public class DrawingDetail implements IDrawableDetails {
 
         context.setFill(color);
     }
-
-
 }
