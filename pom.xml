@@ -34,6 +34,9 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>11</release>
+                    <fork>true</fork>
+                    <meminitial>512m</meminitial>
+                    <maxmem>1048m</maxmem>
                 </configuration>
             </plugin>
             <plugin>

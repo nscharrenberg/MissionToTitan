@@ -1,10 +1,7 @@
 import controllers.ControllerInterface;
-import factory.FactoryProvider;
-import gui.javafx.utils.DrawingContext;
-import gui.javafx.manager.DrawRegistry;
+import controllers.SolarSystemController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -17,26 +14,17 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
-//        SolarSystemController primaryController = new SolarSystemController();
-//        loader.setController(primaryController);
+        SolarSystemController primaryController = new SolarSystemController();
+        loader.setController(primaryController);
 
         stage.centerOnScreen();
-        DrawRegistry.getRegistry().init();
+        Pane flowPane = loader.load();
+        scene = new Scene(flowPane, 500, 500);
 
-        Group root = new Group();
-
-//        Pane flowPane = loader.load();
-        scene = new Scene(root, 500, 500);
-        DrawingContext drawingContext = new DrawingContext(root);
-        drawingContext.applySizeFromScene(scene);
-        DrawRegistry.getDrawManager().init();
-        FactoryProvider.getSolarSystemFactory().init();
+        stage.setMaximized(true);
         stage.setScene(scene);
+
         stage.show();
-//        stage.setMaximized(true);
-//        stage.setScene(scene);
-//
-//        stage.show();
     }
 
 

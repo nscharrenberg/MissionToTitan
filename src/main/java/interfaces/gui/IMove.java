@@ -2,6 +2,6 @@ package interfaces.gui;
 
 public interface IMove {
     void move(IPoint point);
-    double getVelocity();
-    void setSpeed(double val);
+    IPoint getCalculatedVelocity();
+    void setCalculatedVelocity(double val);
 }
