@@ -2,14 +2,11 @@ package domain;
 
 import interfaces.Vector3dInterface;
 
-public class SpaceObject {
+
+public abstract class SpaceObject {
     private double mass;
     private Vector3dInterface position;
 
-    /**
-     * @param mass - the mass of the object in kilograms
-     * @param position - the Vector Object with coordinates
-     */
     public SpaceObject(double mass, Vector3dInterface position){
         this.mass = mass;
         this.position = position;
@@ -26,5 +23,6 @@ public class SpaceObject {
     public void setPosition(Vector3dInterface position) {
         this.position = position;
     }
+
 }
 
