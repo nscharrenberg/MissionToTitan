@@ -5,7 +5,7 @@ import gui.javafx.manager.DrawRegistry;
 import gui.javafx.manager.UpdateManager;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
-import gui.javafx.utils.DrawingDetails;
+import gui.javafx.utils.DrawingDetail;
 import javafx.scene.paint.Color;
 import repositories.interfaces.SolarSystemInterface;
 
@@ -25,7 +25,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
         UpdateManager updateManager = DrawRegistry.getUpdateManager();
 
-        TestShape shape1 = new TestShape("Circle", new AbsolutePoint(50, 50), new Circle(20), new DrawingDetails(Color.BLUE));
+        TestShape shape1 = new TestShape("Circle", new AbsolutePoint(50, 50), new Circle(20), new DrawingDetail(Color.BLUE));
         updateManager.addToQueue(shape1);
         updateManager.update();
     }
