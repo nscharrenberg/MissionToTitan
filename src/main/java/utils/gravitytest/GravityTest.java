@@ -47,7 +47,7 @@ public class GravityTest extends Application {
         ODEFunction f = new ODEFunction(system);
         State state = new State(earth.getPosition(), earth.getVelocity(), earth);
 
-        StateInterface[] solveArray = solve.solve(f,state, 365*24.0*60*60, 0.1*24*60*60);
+        StateInterface[] solveArray = solve.solve(f,state, 5*365*24.0*60*60, 0.1*24*60*60);
 
         for (int i = 0; i < solveArray.length; i++) {
             State temp = (State) solveArray[i];
@@ -119,9 +119,9 @@ public class GravityTest extends Application {
     protected static void initSystem() {
         system = new SolarSystemRepository();
         system.init();
-        earth = system.findPlanet("Earth");
+        earth = system.findPlanet("Mars");
         sun = system.findPlanet("Sun");
-        moon = earth.getMoon("Moon");
+        //moon = earth.getMoon("Moon");
         t = 0; // start time
     }
 

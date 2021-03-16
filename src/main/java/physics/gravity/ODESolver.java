@@ -29,8 +29,6 @@ public class ODESolver implements ODESolverInterface {
             stateArray[i] = step(f,i*h, stateArray[i-1],h);
             State state = (State) stateArray[i];
 
-            System.out.println(state.getPosition().getX());
-
             // updating the MovingObject's state
             state.getMovingObject().setPosition(state.getPosition());
             state.getMovingObject().setVelocity(state.getVelocity());
