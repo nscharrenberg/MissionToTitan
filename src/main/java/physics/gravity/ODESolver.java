@@ -3,8 +3,15 @@ package physics.gravity;
 import interfaces.ODEFunctionInterface;
 import interfaces.ODESolverInterface;
 import interfaces.StateInterface;
+import repositories.SolarSystemRepository;
 
 public class ODESolver implements ODESolverInterface {
+
+    private SolarSystemRepository system;
+
+    public ODESolver(SolarSystemRepository system){
+        system = new SolarSystemRepository();
+    }
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         return new StateInterface[0];
@@ -32,5 +39,9 @@ public class ODESolver implements ODESolverInterface {
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
         // y[i+1] = y[i] + h * f.call(t[i], y[i])
         return y.addMul(h,f.call(t,y));
+    }
+
+    private SolarSystemRepository getSolarSysem(){
+        return system;
     }
 }
