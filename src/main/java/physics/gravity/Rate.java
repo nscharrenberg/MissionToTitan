@@ -1,19 +1,31 @@
 package physics.gravity;
 
-import domain.Vector3D;
 import interfaces.RateInterface;
+import interfaces.Vector3dInterface;
 
 public class Rate implements RateInterface {
 
-    private Vector3D p;
-    private Vector3D v;
+    private Vector3dInterface acceleration;
+    private Vector3dInterface velocity;
 
-    public Rate(Vector3D p, Vector3D v) {
-        this.p = p;
-        this.v = v;
+    public Rate(Vector3dInterface acceleration, Vector3dInterface velocity){
+        this.acceleration = acceleration;
+        this.velocity = velocity;
     }
 
-    public Vector3D<Rate>  newTown() {
+    public void setAcceleration(Vector3dInterface acceleration) {
+        this.acceleration = acceleration;
+    }
 
+    public void setVelocity(Vector3dInterface velocity) {
+        this.velocity = velocity;
+    }
+
+    public Vector3dInterface getAcceleration(){
+        return acceleration;
+    }
+
+    public Vector3dInterface getVelocity() {
+        return velocity;
     }
 }
