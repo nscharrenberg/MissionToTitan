@@ -16,14 +16,12 @@ public class ODEFunction implements ODEFunctionInterface {
     @Override
     public RateInterface call(double t, StateInterface y) {
         State state = (State) y;
-        Vector3dInterface position = state.getPosition();
         Vector3dInterface velocity = state.getVelocity();
-        MovingObject object = state.getObject();
+        MovingObject object = state.getMovingObject();
 
         newtonsLaw(object, sun);
         Vector3dInterface rateAcceleration = object.getForce().mul(1/object.getMass());
-        Vector3dInterface rateVelocity = rateAcceleration.mul(t).add(velocity);
-        rateVelocity = velocity.add(rateAcceleration);
+        Vector3dInterface rateVelocity = velocity.add(rateAcceleration);
 
         return new Rate(rateAcceleration, rateVelocity);
     }

@@ -46,7 +46,7 @@ public class State implements StateInterface {
         this.object = object;
     }
 
-    public MovingObject getObject() {
+    public MovingObject getMovingObject() {
         return object;
     }
 

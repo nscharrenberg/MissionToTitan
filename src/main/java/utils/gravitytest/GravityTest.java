@@ -47,7 +47,7 @@ public class GravityTest extends Application {
         ODEFunction f = new ODEFunction();
         State state = new State(earth.getPosition(), earth.getVelocity(), earth);
 
-        StateInterface[] solveArray = solve.solve(f,state, 365*24.0*60*60, 0.05*24*60*60);
+        StateInterface[] solveArray = solve.solve(f,state, 365*24.0*60*60, 0.1*24*60*60);
 
         for (int i = 0; i < solveArray.length; i++) {
             State temp = (State) solveArray[i];

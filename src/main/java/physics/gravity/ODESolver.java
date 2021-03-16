@@ -18,19 +18,21 @@ public class ODESolver implements ODESolverInterface {
         stateArray[0] = step(f,0, y0,h); // initial calculation of t=0
 
         for (int i = 1; i < size; i++) {
-            //TODO: step();
+            // inserting step into the array
             stateArray[i] = step(f,i*h, stateArray[i-1],h);
             State state = (State) stateArray[i];
-            state.getObject().setPosition(state.getPosition());
-            state.getObject().setVelocity(state.getVelocity());
-            System.out.println(i);
+
+            System.out.println(state.getPosition().getX());
+
+            // updating the MovingObject's state
+            state.getMovingObject().setPosition(state.getPosition());
+            state.getMovingObject().setVelocity(state.getVelocity());
         }
         return stateArray;
     }
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
-        // y[i+1] = y[i] + h * f.call(t[i], y[i])
-        return y.addMul(h,f.call(t,y));
+        return y.addMul(h,f.call(t,y)); // y[i+1] = y[i] + h * f.call(t[i], y[i])
     }
 }
