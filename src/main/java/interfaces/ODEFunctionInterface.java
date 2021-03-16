@@ -7,7 +7,7 @@
 
 package interfaces;
 
-public interface DifferentialEquationFunctionInterface {
+public interface ODEFunctionInterface {
 
     /*
      * This is an interface for the function f that represents the
