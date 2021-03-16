@@ -22,6 +22,3 @@ public interface StateInterface {
 
     public String toString();
 }
-
-interface RateInterface {
-}
