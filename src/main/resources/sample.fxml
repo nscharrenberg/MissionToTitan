@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utils.gravitytest.Chart">
    <children>
-      <LineChart fx:id="LineChartEarthX" prefHeight="450.0" prefWidth="530.0" title="Earth (X Position)">
+      <LineChart fx:id="LineChartA" prefHeight="450.0" prefWidth="530.0" title="Mercury (X Position)">
         <xAxis>
           <CategoryAxis side="BOTTOM" fx:id="x" />
         </xAxis>
@@ -15,7 +15,7 @@
           <NumberAxis fx:id="y" side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartEarthY" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Earth (Y Position)">
+      <LineChart fx:id="LineChartB" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Venus (X Position)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x1" />
          </xAxis>
@@ -23,7 +23,7 @@
             <NumberAxis fx:id="y1" side="LEFT" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartSunX" layoutX="1060.0" prefHeight="450.0" prefWidth="530.0" title="Sun (X Position)">
+      <LineChart fx:id="LineChartC" layoutX="1060.0" prefHeight="450.0" prefWidth="530.0" title="Earth (X Position)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x2" />
          </xAxis>
@@ -31,7 +31,7 @@
             <NumberAxis fx:id="y2" side="LEFT" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartSunY" layoutX="1060.0" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Sun (Y Position)">
+      <LineChart fx:id="LineChartD" layoutX="1060.0" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Mars (X Position)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x21" />
          </xAxis>
@@ -39,7 +39,7 @@
             <NumberAxis fx:id="y21" side="LEFT" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartMoonX" layoutX="530.0" prefHeight="450.0" prefWidth="530.0" title="Moon (X Position)">
+      <LineChart fx:id="LineChartE" layoutX="530.0" prefHeight="450.0" prefWidth="530.0" title="Jupiter (X Position)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x3" />
          </xAxis>
@@ -47,7 +47,7 @@
             <NumberAxis fx:id="y3" side="LEFT" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartMoonY" layoutX="530.0" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Moon (Y Position)">
+      <LineChart fx:id="LineChartF" layoutX="530.0" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Sun (X Position)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x31" />
          </xAxis>

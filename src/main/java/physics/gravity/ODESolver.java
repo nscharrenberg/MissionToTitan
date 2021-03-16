@@ -12,6 +12,7 @@ public class ODESolver implements ODESolverInterface {
     public ODESolver(SolarSystemRepository system){
         system = new SolarSystemRepository();
     }
+
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         return new StateInterface[0];
@@ -26,7 +27,7 @@ public class ODESolver implements ODESolverInterface {
 
         for (int i = 1; i < size; i++) {
             // inserting step into the array
-            stateArray[i] = step(f,i*h, stateArray[i-1],h);
+            stateArray[i] = step(f,h, stateArray[i-1],h);
             State state = (State) stateArray[i];
 
             // updating the MovingObject's state
@@ -41,7 +42,7 @@ public class ODESolver implements ODESolverInterface {
         return y.addMul(h,f.call(t,y)); // y[i+1] = y[i] + h * f.call(t[i], y[i])
     }
 
-    private SolarSystemRepository getSolarSysem(){
+    private SolarSystemRepository getSolarSystem(){
         return system;
     }
 }

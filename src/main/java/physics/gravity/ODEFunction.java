@@ -28,7 +28,7 @@ public class ODEFunction implements ODEFunctionInterface {
 
         newtonsLaw(object);
         Vector3dInterface rateAcceleration = object.getForce().mul(1/object.getMass());
-        Vector3dInterface rateVelocity = velocity.add(rateAcceleration);
+        Vector3dInterface rateVelocity = velocity.add(rateAcceleration.mul(t));
 
         return new Rate(rateAcceleration, rateVelocity);
     }
@@ -46,12 +46,13 @@ public class ODEFunction implements ODEFunctionInterface {
         ArrayList<Planet> list = (ArrayList<Planet>) system.getPlanets();
         a.setForce(new Vector3D(0,0,0));
 
-        for(int i=0; i<list.size(); i++){
-            if(!list.get(i).getName().equals(a.getName())){
-                System.out.println(list.get(i).getName());
+        for(int i=0; i<list.size(); i++)
+            if(!list.get(i).getName().equals(a.getName()))
                 a.setForce(a.getForce().add(newtonsLaw(a, list.get(i))));
+            if (a.getName().equals("Sun")) {
+                System.out.println(system.findPlanet("Sun").getForce());
             }
-        }
+
     }
 
 }

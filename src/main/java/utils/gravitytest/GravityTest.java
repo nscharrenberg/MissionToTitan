@@ -1,10 +1,7 @@
 package utils.gravitytest;
 
-import domain.MovingObject;
 import domain.Planet;
-import domain.Vector3D;
 import interfaces.StateInterface;
-import interfaces.Vector3dInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,108 +17,65 @@ public class GravityTest extends Application {
     protected static final double G = 6.67408e-11; // Gravitational Constant
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
+
+    protected static Planet mercury;
+    protected static Planet venus;
     protected static Planet earth;
-    protected static Planet moon;
+    protected static Planet mars;
+    protected static Planet jupiter;
     protected static Planet sun;
+
     protected static SolarSystemRepository system;
 
-    protected static double dt = 0.5*daySec;
-    protected static double totalSteps = 365*daySec/dt; // ensures that when changing dt, a full year will always be displayed
-
-    /**
-     *  this is where the logic of the whole simulation happens
-     */
-    protected static void simulate2() {
-        System.out.println("starting calculation");
-        while(t < dt*totalSteps) {
-            determineForces();
-            updateBodies();
-            Chart.addDataPoints();
-            t += dt;
-        }
-        System.out.println("done calculating");
-    }
+    protected static double dt = 0.1*daySec;
+    protected static double totalSteps = 365*daySec*3;
 
     protected static void simulate() {
         ODESolver solve = new ODESolver(system);
         ODEFunction f = new ODEFunction(system);
-        State state = new State(earth.getPosition(), earth.getVelocity(), earth);
 
-        StateInterface[] solveArray = solve.solve(f,state, 5*365*24.0*60*60, 0.1*24*60*60);
+        State mercuryState = new State(mercury.getPosition(), mars.getVelocity(), mercury);
+        State venusState = new State(venus.getPosition(), venus.getVelocity(), venus);
+        State earthState = new State(earth.getPosition(), earth.getVelocity(), earth);
+        State marsState = new State(mars.getPosition(), mars.getVelocity(), mars);
+        State jupiterState = new State(jupiter.getPosition(), jupiter.getVelocity(), jupiter);
+        State sunState = new State(sun.getPosition(), sun.getVelocity(), sun);
 
-        for (int i = 0; i < solveArray.length; i++) {
-            State temp = (State) solveArray[i];
-            Chart.addData(i *daySec, temp.getPosition().getX());
+        StateInterface[] mercuryArray = solve.solve(f, mercuryState, totalSteps, dt);
+        StateInterface[] venusArray = solve.solve(f, venusState, totalSteps, dt);
+        StateInterface[] earthArray = solve.solve(f, earthState, totalSteps, dt);
+        StateInterface[] marsArray  = solve.solve(f, marsState, totalSteps, dt);
+        StateInterface[] jupiterArray = solve.solve(f, jupiterState, totalSteps, dt);
+        StateInterface[] sunArray = solve.solve(f, sunState, totalSteps, dt);
+
+        for (int i = 0; i < earthArray.length; i++) {
+
+            State newMercuryState = (State) mercuryArray[i];
+            State newVenusState = (State) venusArray[i];
+            State newEarthState = (State) earthArray[i];
+            State newMarsState =  (State) marsArray[i];
+            State newJupiterState = (State) jupiterArray[i];
+            State newSunState = (State) sunArray[i];
+
+            Chart.addDataA(i*daySec, newMercuryState.getPosition().getX());
+            Chart.addDataB(i*daySec, newVenusState.getPosition().getX());
+            Chart.addDataC(i*daySec, newEarthState.getPosition().getX());
+            Chart.addDataD(i*daySec, newMarsState.getPosition().getX());
+            Chart.addDataE(i*daySec, newJupiterState.getPosition().getX());
+            Chart.addDataF(i*daySec, newSunState.getPosition().getX());
+
         }
-    }
-
-    private static void determineForces() {
-        resetForces();
-        newtonsLaw(moon, sun);
-        newtonsLaw(earth, sun);
-        newtonsLaw(moon, earth);
-    }
-
-    private static void resetForces() {
-        earth.setForce(new Vector3D(0,0,0));
-        moon.setForce(new Vector3D(0,0,0));
-        sun.setForce(new Vector3D(0,0,0));
-    }
-
-    private static void updateBodies() {
-        updateAcceleration();
-        updateVelocities();
-        updatePositions();
-    }
-
-    // calculates the force on all x,y,z axes of a at its current position
-    private static void newtonsLaw(MovingObject a, MovingObject b) {
-
-        Vector3D r = (Vector3D) b.getPosition().sub(a.getPosition()); // xi - xj
-        double gravConst = G * a.getMass() * b.getMass(); // G * Mi * Mj
-        double modr3 = Math.pow(r.norm(),3); // ||xi - xj||^3
-        Vector3dInterface force = r.mul(gravConst/modr3); // full formula together
-
-        a.setForce(a.getForce().add(force));
-        b.setForce(b.getForce().add(force.mul(-1)));
-    }
-
-    /**
-     * updates the current acceleration of a and b determined by the gravitational force
-     * each MovingObject is experiencing
-     */
-    private static void updateAcceleration () {
-        earth.setAcceleration(earth.getForce().mul(1/earth.getMass()));
-        sun.setAcceleration(sun.getForce().mul(1/sun.getMass()));
-        moon.setAcceleration(moon.getForce().mul(1/moon.getMass()));
-    }
-
-    /**
-     * updates the current Velocities of a and b determined by it's current
-     * acceleration
-     */
-    private static void updateVelocities() {
-        earth.setVelocity(earth.getVelocity().add(earth.getAcceleration().mul(dt)));
-        sun.setVelocity(sun.getVelocity().add(sun.getAcceleration().mul(dt)));
-        moon.setVelocity(moon.getVelocity().add(moon.getAcceleration().mul(dt)));
-    }
-
-    /**
-     * updates the current position of a and b determined by it's
-     * current velocity
-     */
-    private static void updatePositions() {
-        earth.setPosition(earth.getPosition().add(earth.getVelocity().mul(dt)));
-        sun.setPosition(sun.getPosition().add(sun.getVelocity().mul(dt)));
-        moon.setPosition(moon.getPosition().add(moon.getVelocity().mul(dt)));
     }
 
     protected static void initSystem() {
         system = new SolarSystemRepository();
         system.init();
-        earth = system.findPlanet("Mars");
+        mercury = system.findPlanet("Mercury");
+        venus = system.findPlanet("Venus");
+        earth = system.findPlanet("Earth");
+        mars = system.findPlanet("Mars");
+        jupiter = system.findPlanet("Jupiter");
         sun = system.findPlanet("Sun");
-        //moon = earth.getMoon("Moon");
         t = 0; // start time
     }
 
