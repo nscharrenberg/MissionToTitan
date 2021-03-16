@@ -1,13 +1,16 @@
 import controllers.ControllerInterface;
 import controllers.SolarSystemController;
+import factory.FactoryProvider;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
 import gui.javafx.utils.DrawingContext;
+import gui.javafx.utils.DrawingDetail;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,17 +23,17 @@ public class Main extends Application {
         stage.setTitle("Mission To Titan");
         stage.centerOnScreen();
         Group root = new Group();
-        Scene scene = new Scene(root, 500, 500);
+        Scene scene = new Scene(root, 700, 700);
         DrawingContext drawingContext = new DrawingContext(root);
         drawingContext.changeCanvasSizeFromScene(scene);
 
-        Circle circle = new Circle(50, new AbsolutePoint(100, 100));
-        drawingContext.drawShape(circle);
+        FactoryProvider.getDrawingManager().setContext(drawingContext);
+        FactoryProvider.getDrawingManager().init();
+        FactoryProvider.getDrawingManager().update();
 
         stage.setScene(scene);
         stage.show();
     }
-
 
     public static void setRoot(String fxml, ControllerInterface controller) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));

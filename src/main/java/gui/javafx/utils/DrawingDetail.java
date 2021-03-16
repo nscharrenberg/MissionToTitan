@@ -23,6 +23,12 @@ public class DrawingDetail implements IDrawableDetails {
     }
 
     private void fill(GraphicsContext context) {
+        if (color == null) {
+            context.setFill(Color.BLACK);
+        }
+
         context.setFill(color);
     }
+
+
 }

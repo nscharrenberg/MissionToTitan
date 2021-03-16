@@ -1,11 +1,12 @@
 package gui.javafx.shapes;
 
 import gui.javafx.points.AbsolutePoint;
+import gui.javafx.utils.BlankDrawingDetail;
 import gui.javafx.utils.DrawingContext;
-import interfaces.gui.IDrawableContext;
-import interfaces.gui.IPoint;
-import interfaces.gui.IShape;
+import gui.javafx.utils.DrawingDetail;
+import interfaces.gui.*;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,9 +18,16 @@ public abstract class Shape implements IShape {
 
     protected IPoint point;
     protected List<IPoint> outlines = new LinkedList<>();
+    protected IDrawableDetails detailedDrawable;
 
     public Shape(IPoint point) {
         this.point = point;
+        this.detailedDrawable = new BlankDrawingDetail();
+    }
+
+    public Shape(IPoint point, IDrawableDetails drawableDetails) {
+        this.point = point;
+        this.detailedDrawable = drawableDetails;
     }
 
     public Shape() {
@@ -36,6 +44,11 @@ public abstract class Shape implements IShape {
         }
 
         calcOutlines();
+    }
+
+    @Override
+    public IDrawableDetails getDetails() {
+        return this.detailedDrawable;
     }
 
     @Override
@@ -87,6 +100,8 @@ public abstract class Shape implements IShape {
         if (!(context instanceof DrawingContext)) {
             throw new UnsupportedOperationException("No JavaFX Drawing Context found");
         }
+
+        detailedDrawable.getDetails(context);
 
         draw(((DrawingContext) context).getContext());
     }

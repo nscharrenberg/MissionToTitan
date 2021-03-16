@@ -12,4 +12,5 @@ public interface IShape extends IDrawable {
     boolean intersects(IShape other);
     boolean covers(IShape other);
     boolean isSameShape(IShape shape);
+    IDrawableDetails getDetails();
 }

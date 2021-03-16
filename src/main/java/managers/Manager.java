@@ -5,14 +5,31 @@ import interfaces.gui.IUpdateManager;
 import java.util.Collection;
 
 public abstract class Manager<T> implements IUpdateManager<T> {
+    protected boolean isRunning = true;
     protected Collection<T> items;
     protected Collection<T> scheduledAdditions;
     protected Collection<T> scheduledRemovals;
-    protected boolean isRunning = true;
 
     @Override
     public void toggleUpdate() {
-        this.isRunning = !this.isRunning;
+        this.isRunning = !isRunning;
+    }
+
+    @Override
+    public void scheduleAddition(T item) {
+        scheduledAdditions.add(item);
+    }
+
+    @Override
+    public void scheduleRemoval(T item) {
+        scheduledRemovals.add(item);
+    }
+
+    protected void refresh() {
+        items.addAll(scheduledAdditions);
+        items.removeAll(scheduledRemovals);
+        scheduledRemovals.clear();
+        scheduledAdditions.clear();
     }
 
     @Override
@@ -20,35 +37,13 @@ public abstract class Manager<T> implements IUpdateManager<T> {
         return isRunning;
     }
 
-    @Override
-    public void scheduleAddition(T item) {
-        this.scheduledAdditions.add(item);
-    }
-
-    @Override
-    public void scheduleRemoval(T item) {
-        this.scheduledRemovals.add(item);
-    }
-
-    @Override
-    public void reset() {
-        this.isRunning = true;
-        this.scheduledRemovals.clear();
-        this.scheduledAdditions.clear();
-        this.items.clear();
+    public void setRunning(boolean running) {
+        isRunning = running;
     }
 
     @Override
     public Collection<T> getItems() {
         return items;
-    }
-
-    protected void refresh() {
-        items.addAll(scheduledAdditions);
-
-        scheduledAdditions.removeAll(scheduledRemovals);
-        scheduledRemovals.clear();
-        scheduledAdditions.clear();
     }
 
     public void setItems(Collection<T> items) {
@@ -69,9 +64,5 @@ public abstract class Manager<T> implements IUpdateManager<T> {
 
     public void setScheduledRemovals(Collection<T> scheduledRemovals) {
         this.scheduledRemovals = scheduledRemovals;
-    }
-
-    public void setRunning(boolean running) {
-        isRunning = running;
     }
 }

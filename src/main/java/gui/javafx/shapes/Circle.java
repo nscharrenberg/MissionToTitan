@@ -1,6 +1,7 @@
 package gui.javafx.shapes;
 
 import gui.javafx.points.RelativePoint;
+import interfaces.gui.IDrawableDetails;
 import interfaces.gui.IPoint;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -17,6 +18,11 @@ public class Circle extends Shape {
 
     public Circle(double radius, IPoint point) {
         super(point);
+        this.radius = radius;
+    }
+
+    public Circle(double radius, IPoint point, IDrawableDetails drawableDetails) {
+        super(point, drawableDetails);
         this.radius = radius;
     }
 
