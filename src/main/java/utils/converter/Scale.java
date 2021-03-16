@@ -1,4 +1,4 @@
-package utils;
+package utils.converter;
 
 public class Scale {
     private double realWorldSize, divisor;

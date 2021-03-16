@@ -3,7 +3,7 @@ package repositories;
 import domain.Planet;
 import domain.Vector3D;
 import repositories.interfaces.SolarSystemInterface;
-import utils.PositionConverter;
+import utils.converter.PositionConverter;
 
 import java.util.*;
 

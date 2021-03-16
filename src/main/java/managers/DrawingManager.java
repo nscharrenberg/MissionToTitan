@@ -55,7 +55,6 @@ public class DrawingManager extends Manager<IDrawable> {
             }
 
             items.add(new Circle(10, new AbsolutePoint(planet.getPosition().getX(), planet.getPosition().getY()), new DrawingDetail(color)));
-            items.add(new Circle(10, new AbsolutePoint(1, 2), new DrawingDetail(color)));
         });
 
         super.refresh();

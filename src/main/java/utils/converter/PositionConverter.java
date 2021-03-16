@@ -1,4 +1,4 @@
-package utils;
+package utils.converter;
 
 import domain.Vector3D;
 import interfaces.Vector3dInterface;
