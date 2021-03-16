@@ -30,8 +30,6 @@ public class Chart implements Initializable {
      */
     private void getPlanets() {
         GravityTest.initSystem();
-        earth = GravityTest.earth;
-        sun = GravityTest.sun;
         daySec = 24.0 * 60 * 60;
     }
 

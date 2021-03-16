@@ -21,13 +21,6 @@ public class GravityTest extends Application {
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
 
-    protected static Planet mercury;
-    protected static Planet venus;
-    protected static Planet earth;
-    protected static Planet mars;
-    protected static Planet jupiter;
-    protected static Planet sun;
-
     protected static List<Planet> planets;
 
     protected static SolarSystemRepository system;
@@ -49,20 +42,21 @@ public class GravityTest extends Application {
         }
 
         for (int i = 0; i < stateArrayList.get(0).length; i++) {
-            System.out.println(i);
-            State newMercuryState = (State) stateArrayList.get(0)[i];
-            State newVenusState = (State) stateArrayList.get(1)[i];
-            State newEarthState = (State) stateArrayList.get(2)[i];
-            State newMarsState =  (State) stateArrayList.get(3)[i];
-            State newJupiterState = (State) stateArrayList.get(4)[i];
-            State newSunState = (State) stateArrayList.get(5)[i];
+            State newState1 = (State) stateArrayList.get(0)[i];
+            State newState2 = (State) stateArrayList.get(1)[i];
+            State newState3 = (State) stateArrayList.get(2)[i];
+            State newState4 =  (State) stateArrayList.get(3)[i];
+            State newState5 = (State) stateArrayList.get(4)[i];
+            State newState6 = (State) stateArrayList.get(5)[i];
 
-            Chart.addDataA(i*daySec, newMercuryState.getPosition().getY());
-            Chart.addDataB(i*daySec, newVenusState.getPosition().getX());
-            Chart.addDataC(i*daySec, newEarthState.getPosition().getX());
-            Chart.addDataD(i*daySec, newMarsState.getPosition().getX());
-            Chart.addDataE(i*daySec, newJupiterState.getPosition().getX());
-            Chart.addDataF(i*daySec, newSunState.getPosition().getX());
+            System.out.println(newState2.getMovingObject().getName());
+
+            Chart.addDataA(i*daySec, newState1.getPosition().getY());
+            Chart.addDataB(i*daySec, newState2.getPosition().getX());
+            Chart.addDataC(i*daySec, newState3.getPosition().getX());
+            Chart.addDataD(i*daySec, newState4.getPosition().getX());
+            Chart.addDataE(i*daySec, newState5.getPosition().getX());
+            Chart.addDataF(i*daySec, newState6.getPosition().getX());
         }
     }
 
