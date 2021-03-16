@@ -9,7 +9,7 @@ import domain.Planet;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FXMLDocumentController implements Initializable {
+public class Chart implements Initializable {
 
     public static Planet earth;
     public static Planet moon;

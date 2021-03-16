@@ -32,7 +32,7 @@ public class GravityTest extends Application {
         while(t < dt*totalSteps) {
             determineForces();
             updateBodies();
-            FXMLDocumentController.addDataPoints();
+            Chart.addDataPoints();
             t += dt;
         }
         System.out.println("done calculating");
