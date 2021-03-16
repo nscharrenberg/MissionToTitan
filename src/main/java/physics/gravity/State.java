@@ -53,6 +53,6 @@ public class State implements StateInterface {
     }
 
     public String toString() {
-        return "(p: "  + position + ", v: " + velocity + ", o: " + object.getName();
+        return "(p: "  + position + ", v: " + velocity + ", o: " + object.getName() + ")";
     }
 }
