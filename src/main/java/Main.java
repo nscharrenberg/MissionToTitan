@@ -1,7 +1,11 @@
 import controllers.ControllerInterface;
 import controllers.SolarSystemController;
+import gui.javafx.points.AbsolutePoint;
+import gui.javafx.shapes.Circle;
+import gui.javafx.utils.DrawingContext;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -13,17 +17,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
-        SolarSystemController primaryController = new SolarSystemController();
-        loader.setController(primaryController);
-
+        stage.setTitle("Mission To Titan");
         stage.centerOnScreen();
-        Pane flowPane = loader.load();
-        scene = new Scene(flowPane, 500, 500);
+        Group root = new Group();
+        Scene scene = new Scene(root, 500, 500);
+        DrawingContext drawingContext = new DrawingContext(root);
+        drawingContext.changeCanvasSizeFromScene(scene);
 
-        stage.setMaximized(true);
+        Circle circle = new Circle(50, new AbsolutePoint(100, 100));
+        drawingContext.drawShape(circle);
+
         stage.setScene(scene);
-
         stage.show();
     }
 
