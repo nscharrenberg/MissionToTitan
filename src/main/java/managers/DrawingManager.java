@@ -1,12 +1,16 @@
 package managers;
 
+import domain.PlanetEnum;
+import domain.Vector3D;
 import factory.FactoryProvider;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
 import gui.javafx.utils.DrawingDetail;
 import interfaces.gui.IDrawable;
 import interfaces.gui.IDrawableContext;
+import interfaces.gui.IDrawableDetails;
 import javafx.scene.paint.Color;
+import utils.converter.PositionConverter;
 
 import java.util.HashSet;
 
@@ -49,12 +53,21 @@ public class DrawingManager extends Manager<IDrawable> {
 
         // TODO: Not correct logic. Should be revised
         FactoryProvider.getSolarSystemFactory().getPlanets().forEach(planet -> {
-            Color color = Color.RED;
-            if (planet.getName().equals("earth")) {
-                color = Color.BLUE;
+            DrawingDetail found = new DrawingDetail(Color.RED);
+
+            double width = 700;
+            double height = 700;
+            Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height);
+
+            System.out.println(v);
+
+            PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
+
+            if (foundPlanet != null) {
+                found = (DrawingDetail) foundPlanet.getDetail();
             }
 
-            items.add(new Circle(10, new AbsolutePoint(planet.getPosition().getX(), planet.getPosition().getY()), new DrawingDetail(color)));
+            items.add(new Circle(10, new AbsolutePoint(v.getX(), v.getY()), found));
         });
 
         super.refresh();
@@ -62,7 +75,6 @@ public class DrawingManager extends Manager<IDrawable> {
 
     private void draw() {
         items.forEach(item -> {
-            System.out.println(item);
             item.draw(context);
         });
     }

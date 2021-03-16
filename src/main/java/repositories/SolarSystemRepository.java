@@ -13,9 +13,6 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
     @Override
     public void init() {
-        double width = 500;
-        double height = 500;
-//        // TODO: Maybe we should import the data file to initialize planets?
         ArrayList<Planet> planets = PlanetReader.getPlanets();
         setPlanets(planets);
     }
