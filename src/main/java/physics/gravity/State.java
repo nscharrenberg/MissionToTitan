@@ -21,6 +21,8 @@ public class State implements StateInterface {
     @Override
     public StateInterface addMul(double step, RateInterface rate) {
         Rate r = (Rate) rate;
+
+
         Rate mul = new Rate(r.getAcceleration().mul(step), r.getVelocity().mul(step));
         State state = new State(position.add(mul.getVelocity()), velocity.add(mul.getAcceleration()),object);
         return state;
@@ -51,6 +53,6 @@ public class State implements StateInterface {
     }
 
     public String toString() {
-        return "this is a state, cool right?";
+        return "(p: "  + position + ", v: " + velocity + ", o: " + object.getName();
     }
 }
