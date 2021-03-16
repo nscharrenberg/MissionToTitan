@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
-        <titan.main>utils.converter.ConverterTest</titan.main>
+        <titan.main>Main</titan.main>
     </properties>
 
     <dependencies>

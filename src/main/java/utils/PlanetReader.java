@@ -41,21 +41,21 @@ public class PlanetReader {
                     radius = Double.parseDouble(split[7].substring(7));
                 Vector3dInterface position = new Vector3D(x, y, z), velocity = new Vector3D(vx, vy, vz);
                 if(!Arrays.asList(MOONS).contains(name)) {//checks if it is a planet
-                    planets.add(new Planet(mass, position, velocity, name));
+                    planets.add(new Planet(mass, radius, position, velocity, name));
                 } else {
                     System.out.println(name);
                     if(name.equals(MOONS[0])) {
                         System.out.println(name.equals(MOONS[0]));
                         for(Planet p : planets) {
                             if(p.getName().equals("Earth")) {
-                                p.addMoon(mass, position, velocity, name);
+                                p.addMoon(mass, radius, position, velocity, name);
                             }
                         }
                     }
                     if(name.equals(MOONS[1])) {
                         for(Planet p : planets) {
                             if(p.getName().equals("Saturn")) {
-                                p.addMoon(mass, position, velocity, name);
+                                p.addMoon(mass, radius, position, velocity, name);
                             }
                         }
                     }
