@@ -1,12 +1,21 @@
+/*
+ * @author Pieter Collins, Christof Seiler, Katerina Stankova, Nico Roos, Katharina Schueller
+ * @version 0.99.0
+ *
+ * This interface serves as the API for students in phase 1.
+ */
+
 package interfaces;
 
 public interface Vector3dInterface {
+
     public double getX();
     public void setX(double x);
     public double getY();
     public void setY(double y);
     public double getZ();
     public void setZ(double z);
+
     public Vector3dInterface add(Vector3dInterface other);
     public Vector3dInterface sub(Vector3dInterface other);
     public Vector3dInterface mul(double scalar);
@@ -44,4 +53,5 @@ public interface Vector3dInterface {
      * Vector3d(-1.0, 2, -3.0) should print out (-1.0,2.0,-3.0)
      */
     public String toString();
+
 }
