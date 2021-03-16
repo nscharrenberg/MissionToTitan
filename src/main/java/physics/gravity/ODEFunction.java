@@ -23,6 +23,7 @@ public class ODEFunction implements ODEFunctionInterface {
         newtonsLaw(object, sun);
         Vector3dInterface rateAcceleration = object.getForce().mul(1/object.getMass());
         Vector3dInterface rateVelocity = rateAcceleration.mul(t).add(velocity);
+        rateVelocity = velocity.add(rateAcceleration);
 
         return new Rate(rateAcceleration, rateVelocity);
     }
