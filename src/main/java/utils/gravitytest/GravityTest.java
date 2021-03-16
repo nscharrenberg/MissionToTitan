@@ -17,14 +17,11 @@ import java.util.List;
 
 public class GravityTest extends Application {
 
-    protected static final double G = 6.67408e-11; // Gravitational Constant
-    protected static double daySec = 60*24*60; // total seconds in a day
-    protected static double t;
-
     protected static List<Planet> planets;
-
     protected static SolarSystemRepository system;
 
+    protected static double daySec = 60*24*60; // total seconds in a day
+    protected static double t;
     protected static double dt = 0.5*daySec;
     protected static double totalTime = 1*365*daySec;
 

@@ -70,7 +70,6 @@ public class ODESolver implements ODESolverInterface {
      * and up and adds them in the allStates array
      */
     private void computeStates(ODEFunctionInterface f, double h) {
-        // continuing all other steps for all planets
         for (int i = 1; i < size; i++) {
             for( int j = 0; j < planets.size(); j++)
             {
