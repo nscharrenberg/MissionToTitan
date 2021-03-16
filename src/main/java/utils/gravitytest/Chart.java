@@ -15,11 +15,11 @@ public class Chart implements Initializable {
     public static Planet moon;
     public static Planet sun;
     private static double t;
-    private static double daySec;
+    private static double daySec = 24.0 * 60 * 60;;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        getPlanets();
+        GravityTest.initSystem();
         openDataSeries();
         GravityTest.simulate();
         closeDataSeries();

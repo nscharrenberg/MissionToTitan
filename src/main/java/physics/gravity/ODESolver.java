@@ -1,16 +1,27 @@
 package physics.gravity;
 
+import domain.Planet;
 import interfaces.ODEFunctionInterface;
 import interfaces.ODESolverInterface;
 import interfaces.StateInterface;
 import repositories.SolarSystemRepository;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ODESolver implements ODESolverInterface {
 
     private SolarSystemRepository system;
 
+    private StateInterface[][] allStates;
+    private int size;
+
+    private int solveIndex;
+
     public ODESolver(SolarSystemRepository system){
-        system = new SolarSystemRepository();
+        this.system = system;
+
+        method();
     }
 
     @Override
@@ -21,20 +32,35 @@ public class ODESolver implements ODESolverInterface {
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
         int size = (int)Math.round(tf/h)+1;
-        StateInterface[] stateArray = new StateInterface[size];
+        List<Planet> planets = system.getPlanets();
+        allStates = new StateInterface[planets.size()][size];
 
-        stateArray[0] = step(f,0, y0,h); // initial calculation of t=0
+        // gets index of planet in the solar system list
+        for (int i = 0; i <planets.size(); i++) {
+            State state = (State) y0;
+            if (planets.get(i).getName().equals(state.getMovingObject().getName()))
+                solveIndex = i;
+        }
+
+        for (int i = 0; i < planets.size(); i++) {
+            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), planets.get(i));
+            allStates[i][0] = step(f, 0, state , h); // initial calculation of t=0
+        }
 
         for (int i = 1; i < size; i++) {
-            // inserting step into the array
-            stateArray[i] = step(f,h, stateArray[i-1],h);
-            State state = (State) stateArray[i];
+            for( int j = 0; j < planets.size(); j++)
+            {
+                // inserting step into the array
+                allStates[j][i] = step(f, h, allStates[j][i - 1], h);
+                State state = (State) allStates[j][i];
 
-            // updating the MovingObject's state
-            state.getMovingObject().setPosition(state.getPosition());
-            state.getMovingObject().setVelocity(state.getVelocity());
+                // updating the MovingObject's state
+                state.getMovingObject().setPosition(state.getPosition());
+                state.getMovingObject().setVelocity(state.getVelocity());
+            }
         }
-        return stateArray;
+
+        return allStates[solveIndex];
     }
 
     @Override
@@ -45,4 +71,10 @@ public class ODESolver implements ODESolverInterface {
     private SolarSystemRepository getSolarSystem(){
         return system;
     }
+
+    private void method() {
+
+    }
+
+
 }

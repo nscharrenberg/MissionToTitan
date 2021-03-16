@@ -46,12 +46,12 @@ public class ODEFunction implements ODEFunctionInterface {
         ArrayList<Planet> list = (ArrayList<Planet>) system.getPlanets();
         a.setForce(new Vector3D(0,0,0));
 
+
         for(int i=0; i<list.size(); i++)
-            if(!list.get(i).getName().equals(a.getName()))
+            if(!list.get(i).getName().equals(a.getName())) {
                 a.setForce(a.getForce().add(newtonsLaw(a, list.get(i))));
-            if (a.getName().equals("Sun")) {
-                System.out.println(system.findPlanet("Sun").getForce());
             }
+
 
     }
 
