@@ -16,10 +16,12 @@ public class State implements StateInterface {
 
     @Override
     public StateInterface addMul(double step, RateInterface rate) {
+
         return null;
     }
 
     public void setPosition(Vector3dInterface position) {
+
         this.position = position;
     }
 
