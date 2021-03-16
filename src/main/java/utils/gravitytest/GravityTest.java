@@ -12,6 +12,9 @@ import physics.gravity.ODESolver;
 import physics.gravity.State;
 import repositories.SolarSystemRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GravityTest extends Application {
 
     protected static final double G = 6.67408e-11; // Gravitational Constant
@@ -25,6 +28,8 @@ public class GravityTest extends Application {
     protected static Planet jupiter;
     protected static Planet sun;
 
+    protected static List<Planet> planets;
+
     protected static SolarSystemRepository system;
 
     protected static double dt = 1*daySec;
@@ -34,52 +39,37 @@ public class GravityTest extends Application {
         ODESolver solve = new ODESolver(system);
         ODEFunction f = new ODEFunction(system);
 
-       // State mercuryState = new State(mercury.getPosition(), mars.getVelocity(), mercury);
-        //State venusState = new State(venus.getPosition(), venus.getVelocity(), venus);
-        //State earthState = new State(earth.getPosition(), earth.getVelocity(), earth);
-        //State marsState = new State(mars.getPosition(), mars.getVelocity(), mars);
-        //State jupiterState = new State(jupiter.getPosition(), jupiter.getVelocity(), jupiter);
-        State sunState = new State(sun.getPosition(), sun.getVelocity(), sun);
+        ArrayList<StateInterface[]> stateArrayList = new ArrayList<>();
 
-        //StateInterface[] mercuryArray = solve.solve(f, mercuryState, totalTime, dt);
-        //StateInterface[] venusArray = solve.solve(f, venusState, totalSteps, dt);
-        //StateInterface[] earthArray = solve.solve(f, earthState, totalSteps, dt);
-      //  StateInterface[] marsArray  = solve.solve(f, marsState, totalSteps, dt);
-        //StateInterface[] jupiterArray = solve.solve(f, jupiterState, totalSteps, dt);
-        StateInterface[] sunArray = solve.solve(f, sunState, totalTime, dt);
+        for (int i = 0; i < planets.size(); i++) {
+            Planet planet = planets.get(i);
+            State planetState = new State(planet.getPosition(), planet.getVelocity(), planet);
+            StateInterface[] stateArray = solve.solve(f, planetState, totalTime, dt);
+            stateArrayList.add(stateArray);
+        }
 
-        System.out.println(sunArray[0].toString());
-        System.out.println(sunArray[30].toString());
-        System.out.println(sunArray[60].toString());
+        for (int i = 0; i < stateArrayList.get(0).length; i++) {
+            System.out.println(i);
+            State newMercuryState = (State) stateArrayList.get(0)[i];
+            State newVenusState = (State) stateArrayList.get(1)[i];
+            State newEarthState = (State) stateArrayList.get(2)[i];
+            State newMarsState =  (State) stateArrayList.get(3)[i];
+            State newJupiterState = (State) stateArrayList.get(4)[i];
+            State newSunState = (State) stateArrayList.get(5)[i];
 
-        for (int i = 0; i < sunArray.length; i++) {
-            //State newMercuryState = (State) mercuryArray[i];
-           // State newVenusState = (State) venusArray[i];
-           // State newEarthState = (State) earthArray[i];
-           // State newMarsState =  (State) marsArray[i];
-           // State newJupiterState = (State) jupiterArray[i];
-            State newSunState = (State) sunArray[i];
-
-
-            //Chart.addDataA(i*daySec, newMercuryState.getPosition().getY());
-           // Chart.addDataB(i*daySec, newVenusState.getPosition().getX());
-           // Chart.addDataC(i*daySec, newEarthState.getPosition().getX());
-           // Chart.addDataD(i*daySec, newMarsState.getPosition().getX());
-           // Chart.addDataE(i*daySec, newJupiterState.getPosition().getX());
+            Chart.addDataA(i*daySec, newMercuryState.getPosition().getY());
+            Chart.addDataB(i*daySec, newVenusState.getPosition().getX());
+            Chart.addDataC(i*daySec, newEarthState.getPosition().getX());
+            Chart.addDataD(i*daySec, newMarsState.getPosition().getX());
+            Chart.addDataE(i*daySec, newJupiterState.getPosition().getX());
             Chart.addDataF(i*daySec, newSunState.getPosition().getX());
-
         }
     }
 
     protected static void initSystem() {
         system = new SolarSystemRepository();
         system.init();
-        mercury = system.findPlanet("Mercury");
-        venus = system.findPlanet("Venus");
-        earth = system.findPlanet("Earth");
-        mars = system.findPlanet("Mars");
-        jupiter = system.findPlanet("Jupiter");
-        sun = system.findPlanet("Sun");
+        planets = system.getPlanets();
         t = 0; // start time
     }
 
