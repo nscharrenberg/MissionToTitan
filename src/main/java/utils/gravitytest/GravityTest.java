@@ -101,9 +101,9 @@ public class GravityTest extends Application {
     protected static void initSystem() {
         system = new SolarSystemRepository();
         system.init();
-        earth = system.findPlanet("earth");
-        sun = system.findPlanet("sun");
-        moon = earth.getMoon("luna");
+        earth = system.findPlanet("Earth");
+        sun = system.findPlanet("Sun");
+        moon = earth.getMoon("Moon");
         t = 0; // start time
     }
 
