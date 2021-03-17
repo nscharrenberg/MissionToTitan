@@ -17,8 +17,7 @@ public class Planet extends MovingObject {
      * @param name - the name of the planet
      */
     public Planet(double mass, Vector3dInterface vector, Vector3dInterface newVectorState, String name, double radius) {
-        super(mass, vector, newVectorState);
-        this.name = name;
+        super(mass, vector, newVectorState, name);
         this.radius = radius;
     }
 
@@ -50,6 +49,8 @@ public class Planet extends MovingObject {
     }
 
     public Moon getMoon(String name) {
+
+
         if (this.moons.size() <= 0) {
             return null;
         }
@@ -62,13 +63,7 @@ public class Planet extends MovingObject {
                 .orElse(null);
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

@@ -47,9 +47,9 @@ public class PlanetReader {
 				if(!Arrays.asList(MOONS).contains(name)) {//checks if it is a planet
 					planets.add(new Planet(mass, position, velocity, name, radius));
 				} else {
-					System.out.println(name);
+					//System.out.println(name);
 					if(name.equals(MOONS[0])) {
-						System.out.println(name.equals(MOONS[0]));
+						//System.out.println(name.equals(MOONS[0]));
 						for(Planet p : planets) {
 							if(p.getName().equals("Earth")) {
 								p.addMoon(mass, position, velocity, name, radius);
