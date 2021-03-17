@@ -9,10 +9,12 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Main extends Application {
@@ -32,7 +34,7 @@ public class Main extends Application {
 //        FactoryProvider.getDrawingManager().update();
         FactoryProvider.getSolarSystemFactory().init();
         FactoryProvider.getUpdateManager().init();
-
+        stage.getIcons().add(new Image(new FileInputStream("src/main/resources/icon/icon.png")));
         stage.setScene(scene);
         stage.show();
     }
