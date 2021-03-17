@@ -1,6 +1,7 @@
 package gui.javafx.shapes;
 
 import gui.javafx.points.RelativePoint;
+import interfaces.gui.IDrawableDetails;
 import interfaces.gui.IPoint;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -19,6 +20,11 @@ public class Rectangle extends Shape {
 
     public Rectangle(IPoint point, double width, double height) {
         super(point);
+        this.width = width;
+        this.height = height;
+    }
+    public Rectangle(IPoint point, double width, double height, IDrawableDetails drawableDetails) {
+    	super(point,drawableDetails);
         this.width = width;
         this.height = height;
     }

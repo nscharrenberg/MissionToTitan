@@ -45,19 +45,27 @@ public class PlanetReader {
                 } else {
                     System.out.println(name);
                     if(name.equals(MOONS[0])) {
+                    	Planet q = null;;
                         System.out.println(name.equals(MOONS[0]));
                         for(Planet p : planets) {
                             if(p.getName().equals("Earth")) {
                                 p.addMoon(mass, radius, position, velocity, name);
+                                q = p;
                             }
                         }
+                        if(q != null)
+                        	planets.add(q.getMoon(name));
                     }
                     if(name.equals(MOONS[1])) {
+                    	Planet q = null;;
                         for(Planet p : planets) {
                             if(p.getName().equals("Saturn")) {
                                 p.addMoon(mass, radius, position, velocity, name);
+                                q = p;
                             }
                         }
+                        if(q != null)
+                        	planets.add(q.getMoon(name));
                     }
                 }
             }

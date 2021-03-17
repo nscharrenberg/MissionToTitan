@@ -119,8 +119,9 @@ public class Vector3D implements Vector3dInterface {
     @Override
     public Vector3dInterface addMul(double scalar, Vector3dInterface other) {
         Vector3dInterface resultant = new Vector3D(this.x, this.y, this.z);
-        resultant.add(other);
-        resultant.mul(scalar);
+        other = other.mul(scalar);
+        resultant = resultant.add(other);
+        
         return resultant;
     }
 

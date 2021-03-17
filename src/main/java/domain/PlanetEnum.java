@@ -1,12 +1,20 @@
 package domain;
 
 import gui.javafx.utils.DrawingDetail;
+import gui.javafx.utils.DrawingDetailImage;
 import interfaces.gui.IDrawableDetails;
 import javafx.scene.paint.Color;
 
 public enum PlanetEnum {
-    EARTH("earth", new DrawingDetail(Color.GREEN)),
-    SUN("sun", new DrawingDetail(Color.ORANGE));
+	SUN("sun", new DrawingDetailImage("src/main/resources/sprites/Titan.png")),
+	MERCURY("mercury", new DrawingDetailImage("src/main/resources/sprites/Mercury.png")),
+	VENUS("venus", new DrawingDetailImage("src/main/resources/sprites/Venus.png")),
+    EARTH("earth", new DrawingDetailImage("src/main/resources/sprites/Earth.png")),
+    MOON("moon", new DrawingDetailImage("src/main/resources/sprites/Moon.png")),
+    MARS("mars", new DrawingDetailImage("src/main/resources/sprites/Mars.png")),
+    JUPITER("jupiter", new DrawingDetailImage("src/main/resources/sprites/Jupiter.png")),
+    SATURN("saturn", new DrawingDetailImage("src/main/resources/sprites/Saturn.png")),
+    TITANT("titan", new DrawingDetailImage("src/main/resources/sprites/Titan.png"));
 
     private PlanetEnum(String name, IDrawableDetails detail) {
         this.name = name;
