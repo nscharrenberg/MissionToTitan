@@ -37,7 +37,6 @@ public class DrawingManager extends Manager<IDrawable> {
 
     @Override
     public void init() {
-        FactoryProvider.getSolarSystemFactory().init();
         refresh();
     }
 

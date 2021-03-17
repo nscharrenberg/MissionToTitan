@@ -23,6 +23,7 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void init() {
+        FactoryProvider.getSolarSystemFactory().preprocessing();
         setTimer(DEFAULT_INTERVAL);
     }
 
