@@ -1,16 +1,16 @@
-
 package repositories;
 
 import domain.Planet;
+import domain.SpaceCraft;
 import domain.Vector3D;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
-import utils.converter.PositionConverter;
 
 import java.util.*;
 
 public class SolarSystemRepository implements SolarSystemInterface {
     private List<Planet> planets = new ArrayList<>();
+    private SpaceCraft probe;
     private double width = 700;
     private double height = 700;
 
@@ -18,6 +18,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
     public void init() {
         ArrayList<Planet> planets = PlanetReader.getPlanets();
         setPlanets(planets);
+        //probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
 //        sampleSolarSystem();
     }
 
@@ -73,5 +74,13 @@ public class SolarSystemRepository implements SolarSystemInterface {
         }
 
         return this.planets.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public SpaceCraft getProbe() {
+        return probe;
+    }
+
+    public void setProbe(SpaceCraft probe) {
+        this.probe = probe;
     }
 }

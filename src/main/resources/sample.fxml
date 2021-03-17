@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="utils.gravitytest.Chart">
    <children>
-      <LineChart fx:id="LineChartA" prefHeight="450.0" prefWidth="530.0" title="Sun (X Position)">
+      <LineChart fx:id="LineChartA" prefHeight="450.0" prefWidth="530.0" title="Earth (X Y Z)">
         <xAxis>
           <CategoryAxis side="BOTTOM" fx:id="x" />
         </xAxis>
@@ -15,7 +15,7 @@
           <NumberAxis fx:id="y" side="LEFT" />
         </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartB" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Mercury (X Position)">
+      <LineChart fx:id="LineChartB" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Moon relative to Earth (X Y Z)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x1" />
          </xAxis>
@@ -23,7 +23,7 @@
             <NumberAxis fx:id="y1" side="LEFT" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartC" layoutX="1060.0" prefHeight="450.0" prefWidth="530.0" title="Venus (X Position)">
+      <LineChart fx:id="LineChartC" layoutX="1060.0" prefHeight="450.0" prefWidth="530.0" title="Saturn (X Y Z">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x2" />
          </xAxis>
@@ -31,7 +31,7 @@
             <NumberAxis fx:id="y2" side="LEFT" />
          </yAxis>
       </LineChart>
-      <LineChart fx:id="LineChartD" layoutX="1060.0" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Earth (X Position)">
+      <LineChart fx:id="LineChartD" layoutX="1060.0" layoutY="450.0" prefHeight="450.0" prefWidth="530.0" title="Titan Relative to Saturn (X Y Z)">
          <xAxis>
             <CategoryAxis side="BOTTOM" fx:id="x21" />
          </xAxis>
