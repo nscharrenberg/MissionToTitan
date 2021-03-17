@@ -64,7 +64,9 @@ public class Chart implements Initializable {
         seriesMY.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), moon.getPosition().getY() - earth.getPosition().getY()));
     }
 
-
+   protected static void addData(double t, double data) {
+        seriesEX.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), data));
+    }
 
 
 

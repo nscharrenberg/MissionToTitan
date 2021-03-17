@@ -3,12 +3,16 @@ package utils.gravitytest;
 import domain.MovingObject;
 import domain.Planet;
 import domain.Vector3D;
+import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import physics.gravity.ODEFunction;
+import physics.gravity.ODESolver;
+import physics.gravity.State;
 import repositories.SolarSystemRepository;
 
 public class GravityTest extends Application {
@@ -27,7 +31,7 @@ public class GravityTest extends Application {
     /**
      *  this is where the logic of the whole simulation happens
      */
-    protected static void simulate() {
+    protected static void simulate2() {
         System.out.println("starting calculation");
         while(t < dt*totalSteps) {
             determineForces();
@@ -36,6 +40,19 @@ public class GravityTest extends Application {
             t += dt;
         }
         System.out.println("done calculating");
+    }
+
+    protected static void simulate() {
+        ODESolver solve = new ODESolver();
+        ODEFunction f = new ODEFunction();
+        State state = new State(earth.getPosition(), earth.getVelocity(), earth);
+
+        StateInterface[] solveArray = solve.solve(f,state, 365*24.0*60*60, 0.05*24*60*60);
+
+        for (int i = 0; i < solveArray.length; i++) {
+            State temp = (State) solveArray[i];
+            Chart.addData(i *daySec, temp.getPosition().getX());
+        }
     }
 
     private static void determineForces() {
@@ -66,6 +83,7 @@ public class GravityTest extends Application {
         Vector3dInterface force = r.mul(gravConst/modr3); // full formula together
 
         a.setForce(a.getForce().add(force));
+        b.setForce(b.getForce().add(force.mul(-1)));
     }
 
     /**
