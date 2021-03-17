@@ -18,9 +18,9 @@ public class ConverterTest {
 //            System.out.println(p.getName());
             Vector3D w = (Vector3D) p.getPosition();
 //            System.out.println(w);
-            Vector3D v = (Vector3D) PositionConverter.convertToPixel(w, width, height);
-            System.out.println(v.toString());
-            System.out.println("-----------------------");
+//            Vector3D v = (Vector3D) PositionConverter.convertToPixel(w, width, height);
+//            System.out.println(v.toString());
+//            System.out.println("-----------------------");
         }
     }
 }

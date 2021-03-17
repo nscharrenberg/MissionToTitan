@@ -26,6 +26,7 @@ public class DrawingContext implements IDrawableContext {
     public void reset() {
         this.context.restore();
         this.context.setFill(null);
+        this.context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     public Canvas getCanvas() {

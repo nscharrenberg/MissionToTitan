@@ -1,6 +1,7 @@
 package managers;
 
 import domain.Moon;
+import domain.Planet;
 import domain.PlanetEnum;
 import domain.Vector3D;
 import factory.FactoryProvider;
@@ -12,15 +13,21 @@ import gui.javafx.utils.DrawingDetailImage;
 import interfaces.gui.IDrawable;
 import interfaces.gui.IDrawableContext;
 import interfaces.gui.IDrawableDetails;
+import interfaces.gui.IUpdate;
 import javafx.scene.paint.Color;
 import utils.converter.PositionConverter;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DrawingManager extends Manager<IDrawable> {
     private IDrawableContext context;
-    private IDrawable background;
+    double width = 700;
+    double height = 700;
+    private IDrawable background = new Rectangle(new AbsolutePoint(350, 350), width, height, new DrawingDetailImage("src/main/resources/sprites/starry-night-sky.png"));
+
 
     public DrawingManager() {
         items = new HashSet<>();
@@ -56,10 +63,10 @@ public class DrawingManager extends Manager<IDrawable> {
     protected void refresh() {
         items = new HashSet<>();
 
-        double width = 700;
-        double height = 700;
-        
-        PositionConverter.convertToPixel(FactoryProvider.getSolarSystemFactory().getPlanets(), width, height).forEach(planet -> {
+       List<Planet> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof Planet).map(obj -> (Planet) obj).collect(Collectors.toList());
+        PositionConverter.convertToPixel(planets, width, height).forEach(planet -> {
+//        FactoryProvider.getUpdateManager().getItems().forEach(p -> {
+//            Planet planet = (Planet) p;
         	IDrawableDetails found = new DrawingDetail(Color.RED);
             //Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
             Vector3D v = (Vector3D) planet.getPosition();
@@ -79,11 +86,13 @@ public class DrawingManager extends Manager<IDrawable> {
             	items.add(new Circle(18, new AbsolutePoint(v.getX(), v.getY()), found));
             }
         });
-        background = new Rectangle(new AbsolutePoint(350, 350), width, height, new DrawingDetailImage("src/main/resources/sprites/night-sky.png"));
+
+
         super.refresh();
     }
 
     private void draw() {
+        context.reset();
     	background.draw(context);
         items.forEach(item -> {
             item.draw(context);

@@ -28,8 +28,10 @@ public class Main extends Application {
         drawingContext.changeCanvasSizeFromScene(scene);
 
         FactoryProvider.getDrawingManager().setContext(drawingContext);
-        FactoryProvider.getDrawingManager().init();
-        FactoryProvider.getDrawingManager().update();
+//        FactoryProvider.getDrawingManager().init();
+//        FactoryProvider.getDrawingManager().update();
+        FactoryProvider.getSolarSystemFactory().init();
+        FactoryProvider.getUpdateManager().init();
 
         stage.setScene(scene);
         stage.show();

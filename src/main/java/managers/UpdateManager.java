@@ -1,22 +1,55 @@
 package managers;
 
+import domain.MovingObject;
+import factory.FactoryProvider;
+import interfaces.gui.ITimer;
 import interfaces.gui.IUpdate;
+import javafx.application.Platform;
 
-public class UpdateManager extends Manager<IUpdate> {
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
+public class UpdateManager extends Manager<IUpdate> implements ITimer {
+    public final static int DEFAULT_INTERVAL = 2000; // 1 sec
+
+    private Timer timer;
+
+    public UpdateManager() {
+        items = new LinkedList<>();
+        scheduledAdditions = new LinkedList<>();
+        scheduledRemovals = new LinkedList<>();
+    }
 
     @Override
     public void init() {
-
+        setTimer(DEFAULT_INTERVAL);
     }
 
     @Override
     public void reset() {
-
+        items = new LinkedList<>();
+        scheduledAdditions = new LinkedList<>();
+        scheduledRemovals = new LinkedList<>();
     }
 
     @Override
     public void update() {
+        reset();
+        FactoryProvider.getSolarSystemFactory().getPlanets().forEach(MovingObject::update);
+        items.addAll(FactoryProvider.getSolarSystemFactory().getPlanets());
 
+        FactoryProvider.getDrawingManager().update();
+    }
+
+    @Override
+    public void setTimer(int interval) {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> update());
+            }
+        }, 0, interval);
     }
 }
