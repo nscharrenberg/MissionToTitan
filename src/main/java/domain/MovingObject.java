@@ -1,8 +1,11 @@
 package domain;
 
 import interfaces.Vector3dInterface;
+import interfaces.gui.IUpdate;
 
-public class MovingObject extends SpaceObject {
+import java.util.Random;
+
+public class MovingObject extends SpaceObject implements IUpdate {
     private Vector3dInterface force;
     private Vector3dInterface acceleration;
     private Vector3dInterface velocity;
@@ -40,6 +43,26 @@ public class MovingObject extends SpaceObject {
 
     public Vector3dInterface getAcceleration() {
         return acceleration;
+    }
+
+    @Override
+    public void update() {
+        Random r = new Random();
+
+        boolean xFlip = r.nextBoolean();
+        boolean yFlip = r.nextBoolean();
+
+        if (xFlip) {
+            getPosition().setX(getPosition().getX() - (r.nextInt(5)*1E11));
+        } else {
+            getPosition().setX(getPosition().getX() + r.nextInt(5)*1E11);
+        }
+
+        if (yFlip) {
+            getPosition().setY(getPosition().getY() - r.nextInt(5)*1E11);
+        } else {
+            getPosition().setY(getPosition().getY() + r.nextInt(5)*1E11);
+        }
     }
 
     public String getName() {
