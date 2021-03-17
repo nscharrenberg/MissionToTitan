@@ -1,6 +1,7 @@
 package repositories;
 
 import domain.Planet;
+import domain.Vector3D;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
 
