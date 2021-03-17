@@ -10,11 +10,13 @@ import gui.javafx.utils.DrawingDetail;
 import interfaces.StateInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import physics.gravity.ODEFunction;
 import physics.gravity.ODESolver;
@@ -36,14 +38,20 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Mission To Titan");
+        stage.setMaximized(true);
+        stage.setResizable(false);
         stage.centerOnScreen();
         Group root = new Group();
-        Scene scene = new Scene(root, 700, 700);
+        Scene scene = new Scene(root);
+
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        FactoryProvider.getSettingRepository().setAppHeight(screenBounds.getHeight());
+        FactoryProvider.getSettingRepository().setCanvasWidth(screenBounds.getWidth() - FactoryProvider.getSettingRepository().getSidebarWidth());
+
         DrawingContext drawingContext = new DrawingContext(root);
         drawingContext.changeCanvasSizeFromScene(scene);
 
         FactoryProvider.getDrawingManager().setContext(drawingContext);
-        FactoryProvider.getSolarSystemFactory().init();
         FactoryProvider.getUpdateManager().init();
         
         stage.getIcons().add(new Image(new FileInputStream("src/main/resources/icon/icon.png")));

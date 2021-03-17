@@ -13,8 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class UpdateManager extends Manager<IUpdate> implements ITimer {
-    public final static int DEFAULT_INTERVAL = 10; // 1 sec
-
     private Timer timer;
     private int index = 0;
 
@@ -26,8 +24,9 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void init() {
+        FactoryProvider.getDrawingManager().init();
         FactoryProvider.getSolarSystemFactory().preprocessing();
-        setTimer(DEFAULT_INTERVAL);
+        setTimer();
     }
 
     @Override
@@ -55,13 +54,13 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
     }
 
     @Override
-    public void setTimer(int interval) {
+    public void setTimer() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> update());
             }
-        }, 0, interval);
+        }, 0, FactoryProvider.getSettingRepository().getRefreshInterval());
     }
 }

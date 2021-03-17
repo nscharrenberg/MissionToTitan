@@ -15,14 +15,12 @@ import java.util.*;
 
 public class SolarSystemRepository implements SolarSystemInterface {
     private List<Planet> planets = new ArrayList<>();
-    private double width = 700;
-    private double height = 700;
     private List<List<MovingObject>> timeLine = new ArrayList<>();
 
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
-    protected static double dt = 0.1*daySec;
-    protected static double totalTime = 1*365*daySec;
+    protected static double dt = 0.01*daySec;
+
     @Override
     public void init() {
         ArrayList<Planet> planets = PlanetReader.getPlanets();
@@ -82,6 +80,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
      */
     @Override
     public void preprocessing() {
+        double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
         ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
         ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);

@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 
 public class DrawingManager extends Manager<IDrawable> {
     private IDrawableContext context;
-    double width = 700;
-    double height = 700;
-    private IDrawable background = new Rectangle(new AbsolutePoint(350, 350), width, height, new DrawingDetailImage("src/main/resources/sprites/night-sky.png"));
+    private IDrawable background;
 
 
     public DrawingManager() {
@@ -34,7 +32,7 @@ public class DrawingManager extends Manager<IDrawable> {
 
     @Override
     public void init() {
-        refresh();
+        background = new Rectangle(new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight(), new DrawingDetailImage("src/main/resources/sprites/night-sky.png"));
     }
 
     @Override
@@ -56,7 +54,7 @@ public class DrawingManager extends Manager<IDrawable> {
         items = new HashSet<>();
 
        List<MovingObject> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof MovingObject).map(obj -> (MovingObject) obj).collect(Collectors.toList());
-        PositionConverter.convertToPixel(planets, width, height).forEach(planet -> {
+        PositionConverter.convertToPixel(planets, FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight()).forEach(planet -> {
 //        FactoryProvider.getUpdateManager().getItems().forEach(p -> {
 //            Planet planet = (Planet) p;
         	IDrawableDetails found = new DrawingDetail(Color.RED);

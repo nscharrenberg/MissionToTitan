@@ -3,6 +3,7 @@ package utils.converter;
 import domain.MovingObject;
 import domain.Planet;
 import domain.Vector3D;
+import factory.FactoryProvider;
 import interfaces.Vector3dInterface;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
@@ -43,13 +44,12 @@ public class PositionConverter {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         Scale s = new Scale((width/2), 1.51E12);
-        boolean correction = false;
         for(MovingObject p : planets) {
         	String name = p.getName();
         	Vector3D w = (Vector3D) convert(p.getPosition(), s);
             w = (Vector3D) w.add(new Vector3D(width/2, width/2, width/2));
             w = (Vector3D) w.add(new Vector3D(marginX, marginY, 0)); 
-            if(correction) {
+            if(FactoryProvider.getSettingRepository().isGuiFormatting()) {
 		        if(name.equals("Mercury")) {
 		        	w = (Vector3D) w.addMul(1.5, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
