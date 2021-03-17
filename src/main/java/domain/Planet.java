@@ -9,7 +9,6 @@ public class Planet extends MovingObject {
     private String name;
     private double radius;
     private List<Moon> moons;
-    private double radius;
 
     /**
      * @param mass - the mass of the object in kilograms
@@ -18,7 +17,7 @@ public class Planet extends MovingObject {
      * @param name - the name of the planet
      */
     public Planet(double mass, double radius, Vector3dInterface vector, Vector3dInterface newVectorState, String name) {
-        super(mass, vector, newVectorState);
+        super(mass, vector, newVectorState, name);
         this.name = name;
         this.radius = radius;
     }
