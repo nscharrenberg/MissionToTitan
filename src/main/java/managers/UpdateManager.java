@@ -36,10 +36,13 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
     @Override
     public void update() {
         reset();
+        // TODO: This would need to be our timeline array
         FactoryProvider.getSolarSystemFactory().getPlanets().forEach(MovingObject::update);
         items.addAll(FactoryProvider.getSolarSystemFactory().getPlanets());
 
         FactoryProvider.getDrawingManager().update();
+
+        //TODO: Also stop timer when timeline is finished.
     }
 
     @Override
