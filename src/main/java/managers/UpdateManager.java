@@ -11,7 +11,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class UpdateManager extends Manager<IUpdate> implements ITimer {
-    public final static int DEFAULT_INTERVAL = 2000; // 1 sec
+    public final static int DEFAULT_INTERVAL = 500; // 1 sec
 
     private Timer timer;
 

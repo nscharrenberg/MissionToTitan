@@ -26,7 +26,7 @@ public class DrawingManager extends Manager<IDrawable> {
     private IDrawableContext context;
     double width = 700;
     double height = 700;
-    private IDrawable background = new Rectangle(new AbsolutePoint(350, 350), width, height, new DrawingDetailImage("src/main/resources/sprites/starry-night-sky.png"));
+    private IDrawable background = new Rectangle(new AbsolutePoint(350, 350), width, height, new DrawingDetailImage("src/main/resources/sprites/night-sky.png"));
 
 
     public DrawingManager() {
@@ -51,12 +51,8 @@ public class DrawingManager extends Manager<IDrawable> {
 
     @Override
     public void update() {
-        if (isRunning()) {
-            System.out.println("Drawing");
-            draw();
-        }
-
         refresh();
+        draw();
     }
 
     @Override
