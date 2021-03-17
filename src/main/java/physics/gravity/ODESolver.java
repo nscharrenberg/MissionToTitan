@@ -1,6 +1,7 @@
 package physics.gravity;
 
 import domain.Planet;
+import interfaces.DataInterface;
 import interfaces.ODEFunctionInterface;
 import interfaces.ODESolverInterface;
 import interfaces.StateInterface;
@@ -8,13 +9,14 @@ import repositories.SolarSystemRepository;
 
 import java.util.List;
 
-public class ODESolver implements ODESolverInterface {
+public class ODESolver implements ODESolverInterface, DataInterface {
 
     private SolarSystemRepository system; // repository for all planets.
     private StateInterface[][] allStates; // 2d array containing all states of all planets.
     private int currentPlanetIndex;
     private int size;
     private List<Planet> planets;
+    private boolean init;
 
     public ODESolver(SolarSystemRepository system){
         this.system = system;
@@ -42,6 +44,13 @@ public class ODESolver implements ODESolverInterface {
         size = (int)Math.round(tf/h)+1;
         allStates = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
+    }
+
+    private void init(double tf, double h) {
+        system.init();
+        planets = system.getPlanets();
+        size = (int)Math.round(tf/h)+1;
+        allStates = new StateInterface[planets.size()][size];
     }
 
     /**
@@ -90,4 +99,11 @@ public class ODESolver implements ODESolverInterface {
     }
 
 
+    @Override
+    public StateInterface[][] getData(ODEFunctionInterface f, double tf, double h) {
+        init(tf,h);
+        addInitialStates();
+        computeStates(f,h);
+        return allStates;
+    }
 }
