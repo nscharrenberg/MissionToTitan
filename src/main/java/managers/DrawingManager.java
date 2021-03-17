@@ -59,10 +59,10 @@ public class DrawingManager extends Manager<IDrawable> {
         double width = 700;
         double height = 700;
         
-        FactoryProvider.getSolarSystemFactory().getPlanets().forEach(planet -> {
+        PositionConverter.convertToPixel(FactoryProvider.getSolarSystemFactory().getPlanets(), width, height).forEach(planet -> {
         	IDrawableDetails found = new DrawingDetail(Color.RED);
-            Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
-            
+            //Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
+            Vector3D v = (Vector3D) planet.getPosition();
             System.out.println(planet.getName());
             System.out.println(v);
             PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
