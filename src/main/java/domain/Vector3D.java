@@ -2,6 +2,8 @@ package domain;
 
 import interfaces.Vector3dInterface;
 
+import java.util.Objects;
+
 public class Vector3D implements Vector3dInterface {
     private double x;
     private double y;
@@ -117,8 +119,9 @@ public class Vector3D implements Vector3dInterface {
     @Override
     public Vector3dInterface addMul(double scalar, Vector3dInterface other) {
         Vector3dInterface resultant = new Vector3D(this.x, this.y, this.z);
-        resultant.add(other);
-        resultant.mul(scalar);
+        other = other.mul(scalar);
+        resultant = resultant.add(other);
+        
         return resultant;
     }
 
@@ -138,12 +141,27 @@ public class Vector3D implements Vector3dInterface {
         return Math.sqrt((x-other.getX())*(x-other.getX()) + (y-other.getY())*(y-other.getY()) + (z-other.getZ())*(z-other.getZ()));
     }
 
-    /**
-     * @return A string in this format:
-     * Vector3d(-1.0, 2, -3.0) should print out (-1.0, 2.0, -3.0)
-     */
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ", " + z + ")";
+        return "Vector3D{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector3D vector3D = (Vector3D) o;
+        return Double.compare(vector3D.x, x) == 0 &&
+                Double.compare(vector3D.y, y) == 0 &&
+                Double.compare(vector3D.z, z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }

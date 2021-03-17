@@ -4,116 +4,137 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import domain.Planet;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Chart implements Initializable {
 
-    public static Planet earth;
-    public static Planet moon;
-    public static Planet sun;
-    private static double t;
-    private static double daySec;
+    private static double daySec = 24.0 * 60 * 60;;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        getPlanets();
+        GravityTest.initSystem();
         openDataSeries();
         GravityTest.simulate();
         closeDataSeries();
     }
 
-    /**
-     * gets the planets from the solarSystem
-     */
-    private void getPlanets() {
-        GravityTest.initSystem();
-        earth = GravityTest.earth;
-        sun = GravityTest.sun;
-        moon = GravityTest.moon;
-        daySec = 24.0 * 60 * 60;
+    // Data
+   protected static void addDataA(double t, double x, double y, double z) {
+        seriesA.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesA2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+        seriesA3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-    /**
-     *  adds the coordinates of the sun, moon and earth into datapoints
-     *  and adds them to each series.
-     */
-    public static void addDataPoints() {
-        t = GravityTest.t;
-        addEarthData();
-        addSunData();
-        addMoonData();
+    protected static void addDataB(double t,  double x, double y, double z) {
+        seriesB.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesB2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+        seriesB3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-    // the coordinates of the earth that are being added are relative to the earth
-    private static void addEarthData() {
-        seriesEX.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), earth.getPosition().getX() - sun.getPosition().getX()));
-        seriesEY.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), earth.getPosition().getY() - sun.getPosition().getY()));
+    protected static void addDataC(double t,  double x, double y, double z) {
+        seriesC.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesC2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+        seriesC3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-    private static void addSunData() {
-        seriesSX.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), sun.getPosition().getX()));
-        seriesSY.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), sun.getPosition().getY()));
+    protected static void addDataD(double t,  double x, double y, double z) {
+        seriesD.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesD2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+        seriesD3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-    //  the coordinates of the moon that are being added are relative to the earth
-    private static void addMoonData() {
-        seriesMX.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), moon.getPosition().getX() - earth.getPosition().getX()));
-        seriesMY.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), moon.getPosition().getY() - earth.getPosition().getY()));
+    protected static void addDataE(double t,  double x, double y, double z) {
+        seriesE.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesE2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+        seriesE3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-   protected static void addData(double t, double data) {
-        seriesEX.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), data));
+    protected static void addDataF(double t,  double x, double y, double z) {
+        seriesF.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesF2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+        seriesF3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
-
-
-
-
 
     // javaFX
-    private static XYChart.Series seriesEX;
-    private static XYChart.Series seriesEY;
-    private static XYChart.Series seriesSX;
-    private static XYChart.Series seriesSY;
-    private static XYChart.Series seriesMX;
-    private static XYChart.Series seriesMY;
+    private static XYChart.Series seriesA;
+    private static XYChart.Series seriesA2;
+    private static XYChart.Series seriesA3;
+    private static XYChart.Series seriesB;
+    private static XYChart.Series seriesB2;
+    private static XYChart.Series seriesB3;
+    private static XYChart.Series seriesC;
+    private static XYChart.Series seriesC2;
+    private static XYChart.Series seriesC3;
+    private static XYChart.Series seriesD;
+    private static XYChart.Series seriesD2;
+    private static XYChart.Series seriesD3;
+    private static XYChart.Series seriesE;
+    private static XYChart.Series seriesE2;
+    private static XYChart.Series seriesE3;
+    private static XYChart.Series seriesF;
+    private static XYChart.Series seriesF2;
+    private static XYChart.Series seriesF3;
     @FXML
-    private LineChart<?, ?> LineChartEarthX;
+    private LineChart<?, ?> LineChartA;
     @FXML
-    private LineChart<?, ?> LineChartEarthY;
+    private LineChart<?, ?> LineChartB;
     @FXML
-    private LineChart<?, ?> LineChartSunX;
+    private LineChart<?, ?> LineChartC;
     @FXML
-    private LineChart<?, ?> LineChartSunY;
+    private LineChart<?, ?> LineChartD;
     @FXML
-    private LineChart<?, ?> LineChartMoonX;
+    private LineChart<?, ?> LineChartE;
     @FXML
-    private LineChart<?, ?> LineChartMoonY;
+    private LineChart<?, ?> LineChartF;
 
     /**
      * initializes the series receiving the chart coordinates
      */
     private void openDataSeries() {
-        seriesEX = new XYChart.Series();
-        seriesEY = new XYChart.Series();
-        seriesSX = new XYChart.Series();
-        seriesSY = new XYChart.Series();
-        seriesMX = new XYChart.Series();
-        seriesMY = new XYChart.Series();
+        seriesA = new XYChart.Series();
+        seriesB = new XYChart.Series();
+        seriesC = new XYChart.Series();
+        seriesD = new XYChart.Series();
+        seriesE = new XYChart.Series();
+        seriesF = new XYChart.Series();
+        seriesA2 = new XYChart.Series();
+        seriesB2 = new XYChart.Series();
+        seriesC2 = new XYChart.Series();
+        seriesD2 = new XYChart.Series();
+        seriesE2 = new XYChart.Series();
+        seriesF2 = new XYChart.Series();
+        seriesA3 = new XYChart.Series();
+        seriesB3 = new XYChart.Series();
+        seriesC3 = new XYChart.Series();
+        seriesD3 = new XYChart.Series();
+        seriesE3 = new XYChart.Series();
+        seriesF3 = new XYChart.Series();
     }
 
     /**
      * closes those series for them to be displayed on the chart
      */
     private void closeDataSeries() {
-        LineChartEarthX.getData().addAll(seriesEX);
-        LineChartEarthY.getData().addAll(seriesEY);
-        LineChartSunX.getData().addAll(seriesSX);
-        LineChartSunY.getData().addAll(seriesSY);
-        LineChartMoonX.getData().addAll(seriesMX);
-        LineChartMoonY.getData().addAll(seriesMY);
+        LineChartA.getData().addAll(seriesA);
+        LineChartB.getData().addAll(seriesB);
+        LineChartC.getData().addAll(seriesC);
+        LineChartD.getData().addAll(seriesD);
+        LineChartE.getData().addAll(seriesE);
+        LineChartF.getData().addAll(seriesF);
+        LineChartA.getData().addAll(seriesA2);
+        LineChartB.getData().addAll(seriesB2);
+        LineChartC.getData().addAll(seriesC2);
+        LineChartD.getData().addAll(seriesD2);
+        LineChartE.getData().addAll(seriesE2);
+        LineChartF.getData().addAll(seriesF2);
+        LineChartA.getData().addAll(seriesA3);
+        LineChartB.getData().addAll(seriesB3);
+        LineChartC.getData().addAll(seriesC3);
+        LineChartD.getData().addAll(seriesD3);
+        LineChartE.getData().addAll(seriesE3);
+        LineChartF.getData().addAll(seriesF3);
     }
 
 }
