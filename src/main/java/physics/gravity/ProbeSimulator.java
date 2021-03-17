@@ -19,4 +19,5 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
         return new Vector3dInterface[0];
     }
+
 }

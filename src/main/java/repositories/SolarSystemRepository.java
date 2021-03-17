@@ -3,6 +3,7 @@ package repositories;
 import domain.Planet;
 import domain.SpaceCraft;
 import domain.Vector3D;
+import physics.gravity.ProbeSimulator;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
 
@@ -20,6 +21,11 @@ public class SolarSystemRepository implements SolarSystemInterface {
         setPlanets(planets);
         //probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
 //        sampleSolarSystem();
+    }
+
+    @Override
+    public void preprocessing() {
+
     }
 
     private void sampleSolarSystem() {

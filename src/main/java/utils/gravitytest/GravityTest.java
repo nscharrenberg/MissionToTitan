@@ -2,7 +2,9 @@ package utils.gravitytest;
 
 import domain.Planet;
 import domain.SpaceCraft;
+import domain.Vector3D;
 import interfaces.StateInterface;
+import interfaces.Vector3dInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import physics.gravity.ODEFunction;
 import physics.gravity.ODESolver;
-import physics.gravity.Simulation;
 import physics.gravity.State;
 import repositories.SolarSystemRepository;
 
@@ -21,33 +22,30 @@ public class GravityTest extends Application {
 
     protected static List<Planet> planets;
     protected static SolarSystemRepository system;
+    private static StateInterface[][] allStates;
+    private static ArrayList<StateInterface[]> stateArrayList;
+
 
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
     protected static double dt = 0.01*daySec;
-    protected static double totalTime = 1*30*daySec;
+    protected static double totalTime = 1*200*daySec;
 
     protected static void simulate() {
         ODESolver solve = new ODESolver(system);
         ODEFunction f = new ODEFunction(system);
 
-        Simulation simulation = new Simulation(system);
-        simulation.simulate();
-
-        StateInterface[][] array = solve.getData(f,totalTime, dt);
-        ArrayList<StateInterface[]> stateArrayList = new ArrayList<>();
+        stateArrayList = new ArrayList<>();
+        run(solve,f);
 
         for (int i = 0; i < planets.size(); i++) {
-            Planet planet = planets.get(i);
-            State planetState = new State(planet.getPosition(), planet.getVelocity(), planet);
-            StateInterface[] stateArray = solve.solve(f, planetState, totalTime, dt);
+            StateInterface[] stateArray = allStates[i];
             stateArrayList.add(stateArray);
         }
+
         SpaceCraft probe = system.getProbe();
         State probeState = new State(probe.getPosition(), probe.getVelocity(), probe);
         StateInterface[] probeStateArray = solve.solve(f, probeState, totalTime, dt);
-        System.out.println(probeStateArray[0].toString());
-
 
         for (int i = 0; i < stateArrayList.get(0).length; i++) {
             State newSunState = (State) stateArrayList.get(0)[i];
@@ -60,6 +58,7 @@ public class GravityTest extends Application {
             State newSaturnState = (State) stateArrayList.get(7)[i];
             State newTitanState = (State) stateArrayList.get(8)[i];
             State newProbeState = (State) probeStateArray[i];
+            System.out.println("adding " + i);
 
             // adding the data to the charts
             Chart.addDataA(i*daySec, newEarthState.getPosition().getX() , newEarthState.getPosition().getY(), newEarthState.getPosition().getZ());
@@ -67,8 +66,64 @@ public class GravityTest extends Application {
             Chart.addDataC(i*daySec, newSaturnState.getPosition().getX(), newSaturnState.getPosition().getY(), newSaturnState.getPosition().getZ());
             Chart.addDataD(i*daySec, newTitanState.getPosition().getX() - newSaturnState.getPosition().getX(), newTitanState.getPosition().getY() - newSaturnState.getPosition().getY(), newTitanState.getPosition().getZ() - newSaturnState.getPosition().getZ());
             Chart.addDataE(i*daySec, newProbeState.getPosition().getX(), newProbeState.getPosition().getY(), newProbeState.getPosition().getZ());
+            Chart.addDataF(i*daySec, newSaturnState.getPosition().sub(newProbeState.getPosition()).norm());
         }
     }
+
+
+    private static void run(ODESolver solve, ODEFunction f) {
+        randomizeProbeSpeed();
+        System.out.println(system.getProbe().getVelocity().norm());
+        allStates = solve.getData(f,totalTime, dt);
+        System.out.println(probeIsCloseTooSaturn());
+    }
+
+    private static void randomizeProbeSpeed() {
+        Planet earth = system.getPlanets().get(4);
+        Planet titan = system.getPlanets().get(8);
+        Vector3dInterface velocity = unitVecToGoal(titan.getPosition()).mul(20000);
+        system.setProbe(new SpaceCraft(1000, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity().add(velocity), "Probe"));
+        System.out.println(system.getProbe().getVelocity().norm() - earth.getVelocity().norm());
+
+    }
+
+    private static Vector3dInterface LaunchPosition(Vector3dInterface goal) {
+        return unitVecToGoal(goal).mul(6371);
+    }
+
+    private static Vector3dInterface unitVecToGoal(Vector3dInterface goal) {
+        Planet earth = planets.get(4);
+        Vector3dInterface aim = goal.sub(earth.getPosition()); // vector between earth and goal
+        return aim.mul(1/aim.norm());
+    }
+
+    private static boolean probeIsCloseTooSaturn() {
+        for (int i = 0; i < allStates[0].length; i++) {
+            State saturnState = (State) allStates[7][i];
+            State probeState = (State) allStates[9][i];
+
+            if ( saturnState.getPosition().sub(probeState.getPosition()).norm() < 10000000 ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static void main(String[] args) {
         launch(args);
