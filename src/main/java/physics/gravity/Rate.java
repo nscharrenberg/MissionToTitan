@@ -7,7 +7,7 @@ public class Rate implements RateInterface {
 
     private Vector3dInterface acceleration;
     private Vector3dInterface velocity;
-//doesn't make sense to pass the accelleration from here
+    //doesn't make sense to pass the accelleration from here
     public Rate(Vector3dInterface acceleration, Vector3dInterface velocity){
         this.acceleration = acceleration;
         this.velocity = velocity;
