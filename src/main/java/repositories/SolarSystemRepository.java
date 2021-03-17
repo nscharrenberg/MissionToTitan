@@ -1,35 +1,36 @@
-
 package repositories;
 
-import domain.MovingObject;
 import domain.Planet;
+import domain.SpaceCraft;
 import domain.Vector3D;
-import factory.FactoryProvider;
-import interfaces.StateInterface;
-import physics.gravity.ODEFunction;
-import physics.gravity.ODESolver;
-import physics.gravity.State;
+import physics.gravity.ProbeSimulator;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
-import utils.converter.PositionConverter;
 
 import java.util.*;
 
 public class SolarSystemRepository implements SolarSystemInterface {
     private List<Planet> planets = new ArrayList<>();
+    private SpaceCraft probe;
     private double width = 700;
     private double height = 700;
-    
 
-    private HashMap<Integer, List<MovingObject>> timeLine;  
-    protected static double daySec = 60*24*60; // total seconds in a day
-    protected static double t;
-    protected static double dt = 0.1*daySec;
-    protected static double totalTime = 1*365*daySec;
     @Override
     public void init() {
         ArrayList<Planet> planets = PlanetReader.getPlanets();
         setPlanets(planets);
+        //probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
+//        sampleSolarSystem();
+    }
+
+    @Override
+    public void preprocessing() {
+
+    }
+
+    private void sampleSolarSystem() {
+        addPlanet(new Planet(50, 10, new Vector3D(100, 100, 10), new Vector3D(105, 105, 15), "earth"));
+        addPlanet(new Planet(50, 20, new Vector3D(300, 350, 50), new Vector3D(310, 345, 10), "sun"));
     }
 
     @Override
@@ -80,26 +81,12 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
         return this.planets.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
     }
-    /**
-     * Something logical
-     */
-    public void preprocessing() {
-        ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
-        ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
-        StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);
-        
-        StateInterface[] tmp2 = timeLineArray[0];
-        int length = tmp2.length;
-        for(int i = 0; i < length; i++) {
-        	ArrayList<MovingObject> tmp = new ArrayList<MovingObject>();
-        	for(int j = 0; j < timeLineArray.length; j++) {
-        		State state = (State)timeLineArray[j][i];
-        		MovingObject sio = state.getMovingObject();
-        		tmp.add(new MovingObject(sio.getMass(), state.getPosition(), state.getVelocity(), sio.getName()));
-        	}
-        	timeLine.put(i, tmp);
-        }
-        
-        System.out.println(timeLineArray.length);
+
+    public SpaceCraft getProbe() {
+        return probe;
+    }
+
+    public void setProbe(SpaceCraft probe) {
+        this.probe = probe;
     }
 }

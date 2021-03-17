@@ -15,7 +15,8 @@ public interface ProbeSimulatorInterface {
      * @param   v0      the starting velocity of the probe, relative to the earth's velocity.
      * @param   ts      the times at which the states should be output, with ts[0] being the initial time.
      * @return  an array of size ts.length giving the position of the probe at each time stated, 
-     *          taken relative to the Solar System barycentre.
+     *          taken rela
+     * tive to the Solar System barycentre.
      */
     Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double[] ts);
 
