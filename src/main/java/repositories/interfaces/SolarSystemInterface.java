@@ -11,4 +11,5 @@ public interface SolarSystemInterface {
     boolean removePlanet(String name);
     Planet findPlanet(String name);
     void init();
+    void preprocessing();
 }

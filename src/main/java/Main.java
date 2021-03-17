@@ -1,10 +1,13 @@
 import controllers.ControllerInterface;
 import controllers.SolarSystemController;
+import domain.MovingObject;
+import domain.Planet;
 import factory.FactoryProvider;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
 import gui.javafx.utils.DrawingContext;
 import gui.javafx.utils.DrawingDetail;
+import interfaces.StateInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -20,9 +23,15 @@ import repositories.SolarSystemRepository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Main extends Application {
     private static Scene scene;
+    
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -34,10 +43,9 @@ public class Main extends Application {
         drawingContext.changeCanvasSizeFromScene(scene);
 
         FactoryProvider.getDrawingManager().setContext(drawingContext);
-//        FactoryProvider.getDrawingManager().init();
-//        FactoryProvider.getDrawingManager().update();
         FactoryProvider.getSolarSystemFactory().init();
         FactoryProvider.getUpdateManager().init();
+        
         stage.getIcons().add(new Image(new FileInputStream("src/main/resources/icon/icon.png")));
         stage.setScene(scene);
         stage.show();
