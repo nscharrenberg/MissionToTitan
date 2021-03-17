@@ -9,6 +9,7 @@ public class State implements StateInterface {
     private Vector3dInterface position;
     private Vector3dInterface velocity;
 
+
     public State (Vector3dInterface position, Vector3dInterface velocity) {
         this.position = position;
         this.velocity = velocity;
@@ -16,7 +17,7 @@ public class State implements StateInterface {
 
     @Override
     public StateInterface addMul(double step, RateInterface rate) {
-
+    //update the state
         return null;
     }
 
