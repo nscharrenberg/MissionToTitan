@@ -38,15 +38,18 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Mission To Titan");
-        stage.setMaximized(true);
-        stage.setResizable(false);
-        stage.centerOnScreen();
         Group root = new Group();
         Scene scene = new Scene(root);
 
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         FactoryProvider.getSettingRepository().setAppHeight(screenBounds.getHeight());
         FactoryProvider.getSettingRepository().setCanvasWidth(screenBounds.getWidth() - FactoryProvider.getSettingRepository().getSidebarWidth());
+
+        stage.setWidth(screenBounds.getWidth());
+        stage.setHeight(screenBounds.getHeight());
+
+        stage.setResizable(false);
+        stage.centerOnScreen();
 
         DrawingContext drawingContext = new DrawingContext(root);
         drawingContext.changeCanvasSizeFromScene(scene);
