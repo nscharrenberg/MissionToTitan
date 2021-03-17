@@ -13,6 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import physics.gravity.ODEFunction;
+import physics.gravity.ODESolver;
+import physics.gravity.State;
+import repositories.SolarSystemRepository;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,6 +51,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        //launch();
+
     }
 }

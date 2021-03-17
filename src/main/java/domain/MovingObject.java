@@ -9,14 +9,16 @@ public class MovingObject extends SpaceObject implements IUpdate {
     private Vector3dInterface force;
     private Vector3dInterface acceleration;
     private Vector3dInterface velocity;
+    private String name;
 
     /**
      * @param mass   - the mass of the object in kilograms
      * @param position - the Vector Object with coordinates
      */
-    public MovingObject(double mass, Vector3dInterface position, Vector3dInterface velocity) {
+    public MovingObject(double mass, Vector3dInterface position, Vector3dInterface velocity, String name) {
         super(mass, position);
         this.velocity = velocity;
+        this.name = name;
     }
 
     public void setVelocity(Vector3dInterface velocity) {
@@ -61,5 +63,13 @@ public class MovingObject extends SpaceObject implements IUpdate {
         } else {
             getPosition().setY(getPosition().getY() + r.nextInt(5)*1E11);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Planet extends MovingObject {
     private String name;
+    private double radius;
     private List<Moon> moons;
     private double radius;
 
@@ -23,7 +24,10 @@ public class Planet extends MovingObject {
     }
 
     public List<Moon> getMoons() {
-        return moons;
+    	if(moons != null)
+    		return moons;
+    	else
+    		return new ArrayList<Moon>();
     }
 
     public void setMoons(List<Moon> moons) {
@@ -47,6 +51,8 @@ public class Planet extends MovingObject {
     }
 
     public Moon getMoon(String name) {
+
+
         if (this.moons.size() <= 0) {
             return null;
         }
@@ -59,17 +65,11 @@ public class Planet extends MovingObject {
                 .orElse(null);
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {
-        return this.name;
+        return "Name: "+this.name+", Moons: " + getMoons().toString();
     }
 
     public double getRadius() {
