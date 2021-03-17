@@ -1,19 +1,22 @@
 package managers;
 
 import domain.MovingObject;
+import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.gui.ITimer;
 import interfaces.gui.IUpdate;
 import javafx.application.Platform;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class UpdateManager extends Manager<IUpdate> implements ITimer {
-    public final static int DEFAULT_INTERVAL = 500; // 1 sec
+    public final static int DEFAULT_INTERVAL = 10; // 1 sec
 
     private Timer timer;
+    private int index = 0;
 
     public UpdateManager() {
         items = new LinkedList<>();
@@ -36,14 +39,19 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void update() {
-        reset();
-        // TODO: This would need to be our timeline array
-        FactoryProvider.getSolarSystemFactory().getPlanets().forEach(MovingObject::update);
-        items.addAll(FactoryProvider.getSolarSystemFactory().getPlanets());
+        try {
+            reset();;
 
-        FactoryProvider.getDrawingManager().update();
+            List<MovingObject> tl = FactoryProvider.getSolarSystemFactory().getTimeLine().get(index);
 
-        //TODO: Also stop timer when timeline is finished.
+            items.addAll(tl);
+
+            FactoryProvider.getDrawingManager().update();
+            index++;
+        } catch (IndexOutOfBoundsException ex) {
+            // Temp fix
+            timer.cancel();
+        }
     }
 
     @Override

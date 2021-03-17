@@ -1,9 +1,6 @@
 package managers;
 
-import domain.Moon;
-import domain.Planet;
-import domain.PlanetEnum;
-import domain.Vector3D;
+import domain.*;
 import factory.FactoryProvider;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
@@ -58,7 +55,7 @@ public class DrawingManager extends Manager<IDrawable> {
     protected void refresh() {
         items = new HashSet<>();
 
-       List<Planet> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof Planet).map(obj -> (Planet) obj).collect(Collectors.toList());
+       List<MovingObject> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof MovingObject).map(obj -> (MovingObject) obj).collect(Collectors.toList());
         PositionConverter.convertToPixel(planets, width, height).forEach(planet -> {
 //        FactoryProvider.getUpdateManager().getItems().forEach(p -> {
 //            Planet planet = (Planet) p;
