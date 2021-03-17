@@ -42,32 +42,34 @@ public class PositionConverter {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         Scale s = new Scale((width/2), 1.51E12);
+        boolean correction = true;
         for(Planet p : planets) {
         	String name = p.getName();
         	Vector3D w = (Vector3D) convert(p.getPosition(), s);
             w = (Vector3D) w.add(new Vector3D(width/2, width/2, width/2));
             w = (Vector3D) w.add(new Vector3D(marginX, marginY, 0)); 
-            /*
-	        if(name.equals("Mercury")) {
-	        	w = (Vector3D) w.addMul(1.5, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
-	        }
-	        if(name.equals("Venus")) {
-	        	w = (Vector3D) w.addMul(3, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
-	        }
-	        if(name.equals("Earth") || name.equals("Moon")) {
-	        	w = (Vector3D) w.addMul(2.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
-	        }
-	        if(name.equals("Moon")) {
-	        	Planet earth = planets.stream().filter(planet -> planet.getName().equals("Earth")).findFirst().orElse(null);
-	        	w = (Vector3D) w.addMul(70, w.sub(earth.getPosition()));
-	        }
-	        if(name.equals("Mars")) {
-	        	w = (Vector3D) w.addMul(1.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
-	        }
-	        if(name.equals("Titan")) {
-	        	Planet saturn = planets.stream().filter(planet -> planet.getName().equals("Saturn")).findFirst().orElse(null);
-	        	w = (Vector3D) w.addMul(100, w.sub(saturn.getPosition()));
-	        }*/
+            if(correction) {
+		        if(name.equals("Mercury")) {
+		        	w = (Vector3D) w.addMul(1.5, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        }
+		        if(name.equals("Venus")) {
+		        	w = (Vector3D) w.addMul(3, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        }
+		        if(name.equals("Earth") || name.equals("Moon")) {
+		        	w = (Vector3D) w.addMul(2.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        }
+		        if(name.equals("Moon")) {
+		        	Planet earth = planets.stream().filter(planet -> planet.getName().equals("Earth")).findFirst().orElse(null);
+		        	w = (Vector3D) w.addMul(70, w.sub(earth.getPosition()));
+		        }
+		        if(name.equals("Mars")) {
+		        	w = (Vector3D) w.addMul(1.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        }
+		        if(name.equals("Titan")) {
+		        	Planet saturn = planets.stream().filter(planet -> planet.getName().equals("Saturn")).findFirst().orElse(null);
+		        	w = (Vector3D) w.addMul(100, w.sub(saturn.getPosition()));
+		        }
+            }
 	        p.setPosition(w);
         }
         

@@ -6,7 +6,7 @@ import interfaces.gui.IDrawableDetails;
 import javafx.scene.paint.Color;
 
 public enum PlanetEnum {
-	SUN("sun", new DrawingDetailImage("src/main/resources/sprites/Titan.png")),
+	SUN("sun", new DrawingDetailImage("src/main/resources/sprites/Sun.png")),
 	MERCURY("mercury", new DrawingDetailImage("src/main/resources/sprites/Mercury.png")),
 	VENUS("venus", new DrawingDetailImage("src/main/resources/sprites/Venus.png")),
     EARTH("earth", new DrawingDetailImage("src/main/resources/sprites/Earth.png")),
