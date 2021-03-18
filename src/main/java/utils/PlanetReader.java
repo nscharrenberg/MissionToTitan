@@ -25,11 +25,8 @@ public class PlanetReader {
             String line = new String();
             while((line = bf.readLine()) != null) {
                 String name = line.split(":")[0];
-                //System.out.println(name);
                 line = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
-                //System.out.println(line);
                 String[] split = line.split(",");
-                //System.out.println(Arrays.toString(split));
                 double mass = Double.parseDouble(split[0].substring(5));
                 double x = Double.parseDouble(split[1].substring(2));
                 double y = Double.parseDouble(split[2].substring(2));
@@ -39,14 +36,11 @@ public class PlanetReader {
                 double vz = Double.parseDouble(split[6].substring(3));
 
                 Vector3dInterface position = new Vector3D(x, y, z), velocity = new Vector3D(vx, vy, vz);
-//                if(!Arrays.asList(MOONS).contains(name)) {//checks if it is a planet
                     planets.add(new MovingObject(mass, position, velocity, name));
-//                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return planets;
@@ -62,11 +56,8 @@ public class PlanetReader {
             String line = new String();
             while((line = bf.readLine()) != null) {
                 String name = line.split(":")[0];
-                //System.out.println(name);
                 line = line.substring(line.indexOf("{") + 1, line.indexOf("}"));
-                //System.out.println(line);
                 String[] split = line.split(",");
-                //System.out.println(Arrays.toString(split));
                 double mass = Double.parseDouble(split[0].substring(5));
                 double x = Double.parseDouble(split[1].substring(2));
                 double y = Double.parseDouble(split[2].substring(2));
@@ -81,10 +72,8 @@ public class PlanetReader {
                 if(!Arrays.asList(MOONS).contains(name)) {//checks if it is a planet
                     planets.add(new Planet(mass, radius, position, velocity, name));
                 } else {
-                    //System.out.println(name);
                     if(name.equals(MOONS[0])) {
                         Planet q = null;;
-                        //System.out.println(name.equals(MOONS[0]));
                         for(Planet p : planets) {
                             if(p.getName().equals("Earth")) {
                                 p.addMoon(mass, radius, position, velocity, name);
@@ -111,7 +100,6 @@ public class PlanetReader {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return planets;

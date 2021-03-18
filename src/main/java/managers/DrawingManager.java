@@ -53,10 +53,8 @@ public class DrawingManager extends Manager<IDrawable> {
                 radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(30, 6963400)));
             } else if(radius >= 696340e3 ){
                 radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(75, 696340e3)));
-//                    System.out.println(tmp.getName()+" "+PositionConverter.convert(tmp.getRadius(), new Scale(65, 696340e3)));
             } else {
                 radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(50, 69911e3)));
-//                    System.out.println(tmp.getName()+" "+PositionConverter.convert(tmp.getRadius(), new Scale(50, 69911e3)));
             }
         }
 
@@ -81,34 +79,18 @@ public class DrawingManager extends Manager<IDrawable> {
     protected void refresh() {
         items = new HashSet<>();
 
-       List<MovingObject> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof MovingObject).map(obj -> (MovingObject) obj).collect(Collectors.toList());
+        List<MovingObject> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof MovingObject).map(obj -> (MovingObject) obj).collect(Collectors.toList());
         PositionConverter.convertToPixel(planets, FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight()).forEach(planet -> {
-//        FactoryProvider.getUpdateManager().getItems().forEach(p -> {
-//            Planet planet = (Planet) p;
-        	IDrawableDetails found = new DrawingDetail(Color.RED);
-            //Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
-            Vector3D v = (Vector3D) planet.getPosition();
-            PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
+	        IDrawableDetails found = new DrawingDetail(Color.RED);
+	        Vector3D v = (Vector3D) planet.getPosition();
+	        PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
 
             if (foundPlanet != null) {
                 found = foundPlanet.getDetail();
             }
-//            System.out.println(planet.getName());
-//            System.out.println(radii);
             double radius = radii.get(planet.getName());
             items.add(new Circle(radius, new AbsolutePoint(v.getX(), v.getY()), found));
-            /*if(planet.getName().equals("Sun")) {
-            	items.add(new Circle(30, new AbsolutePoint(v.getX(), v.getY()), found));
-            } else if(planet instanceof Moon) {
-            	items.add(new Circle(10, new AbsolutePoint(v.getX(), v.getY()), found));
-            } else if (planet instanceof SpaceCraft) {
-                items.add(new Circle(10, new AbsolutePoint(v.getX(), v.getY()), found));
-            }
-            else {
-            	items.add(new Circle(18, new AbsolutePoint(v.getX(), v.getY()), found));
-            }*/
         });
-
 
         super.refresh();
     }

@@ -25,7 +25,6 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void init() {
-//        stop();
         FactoryProvider.getDrawingManager().init();
         FactoryProvider.getSolarSystemFactory().preprocessing();
         start();

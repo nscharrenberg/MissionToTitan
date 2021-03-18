@@ -41,7 +41,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * determines and initializes variables needed for calculating new states.
      */
     private void init(StateInterface y0, double tf, double h) {
-        system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
         allStates = new StateInterface[planets.size()+1][size];

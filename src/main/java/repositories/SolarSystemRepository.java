@@ -27,8 +27,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
     public void init() {
         ArrayList<MovingObject> planets = PlanetReader.getPlanets();
         setPlanets(planets);
-        probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
-//        sampleSolarSystem();
+        probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");//null object
     }
 
     private void sampleSolarSystem() {
@@ -94,11 +93,10 @@ public class SolarSystemRepository implements SolarSystemInterface {
      */
     @Override
     public void preprocessing() {
-        this.timeLine = new ArrayList<>();
-        this.planets = new ArrayList<>();
         double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
-        ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
-        ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        ODESolver odes = new ODESolver(this);
+        ODEFunction odef = new ODEFunction(this);
+        init();
         StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);
 
         StateInterface[] tmp2 = timeLineArray[0];
