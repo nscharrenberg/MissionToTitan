@@ -2,6 +2,7 @@ package repositories.interfaces;
 
 import domain.MovingObject;
 import domain.Planet;
+import interfaces.Vector3dInterface;
 
 import java.util.List;
 

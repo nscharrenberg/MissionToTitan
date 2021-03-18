@@ -36,7 +36,11 @@ public class PlanetReader {
                 double vz = Double.parseDouble(split[6].substring(3));
 
                 Vector3dInterface position = new Vector3D(x, y, z), velocity = new Vector3D(vx, vy, vz);
+                if (name.equals("Probe")) {
                     planets.add(new MovingObject(mass, position, velocity, name));
+                } else {
+                    planets.add(new MovingObject(mass, position, velocity, name));
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

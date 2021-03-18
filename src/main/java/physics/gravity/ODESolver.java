@@ -91,8 +91,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 system.getPlanets().get(j).setPosition(state.getPosition());
                 system.getPlanets().get(j).setVelocity(state.getVelocity());
 
-
-
             }
         }
 

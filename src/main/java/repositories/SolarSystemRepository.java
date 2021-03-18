@@ -30,6 +30,12 @@ public class SolarSystemRepository implements SolarSystemInterface {
         setPlanets(planets);
     }
 
+    public void init(Vector3dInterface velocity) {
+        ArrayList<MovingObject> planets = PlanetReader.getPlanets();
+        planets.get(9).setVelocity(velocity);
+        setPlanets(planets);
+    }
+
     private void sampleSolarSystem() {
         addPlanet(new Planet(50, 10, new Vector3D(100, 100, 10), new Vector3D(105, 105, 15), "earth"));
         addPlanet(new Planet(50, 20, new Vector3D(300, 350, 50), new Vector3D(310, 345, 10), "sun"));
@@ -88,36 +94,47 @@ public class SolarSystemRepository implements SolarSystemInterface {
         }
        return null;
     }
-    /**
-     * Something logical
-     */
+
     @Override
     public void preprocessing() {
         this.timeLine = new ArrayList<>();
         this.planets = new ArrayList<>();
         double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
 
+        ODESolver odes;
+        ODEFunction odef;
 
-        ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
-        ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
-        StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);
+
+        odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
+        odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        StateInterface[][] timeLineArray = odes.getData(odef, totalTime, dt);
 
         State start = (State) timeLineArray[3][0];
-        State goal = (State)  timeLineArray[8][0];
+        State goal = (State) timeLineArray[8][22500];
 
-//        for (int i = 0 ;i < timeLineArray[0].length; i++) {
-//            if ( i*dt/daySec < 300) {
-//                State probe = (State) timeLineArray[9][i];
-//                State jupiter = (State) timeLineArray[7][i];
-//                System.out.println( "Distance : " + probe.getPosition().sub(jupiter.getPosition()).norm());
-//            }
-//        }
+        double min = Double.MAX_VALUE;
+
+        for (int i = 0; i < timeLineArray[0].length; i++) {
+            if (i * dt / daySec < 300) {
+                State probe = (State) timeLineArray[9][i];
+                State titan = (State) timeLineArray[8][i];
+                if (probe.getPosition().sub(titan.getPosition()).norm() < (69911e3 + 20)) {
+                    System.out.println("COLLISION");
+                }
+                double dist = probe.getPosition().sub(titan.getPosition()).norm() - 2575.5e3;
+                if (min > dist) {
+                    min = dist;
+                }
+            }
+        }
+        System.out.println(min);
+
 
         Vector3dInterface unit = unitVecToGoal(start.getPosition(), goal.getPosition());
-        System.out.println(planets.get(3).getPosition().add(unit.mul(6371000)));
-        System.out.println(planets.get(3).getVelocity().add(unit.mul(6000)));
 
         FactoryProvider.getSolarSystemFactory().init();
+
+        System.out.println(FactoryProvider.getSolarSystemFactory().getPlanets().get(9).getVelocity());
         odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
         odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         timeLineArray = odes.getData(odef,totalTime, dt);
