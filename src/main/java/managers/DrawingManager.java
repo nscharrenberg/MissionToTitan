@@ -12,9 +12,13 @@ import interfaces.gui.IDrawableContext;
 import interfaces.gui.IDrawableDetails;
 import interfaces.gui.IUpdate;
 import javafx.scene.paint.Color;
+import utils.PlanetReader;
+import utils.converter.Scale;
 import utils.converter.PositionConverter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +27,7 @@ public class DrawingManager extends Manager<IDrawable> {
     private IDrawableContext context;
     private IDrawable background;
     private IDrawable backgroundCircle;
+    private HashMap<String,Double> radii;
 
 
     public DrawingManager() {
@@ -40,7 +45,21 @@ public class DrawingManager extends Manager<IDrawable> {
             size = FactoryProvider.getSettingRepository().getCanvasWidth();
         }
         backgroundCircle = new Circle(size / 2, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.BLACK));
-
+        radii = new HashMap<>();
+        ArrayList<Planet> planets = PlanetReader.getPlanets();
+        for(Planet tmp : planets) {
+        	double radius = tmp.getRadius();
+        	if(radius <= 6371e3) {
+	        	radii.put(tmp.getName(), PositionConverter.convert(tmp.getRadius(), new Scale(30, 6963400)));
+	        	System.out.println(tmp.getName()+" "+PositionConverter.convert(tmp.getRadius(), new Scale(30, 6963400)));
+        	} else if(radius >= 696340e3 ){
+        		radii.put(tmp.getName(), PositionConverter.convert(tmp.getRadius(), new Scale(75, 696340e3)));
+	        	System.out.println(tmp.getName()+" "+PositionConverter.convert(tmp.getRadius(), new Scale(65, 696340e3)));
+        	} else {
+        		radii.put(tmp.getName(), PositionConverter.convert(tmp.getRadius(), new Scale(50, 69911e3))); 
+	        	System.out.println(tmp.getName()+" "+PositionConverter.convert(tmp.getRadius(), new Scale(50, 69911e3)));
+        	}
+        }
     }
 
     @Override
@@ -73,14 +92,16 @@ public class DrawingManager extends Manager<IDrawable> {
             if (foundPlanet != null) {
                 found = foundPlanet.getDetail();
             }
-            
-            if(planet.getName().equals("Sun")) {
+            System.out.println(planet.getName());
+            double radius = radii.get(planet.getName());
+            items.add(new Circle(radius, new AbsolutePoint(v.getX(), v.getY()), found));
+            /*if(planet.getName().equals("Sun")) {
             	items.add(new Circle(30, new AbsolutePoint(v.getX(), v.getY()), found));
             } else if(planet instanceof Moon) {
             	items.add(new Circle(10, new AbsolutePoint(v.getX(), v.getY()), found));
             } else {
             	items.add(new Circle(18, new AbsolutePoint(v.getX(), v.getY()), found));
-            }
+            }*/
         });
 
 
