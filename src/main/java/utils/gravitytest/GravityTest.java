@@ -2,7 +2,6 @@ package utils.gravitytest;
 
 import domain.Planet;
 import domain.SpaceCraft;
-import domain.Vector3D;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
 import javafx.application.Application;
@@ -73,7 +72,7 @@ public class GravityTest extends Application {
 
     private static void run(ODESolver solve, ODEFunction f) {
         randomizeProbeSpeed();
-        System.out.println(system.getProbe().getVelocity().norm());
+       // System.out.println(system.getProbe().getVelocity().norm());
         allStates = solve.getData(f,totalTime, dt);
         System.out.println(probeIsCloseTooSaturn());
     }
@@ -81,7 +80,7 @@ public class GravityTest extends Application {
     private static void randomizeProbeSpeed() {
         Planet earth = system.getPlanets().get(4);
         Planet titan = system.getPlanets().get(8);
-        Vector3dInterface velocity = unitVecToGoal(titan.getPosition()).mul(20000);
+        Vector3dInterface velocity = unitVecToGoal(titan.getPosition()).mul(1);
         system.setProbe(new SpaceCraft(1000, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity().add(velocity), "Probe"));
         System.out.println(system.getProbe().getVelocity().norm() - earth.getVelocity().norm());
 
@@ -108,22 +107,6 @@ public class GravityTest extends Application {
         }
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public static void main(String[] args) {
         launch(args);
