@@ -58,7 +58,7 @@ public class DrawingManager extends Manager<IDrawable> {
             }
         }
 
-        radii.put("Probe", 3.0);
+        radii.put("Probe", 10d);
     }
 
     @Override
@@ -85,11 +85,18 @@ public class DrawingManager extends Manager<IDrawable> {
 	        Vector3D v = (Vector3D) planet.getPosition();
 	        PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
 
+	        if (planet.getName().equals("Probe")) {
+                items.add(new Circle(100, new AbsolutePoint(350, 350), found));
+                //planet.setPosition(new Vector3D(350,350,350));
+            }
+
             if (foundPlanet != null) {
                 found = foundPlanet.getDetail();
             }
             double radius = radii.get(planet.getName());
             items.add(new Circle(radius, new AbsolutePoint(v.getX(), v.getY()), found));
+
+
         });
 
         super.refresh();

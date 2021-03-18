@@ -11,6 +11,7 @@ import domain.SpaceCraft;
 import domain.Vector3D;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
+import utils.gravitytest.GravityTest;
 
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
         ArrayList<MovingObject> planets = PlanetReader.getPlanets();
         setPlanets(planets);
         probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");//null object
+        //GravityTest.run();
     }
 
     private void sampleSolarSystem() {
@@ -93,11 +95,15 @@ public class SolarSystemRepository implements SolarSystemInterface {
      */
     @Override
     public void preprocessing() {
+        this.timeLine = new ArrayList<>();
+        this.planets = new ArrayList<>();
         double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
-        ODESolver odes = new ODESolver(this);
-        ODEFunction odef = new ODEFunction(this);
-        init();
+        ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
+        ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);
+
+        GravityTest.run();
+
 
         StateInterface[] tmp2 = timeLineArray[0];
         int length = tmp2.length;

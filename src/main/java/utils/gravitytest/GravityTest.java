@@ -4,6 +4,7 @@ import domain.MovingObject;
 import domain.Planet;
 import domain.SpaceCraft;
 import domain.Vector3D;
+import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
 import javafx.application.Application;
@@ -73,18 +74,15 @@ public class GravityTest extends Application {
 //            Chart.addDataF(i*daySec, newSaturnState.getPosition().sub(newProbeState.getPosition()).norm());
 
     public static void run() {
-        boolean run = true;
+        initSystem();
+        //system = systemm;
 
         initProbe();
+
         simulate();
 
-
-        State startEarthState = (State)stateArrayList.get(4)[22509];
+        State startEarthState = (State)stateArrayList.get(3)[22509];
         State startTitanState = (State)stateArrayList.get(8)[22509];
-
-        double min = Double.MAX_VALUE;
-        double t = 0;
-        double dist = 0;
 
         system.init();
         Vector3dInterface unit = unitVecToGoal(startTitanState.getPosition());
@@ -100,10 +98,10 @@ public class GravityTest extends Application {
     }
 
     private static void initProbe() {
-        MovingObject earth = system.getPlanets().get(4);
+        MovingObject earth = system.getPlanets().get(3);
         MovingObject titan = system.getPlanets().get(8);
-        system.setProbe(new SpaceCraft(1500, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity(), "Probe"));
 
+        system.setProbe(new SpaceCraft(1500, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity(), "Probe"));
     }
 
     private static Vector3dInterface LaunchPosition(Vector3dInterface goal) {
@@ -111,7 +109,7 @@ public class GravityTest extends Application {
     }
 
     private static Vector3dInterface unitVecToGoal(Vector3dInterface goal) {
-        MovingObject earth = planets.get(4);
+        MovingObject earth =system.getPlanets().get(3);
         Vector3dInterface aim = goal.sub(earth.getPosition()); // vector between earth and goal
         return aim.mul(1.0/aim.norm());
     }
@@ -139,7 +137,7 @@ public class GravityTest extends Application {
     }
 
     protected static void initSystem() {
-        system = new SolarSystemRepository();
+        system = FactoryProvider.getSolarSystemFactory();
         system.init();
         planets = system.getPlanets();
         t = 0;
