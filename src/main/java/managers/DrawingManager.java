@@ -5,6 +5,7 @@ import factory.FactoryProvider;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
 import gui.javafx.shapes.Rectangle;
+import gui.javafx.utils.DrawingContext;
 import gui.javafx.utils.DrawingDetail;
 import gui.javafx.utils.DrawingDetailImage;
 import interfaces.gui.IDrawable;
@@ -59,6 +60,26 @@ public class DrawingManager extends Manager<IDrawable> {
         }
 
         radii.put("Probe", 10d);
+
+        if (context instanceof DrawingContext) {
+            DrawingContext ct = (DrawingContext) context;
+            ct.getCanvas().setOnMouseClicked(c -> {
+                System.out.println(String.format("%s-%s", c.getX(), c.getY()));
+                System.out.println(items.size());
+                items.forEach(shape -> {
+                    if (shape instanceof Circle) {
+                        Circle circle = (Circle) shape;
+                        boolean collided = circle.contains(new AbsolutePoint(c.getX(), c.getY()));
+
+                        if (collided) {
+                            /
+                            System.out.println("HOORAY");
+                            return;
+                        }
+                    }
+                });
+            });
+        }
     }
 
     @Override
