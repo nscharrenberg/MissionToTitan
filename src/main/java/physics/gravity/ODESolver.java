@@ -1,6 +1,7 @@
 package physics.gravity;
 
 import domain.Planet;
+import domain.SpaceCraft;
 import interfaces.DataInterface;
 import interfaces.ODEFunctionInterface;
 import interfaces.ODESolverInterface;
@@ -16,7 +17,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     private int currentPlanetIndex;
     private int size;
     private List<Planet> planets;
-    private boolean init;
+    private SpaceCraft probe;
 
     public ODESolver(SolarSystemRepository system){
         this.system = system;
@@ -42,15 +43,17 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
-        allStates = new StateInterface[planets.size()][size];
+        allStates = new StateInterface[planets.size()+1][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
+        probe = system.getProbe();
     }
 
     private void init(double tf, double h) {
         system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
-        allStates = new StateInterface[planets.size()][size];
+        allStates = new StateInterface[planets.size()+1][size];
+        probe = system.getProbe();
     }
 
     /**
@@ -60,7 +63,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         for (int i = 0; i <planets.size(); i++)
             if (planets.get(i).getName().equals(y0.getMovingObject().getName()))
                 return i;
-        return -1;
+        return allStates.length-1; // if it's not a planet, it returns the last index, which is the index of the probe
     }
 
     /**
@@ -68,6 +71,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * for all planets to their initial state
      */
     private void addInitialStates() {
+        allStates[allStates.length-1][0] = new State(probe.getPosition(), probe.getVelocity(), probe);
+
         for (int i = 0; i < planets.size(); i++) {
             StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), planets.get(i));
             allStates[i][0] = state;
@@ -90,6 +95,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 system.getPlanets().get(j).setPosition(state.getPosition());
                 system.getPlanets().get(j).setVelocity(state.getVelocity());
             }
+            allStates[allStates.length-1][i] = step(f, h*i, allStates[allStates.length-1][i - 1], h);
         }
     }
 

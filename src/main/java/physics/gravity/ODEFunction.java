@@ -42,6 +42,8 @@ public class ODEFunction implements ODEFunctionInterface {
      * resetting forces of all planets for a new calculation
      */
     private void resetForces(ArrayList<Planet> list) {
+        system.getProbe().setForce(new Vector3D(0,0,0));
+
         for (int i = 0; i < list.size(); i++)
             list.get(i).setForce(new Vector3D(0,0,0));
     }
@@ -68,5 +70,6 @@ public class ODEFunction implements ODEFunctionInterface {
 
         return r.mul(gravConst/modr3); // full formula together
     }
+
 
 }

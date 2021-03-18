@@ -1,13 +1,14 @@
-
 package repositories;
 
-import domain.MovingObject;
 import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import physics.gravity.ODEFunction;
 import physics.gravity.ODESolver;
 import physics.gravity.State;
+import domain.SpaceCraft;
+import domain.Vector3D;
+import physics.gravity.ProbeSimulator;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
 
@@ -20,11 +21,19 @@ public class SolarSystemRepository implements SolarSystemInterface {
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
     protected static double dt = 0.01*daySec;
-
+    private SpaceCraft probe;
+  
     @Override
     public void init() {
         ArrayList<Planet> planets = PlanetReader.getPlanets();
         setPlanets(planets);
+        //probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
+//        sampleSolarSystem();
+    }
+
+    private void sampleSolarSystem() {
+        addPlanet(new Planet(50, 10, new Vector3D(100, 100, 10), new Vector3D(105, 105, 15), "earth"));
+        addPlanet(new Planet(50, 20, new Vector3D(300, 350, 50), new Vector3D(310, 345, 10), "sun"));
     }
 
     @Override
@@ -104,5 +113,13 @@ public class SolarSystemRepository implements SolarSystemInterface {
     @Override
     public List<List<MovingObject>> getTimeLine() {
         return timeLine;
+    }
+
+    public SpaceCraft getProbe() {
+        return probe;
+    }
+
+    public void setProbe(SpaceCraft probe) {
+        this.probe = probe;
     }
 }
