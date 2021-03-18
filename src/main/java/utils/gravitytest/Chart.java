@@ -16,7 +16,7 @@ public class Chart implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         GravityTest.initSystem();
         openDataSeries();
-        GravityTest.simulate();
+        GravityTest.run();
         closeDataSeries();
     }
 

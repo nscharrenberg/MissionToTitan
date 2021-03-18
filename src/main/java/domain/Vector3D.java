@@ -130,7 +130,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public double norm() {
-        return Math.sqrt(x*x+y*y+z*z);
+        return Math.sqrt((x*x)+(y*y)+(z*z));
     }
 
     /**
