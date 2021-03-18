@@ -1,7 +1,6 @@
 package managers;
 
 import domain.MovingObject;
-import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.gui.ITimer;
 import interfaces.gui.IUpdate;
@@ -26,7 +25,7 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
     public void init() {
         FactoryProvider.getDrawingManager().init();
         FactoryProvider.getSolarSystemFactory().preprocessing();
-        setTimer();
+        start();
     }
 
     @Override
@@ -54,7 +53,7 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
     }
 
     @Override
-    public void setTimer() {
+    public void start() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -62,5 +61,14 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
                 Platform.runLater(() -> update());
             }
         }, 0, FactoryProvider.getSettingRepository().getRefreshInterval());
+    }
+
+    @Override
+    public void stop() {
+        if (timer == null) {
+            return;
+        }
+
+        timer.cancel();
     }
 }
