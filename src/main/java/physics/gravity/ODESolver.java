@@ -1,5 +1,6 @@
 package physics.gravity;
 
+import domain.MovingObject;
 import domain.Planet;
 import domain.SpaceCraft;
 import interfaces.DataInterface;
@@ -16,7 +17,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     private StateInterface[][] allStates; // 2d array containing all states of all planets.
     private int currentPlanetIndex;
     private int size;
-    private List<Planet> planets;
+    private List<MovingObject> planets;
     private SpaceCraft probe;
 
     public ODESolver(SolarSystemRepository system){

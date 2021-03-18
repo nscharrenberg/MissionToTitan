@@ -1,5 +1,6 @@
 package utils.gravitytest;
 
+import domain.MovingObject;
 import domain.Planet;
 import domain.SpaceCraft;
 import domain.Vector3D;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class GravityTest extends Application {
 
-    protected static List<Planet> planets;
+    protected static List<MovingObject> planets;
     protected static SolarSystemRepository system;
     private static StateInterface[][] allStates;
     private static ArrayList<StateInterface[]> stateArrayList;
@@ -47,6 +48,7 @@ public class GravityTest extends Application {
         State probeState = new State(probe.getPosition(), probe.getVelocity(), probe);
         StateInterface[] probeStateArray = solve.solve(f, probeState, totalTime, dt);
 
+        System.out.println(system.getProbe().getVelocity().norm());
 
         for (int i = 0; i < stateArrayList.get(0).length; i++)
         {
@@ -73,35 +75,33 @@ public class GravityTest extends Application {
     public static void run() {
         boolean run = true;
 
-        int i = 0;
+        initProbe();
         simulate();
 
 
-        State startEarthState = (State)stateArrayList.get(4)[0];
-        State startTitanState = (State)stateArrayList.get(8)[0];
+        State startEarthState = (State)stateArrayList.get(4)[22509];
+        State startTitanState = (State)stateArrayList.get(8)[22509];
 
-        double dist;
+        double min = Double.MAX_VALUE;
+        double t = 0;
+        double dist = 0;
 
-        while (run) {
-            State newTitanState = (State) stateArrayList.get(8)[i];
-            Vector3dInterface unit = unitVecToGoal(newTitanState.getPosition());
-            Vector3dInterface velocity = unit.mul(-5999999);
-            system.setProbe(new SpaceCraft(15000, startEarthState.getPosition().add(LaunchPosition(startTitanState.getPosition())), startEarthState.getVelocity().add(velocity), "Probe"));
-            System.out.println(system.getProbe().getVelocity());
-            simulate();
-            System.out.println("Distance from titan: " + distanceFromTitan());
-            i+= 1000;
-        }
+        system.init();
+        Vector3dInterface unit = unitVecToGoal(startTitanState.getPosition());
+        Vector3dInterface velocity = unit.mul(60000);
+        system.setProbe(new SpaceCraft(15000, startEarthState.getPosition().add(LaunchPosition(startTitanState.getPosition())), startEarthState.getVelocity().add(velocity), "Probe"));
+        System.out.println(velocity.norm());
+        simulate();
+        System.out.println("Distance from titan: " + distanceFromTitan());
     }
 
     private static void run(ODESolver solve, ODEFunction f) {
-        randomizeProbeSpeed();
         allStates = solve.getData(f,totalTime, dt);
     }
 
-    private static void randomizeProbeSpeed() {
-        Planet earth = system.getPlanets().get(4);
-        Planet titan = system.getPlanets().get(8);
+    private static void initProbe() {
+        MovingObject earth = system.getPlanets().get(4);
+        MovingObject titan = system.getPlanets().get(8);
         system.setProbe(new SpaceCraft(1500, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity(), "Probe"));
 
     }
@@ -111,7 +111,7 @@ public class GravityTest extends Application {
     }
 
     private static Vector3dInterface unitVecToGoal(Vector3dInterface goal) {
-        Planet earth = planets.get(4);
+        MovingObject earth = planets.get(4);
         Vector3dInterface aim = goal.sub(earth.getPosition()); // vector between earth and goal
         return aim.mul(1.0/aim.norm());
     }

@@ -10,6 +10,7 @@ import interfaces.Vector3dInterface;
 import repositories.SolarSystemRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ODEFunction implements ODEFunctionInterface {
 
@@ -33,7 +34,7 @@ public class ODEFunction implements ODEFunctionInterface {
     }
 
     private void applyForces(MovingObject a){
-        ArrayList<Planet> list = (ArrayList<Planet>) system.getPlanets();
+        List<MovingObject> list = system.getPlanets();
         resetForces(list);
         addForcesToPlanets(a, list);
     }
@@ -41,7 +42,7 @@ public class ODEFunction implements ODEFunctionInterface {
     /**
      * resetting forces of all planets for a new calculation
      */
-    private void resetForces(ArrayList<Planet> list) {
+    private void resetForces(List<MovingObject> list) {
         system.getProbe().setForce(new Vector3D(0,0,0));
 
         for (int i = 0; i < list.size(); i++)
@@ -51,7 +52,7 @@ public class ODEFunction implements ODEFunctionInterface {
     /**
      * calculates and adds forces to all planets relative to object a.
      */
-    private void addForcesToPlanets(MovingObject a, ArrayList<Planet> list) {
+    private void addForcesToPlanets(MovingObject a, List<MovingObject> list) {
         for (int i=0; i<list.size(); i++)
             if(!list.get(i).getName().equals(a.getName())) {
                 Vector3dInterface force = newtonsLaw(a, list.get(i));

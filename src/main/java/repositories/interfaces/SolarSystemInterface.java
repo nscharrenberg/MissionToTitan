@@ -6,7 +6,7 @@ import domain.Planet;
 import java.util.List;
 
 public interface SolarSystemInterface {
-    List<Planet> getPlanets();
+    List<MovingObject> getPlanets();
     void addPlanet(Planet planet);
     void addPlanets(Planet... planets);
     boolean removePlanet(String name);

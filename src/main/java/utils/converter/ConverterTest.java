@@ -1,5 +1,6 @@
 package utils.converter;
 
+import domain.MovingObject;
 import domain.Planet;
 import domain.Vector3D;
 import utils.PlanetReader;
@@ -13,8 +14,8 @@ public class ConverterTest {
 		/*Vector3D v = new Vector3D(-9.435345478592035E11, 4.95035955103367E12, 6.131453014410347E9);
 		System.out.println(v);
 		System.out.println(PositionConverter.convertToPixel(v, width, height));*/
-        ArrayList<Planet> planets = PlanetReader.getPlanets();
-        for(Planet p : planets) {
+        ArrayList<MovingObject> planets = PlanetReader.getPlanets();
+        for(MovingObject p : planets) {
 //            System.out.println(p.getName());
             Vector3D w = (Vector3D) p.getPosition();
 //            System.out.println(w);
