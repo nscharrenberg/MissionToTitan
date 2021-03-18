@@ -23,6 +23,7 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void init() {
+//        stop();
         FactoryProvider.getDrawingManager().init();
         FactoryProvider.getSolarSystemFactory().preprocessing();
         start();
@@ -69,6 +70,7 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
             return;
         }
 
+        index = 0;
         timer.cancel();
     }
 }

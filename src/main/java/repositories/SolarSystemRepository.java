@@ -80,6 +80,8 @@ public class SolarSystemRepository implements SolarSystemInterface {
      */
     @Override
     public void preprocessing() {
+        this.timeLine = new ArrayList<>();
+        this.planets = new ArrayList<>();
         double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
         ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
         ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());

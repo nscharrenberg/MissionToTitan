@@ -99,6 +99,8 @@ public class Main extends Application {
             FactoryProvider.getSettingRepository().setGuiFormatting(guiScalingTxt.selectedProperty().getValue());
 
             // TODO: Restart Pre-processing and simulation.
+            FactoryProvider.getUpdateManager().stop();
+            FactoryProvider.getUpdateManager().init();
         });
 
         box.getChildren().addAll(saveBtn);
