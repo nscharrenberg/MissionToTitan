@@ -4,6 +4,7 @@ import gui.javafx.points.RelativePoint;
 import interfaces.gui.IDrawableDetails;
 import interfaces.gui.IPoint;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.Objects;
 

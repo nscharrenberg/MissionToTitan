@@ -91,7 +91,6 @@ public class SolarSystemRepository implements SolarSystemInterface {
         	ArrayList<MovingObject> tmp = new ArrayList<MovingObject>();
         	for(int j = 0; j < timeLineArray.length; j++) {
         		State state = (State)timeLineArray[j][i];
-                System.out.println(state);
         		MovingObject sio = state.getMovingObject();
         		tmp.add(new MovingObject(sio.getMass(), state.getPosition(), state.getVelocity(), sio.getName()));
         	}
