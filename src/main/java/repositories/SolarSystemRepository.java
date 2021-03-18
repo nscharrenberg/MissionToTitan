@@ -28,7 +28,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
     public void init() {
         ArrayList<Planet> planets = PlanetReader.getPlanets();
         setPlanets(planets);
-        //probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
+        probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");
 //        sampleSolarSystem();
     }
 
