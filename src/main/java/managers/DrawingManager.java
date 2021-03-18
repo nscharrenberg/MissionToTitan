@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class DrawingManager extends Manager<IDrawable> {
     private IDrawableContext context;
     private IDrawable background;
+    private IDrawable backgroundCircle;
 
 
     public DrawingManager() {
@@ -32,7 +33,14 @@ public class DrawingManager extends Manager<IDrawable> {
 
     @Override
     public void init() {
-        background = new Rectangle(new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight(), new DrawingDetailImage("src/main/resources/sprites/night-sky.png"));
+        background = new Rectangle(new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight(), new DrawingDetailImage("src/main/resources/sprites/starry-night-sky.png"));
+        double size = FactoryProvider.getSettingRepository().getAppHeight();
+
+        if (FactoryProvider.getSettingRepository().getCanvasWidth() < FactoryProvider.getSettingRepository().getAppHeight()) {
+            size = FactoryProvider.getSettingRepository().getCanvasWidth();
+        }
+        backgroundCircle = new Circle(size / 2, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.BLACK));
+
     }
 
     @Override
@@ -60,8 +68,6 @@ public class DrawingManager extends Manager<IDrawable> {
         	IDrawableDetails found = new DrawingDetail(Color.RED);
             //Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
             Vector3D v = (Vector3D) planet.getPosition();
-            System.out.println(planet.getName());
-            System.out.println(v);
             PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
 
             if (foundPlanet != null) {
@@ -84,6 +90,7 @@ public class DrawingManager extends Manager<IDrawable> {
     private void draw() {
         context.reset();
     	background.draw(context);
+    	backgroundCircle.draw(context);
         items.forEach(item -> {
             item.draw(context);
         });
