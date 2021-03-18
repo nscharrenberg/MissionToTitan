@@ -28,10 +28,10 @@ public class Simulation {
 
         State start = (State) timeLineArray[3][0];
 
-        for (int i = 20000; i < 25000; i+=10) {
+        for (int i =20900; i < 30000; i+=10) {
             State goal = (State) timeLineArray[8][i];
             Vector3dInterface unit = unitVecToGoal(start.getPosition(), goal.getPosition());
-            FactoryProvider.getSolarSystemFactory().init(start.getVelocity().add(unit.mul(60000)));
+            FactoryProvider.getSolarSystemFactory().init(start.getVelocity().add(unit.mul(50200)));
             timeLineArray = odes.getData(odef, totalTime, dt);
             printMin();
         }

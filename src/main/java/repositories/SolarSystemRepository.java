@@ -109,6 +109,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
         odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         StateInterface[][] timeLineArray = odes.getData(odef, totalTime, dt);
 
+
         State start = (State) timeLineArray[3][0];
         State goal = (State) timeLineArray[8][22500];
 

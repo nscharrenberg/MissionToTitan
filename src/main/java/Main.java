@@ -50,8 +50,10 @@ public class Main extends Application {
         DrawingContext drawingContext = new DrawingContext(root);
         drawingContext.changeCanvasSizeFromScene(scene);
 
+
         FactoryProvider.getDrawingManager().setContext(drawingContext);
         FactoryProvider.getUpdateManager().init();
+
 
         stage.getIcons().add(new Image(new FileInputStream("src/main/resources/icon/icon.png")));
         stage.setScene(scene);
