@@ -1,5 +1,6 @@
 package repositories;
 
+import domain.MovingObject;
 import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
