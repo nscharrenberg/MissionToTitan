@@ -87,8 +87,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 allStates[j][i] = step(f, h*i, allStates[j][i - 1], h);
                 State state = (State) allStates[j][i];
 
-                System.out.println(state);
-
                 // updating the MovingObject's (Planet) state
                 system.getPlanets().get(j).setPosition(state.getPosition());
                 system.getPlanets().get(j).setVelocity(state.getVelocity());

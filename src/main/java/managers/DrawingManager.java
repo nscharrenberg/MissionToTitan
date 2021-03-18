@@ -47,15 +47,19 @@ public class DrawingManager extends Manager<IDrawable> {
         backgroundCircle = new Circle(size / 2, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.BLACK));
         radii = new HashMap<>();
         ArrayList<Planet> planets = PlanetReader.getPlanetsWithRadii();
+//        for(Planet temp : planets) {
+//            double radius = temp.getRadius();
+//            if(radius <= 6371e3) {
+//                radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(30, 6963400)));
+//            } else if(radius >= 696340e3 ){
+//                radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(75, 696340e3)));
+//            } else {
+//                radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(50, 69911e3)));
+//            }
+//        }
+
         for(Planet temp : planets) {
-            double radius = temp.getRadius();
-            if(radius <= 6371e3) {
-                radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(30, 6963400)));
-            } else if(radius >= 696340e3 ){
-                radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(75, 696340e3)));
-            } else {
-                radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(), new Scale(50, 69911e3)));
-            }
+            radii.put(temp.getName(), PositionConverter.convert(temp.getRadius(),new Scale((FactoryProvider.getSettingRepository().getCanvasWidth()/2), 1.51E10)));
         }
 
         radii.put("Probe", 10d);

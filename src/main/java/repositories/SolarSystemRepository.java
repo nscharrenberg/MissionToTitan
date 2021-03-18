@@ -102,9 +102,20 @@ public class SolarSystemRepository implements SolarSystemInterface {
         ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);
 
+        State start = (State) timeLineArray[3][0];
+        State goal = (State)  timeLineArray[8][0];
 
+//        for (int i = 0 ;i < timeLineArray[0].length; i++) {
+//            if ( i*dt/daySec < 300) {
+//                State probe = (State) timeLineArray[9][i];
+//                State jupiter = (State) timeLineArray[7][i];
+//                System.out.println( "Distance : " + probe.getPosition().sub(jupiter.getPosition()).norm());
+//            }
+//        }
 
-
+        Vector3dInterface unit = unitVecToGoal(start.getPosition(), goal.getPosition());
+        System.out.println(planets.get(3).getPosition().add(unit.mul(6371000)));
+        System.out.println(planets.get(3).getVelocity().add(unit.mul(6000)));
 
         FactoryProvider.getSolarSystemFactory().init();
         odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
@@ -124,6 +135,12 @@ public class SolarSystemRepository implements SolarSystemInterface {
         	timeLine.add(tmp);
         }
     }
+
+    private Vector3dInterface unitVecToGoal(Vector3dInterface start, Vector3dInterface goal) {
+        Vector3dInterface aim = goal.sub(start); // vector between earth and goal
+        return aim.mul(1.0/aim.norm());
+    }
+
 
     @Override
     public List<List<MovingObject>> getTimeLine() {
