@@ -60,8 +60,6 @@ public class DrawingManager extends Manager<IDrawable> {
         	IDrawableDetails found = new DrawingDetail(Color.RED);
             //Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
             Vector3D v = (Vector3D) planet.getPosition();
-            System.out.println(planet.getName());
-            System.out.println(v);
             PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
 
             if (foundPlanet != null) {

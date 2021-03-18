@@ -20,7 +20,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
     protected static double dt = 0.01*daySec;
-
+    protected static double totalTime = 10*365*daySec;
     @Override
     public void init() {
         ArrayList<Planet> planets = PlanetReader.getPlanets();
