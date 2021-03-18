@@ -51,10 +51,10 @@ public class Chart implements Initializable {
         seriesE3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-    protected static void addDataF(double t,  double x, double y, double z) {
+    protected static void addDataF(double t,  double x) {
         seriesF.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
-        seriesF2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
-        seriesF3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
+     //   seriesF2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+      //  seriesF3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
     // javaFX
