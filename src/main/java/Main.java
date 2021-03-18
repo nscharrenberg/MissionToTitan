@@ -108,22 +108,6 @@ public class Main extends Application {
 
     }
 
-    private void addCheckbox(Pane root, String labelText, boolean initValue) {
-        CheckBox box = new CheckBox(labelText);
-        box.setId(labelText);
-        box.setSelected(initValue);
-        root.getChildren().add(box);
-    }
-
-
-    private void addTextField(Pane root, String labelTxt, String initValue) {
-        Label label = new Label(labelTxt);
-        TextField textField = new TextField();
-        textField.setId(labelTxt);
-        textField.setText(initValue);
-        root.getChildren().addAll(label, textField);
-    }
-
     public static void setRoot(String fxml, ControllerInterface controller) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
         loader.setController(controller);
