@@ -48,10 +48,13 @@ public class Main extends Application {
         addControls(root);
 
         DrawingContext drawingContext = new DrawingContext(root);
+
         drawingContext.changeCanvasSizeFromScene(scene);
 
 
         FactoryProvider.getDrawingManager().setContext(drawingContext);
+
+        System.out.println("DEBUG");
         FactoryProvider.getUpdateManager().init();
 
 
