@@ -44,6 +44,7 @@ public class PositionConverter {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         Scale s = new Scale((width/2), 1.51E12);
+        boolean correction = true;
         for(MovingObject p : planets) {
         	String name = p.getName();
         	Vector3D w = (Vector3D) convert(p.getPosition(), s);
@@ -51,10 +52,10 @@ public class PositionConverter {
             w = (Vector3D) w.add(new Vector3D(marginX, marginY, 0)); 
             if(FactoryProvider.getSettingRepository().isGuiFormatting()) {
 		        if(name.equals("Mercury")) {
-		        	w = (Vector3D) w.addMul(1.5, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        	w = (Vector3D) w.addMul(2.3, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
 		        if(name.equals("Venus")) {
-		        	w = (Vector3D) w.addMul(3, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        	w = (Vector3D) w.addMul(2.3, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
 		        if(name.equals("Earth") || name.equals("Moon")) {
 		        	w = (Vector3D) w.addMul(2.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
@@ -62,9 +63,13 @@ public class PositionConverter {
 		        if(name.equals("Moon")) {
 		        	MovingObject earth = planets.stream().filter(planet -> planet.getName().equals("Earth")).findFirst().orElse(null);
 		        	w = (Vector3D) w.addMul(70, w.sub(earth.getPosition()));
+		            System.out.println(p.getName() + " "+p.getPosition());
 		        }
 		        if(name.equals("Mars")) {
-		        	w = (Vector3D) w.addMul(1.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        	w = (Vector3D) w.addMul(3, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
+		        }
+		        if(name.equals("Jupiter")) {
+		        	w = (Vector3D) w.addMul(0.4, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
 		        if(name.equals("Titan")) {
 		        	MovingObject saturn = planets.stream().filter(planet -> planet.getName().equals("Saturn")).findFirst().orElse(null);
