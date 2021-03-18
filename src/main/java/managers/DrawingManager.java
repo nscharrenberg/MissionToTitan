@@ -72,7 +72,7 @@ public class DrawingManager extends Manager<IDrawable> {
                         boolean collided = circle.contains(new AbsolutePoint(c.getX(), c.getY()));
 
                         if (collided) {
-                            /
+                            // TODO: Setup Zoom-in and Zoom-out logic
                             System.out.println("HOORAY");
                             return;
                         }
