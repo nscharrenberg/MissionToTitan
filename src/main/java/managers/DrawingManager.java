@@ -61,7 +61,7 @@ public class DrawingManager extends Manager<IDrawable> {
             size = FactoryProvider.getSettingRepository().getCanvasWidth();
         }
         backgroundCircle = new Circle(size / 2, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.BLACK));
-        center = new Circle(1.0, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.RED));
+        //center = new Circle(1.0, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.RED));
         radii = new HashMap<>();
         ArrayList<Planet> planets = PlanetReader.getPlanetsWithRadii();
         for(Planet temp : planets) {
@@ -108,6 +108,10 @@ public class DrawingManager extends Manager<IDrawable> {
 
         if (context instanceof DrawingContext) {
             DrawingContext ct = (DrawingContext) context;
+            ct.getCanvas().setOnScroll(c -> {
+            	int sign = (int) (c.getDeltaY()/Math.abs(c.getDeltaY()));
+            	zoomFactor += sign*(ZOOM_VALUE/5);
+            });
             ct.getCanvas().setOnMouseClicked(c -> {
                 System.out.println(String.format("%s-%s", c.getX(), c.getY()));
                 System.out.println(items.size());
@@ -126,7 +130,6 @@ public class DrawingManager extends Manager<IDrawable> {
                             Vector3D v = new Vector3D(c.getX(), c.getY(), 0);
                         	Vector3D w = (Vector3D) new Vector3D(FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2, 0).sub(v.sub(offset));
                             offset = w;
-                            System.out.println(offset);
                             return;
                         }
                     }
@@ -165,7 +168,6 @@ public class DrawingManager extends Manager<IDrawable> {
         Vector3D v = new Vector3D(found.getPoint().getCoordinates().getX(), found.getPoint().getCoordinates().getY(), 0);
     	Vector3D w = (Vector3D) new Vector3D(FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2, 0).sub(v.sub(offset));
         offset = w;
-        System.out.println(offset);
         super.refresh();
     }
 
@@ -176,7 +178,7 @@ public class DrawingManager extends Manager<IDrawable> {
         items.forEach(item -> {
             item.draw(context);
         });
-        center.draw(context);
+        //center.draw(context);
     }
 
     public IDrawableContext getContext() {
@@ -204,6 +206,7 @@ public class DrawingManager extends Manager<IDrawable> {
 	public void defaultZoom() {
 		zoomFactor = 1;
 		offset = DEFAULT_OFFSET;
+		centered = "Sun";
 	}
     
 }
