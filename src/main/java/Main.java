@@ -48,10 +48,14 @@ public class Main extends Application {
         addControls(root);
 
         DrawingContext drawingContext = new DrawingContext(root);
+
         drawingContext.changeCanvasSizeFromScene(scene);
 
         FactoryProvider.getDrawingManager().setContext(drawingContext);
+
+        System.out.println("DEBUG");
         FactoryProvider.getUpdateManager().init();
+
 
         stage.getIcons().add(new Image(new FileInputStream("src/main/resources/icon/icon.png")));
         stage.setScene(scene);
