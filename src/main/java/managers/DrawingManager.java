@@ -1,9 +1,6 @@
 package managers;
 
-import domain.Moon;
-import domain.Planet;
-import domain.PlanetEnum;
-import domain.Vector3D;
+import domain.*;
 import factory.FactoryProvider;
 import gui.javafx.points.AbsolutePoint;
 import gui.javafx.shapes.Circle;
@@ -24,9 +21,8 @@ import java.util.stream.Collectors;
 
 public class DrawingManager extends Manager<IDrawable> {
     private IDrawableContext context;
-    double width = 700;
-    double height = 700;
-    private IDrawable background = new Rectangle(new AbsolutePoint(350, 350), width, height, new DrawingDetailImage("src/main/resources/sprites/night-sky.png"));
+    private IDrawable background;
+    private IDrawable backgroundCircle;
 
 
     public DrawingManager() {
@@ -37,7 +33,14 @@ public class DrawingManager extends Manager<IDrawable> {
 
     @Override
     public void init() {
-        refresh();
+        background = new Rectangle(new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight(), new DrawingDetailImage("src/main/resources/sprites/starry-night-sky.png"));
+        double size = FactoryProvider.getSettingRepository().getAppHeight();
+
+        if (FactoryProvider.getSettingRepository().getCanvasWidth() < FactoryProvider.getSettingRepository().getAppHeight()) {
+            size = FactoryProvider.getSettingRepository().getCanvasWidth();
+        }
+        backgroundCircle = new Circle(size / 2, new AbsolutePoint( FactoryProvider.getSettingRepository().getCanvasWidth() / 2,  FactoryProvider.getSettingRepository().getAppHeight() / 2), new DrawingDetail(Color.BLACK));
+
     }
 
     @Override
@@ -58,15 +61,13 @@ public class DrawingManager extends Manager<IDrawable> {
     protected void refresh() {
         items = new HashSet<>();
 
-       List<Planet> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof Planet).map(obj -> (Planet) obj).collect(Collectors.toList());
-        PositionConverter.convertToPixel(planets, width, height).forEach(planet -> {
+       List<MovingObject> planets = FactoryProvider.getUpdateManager().getItems().stream().filter(obj -> obj instanceof MovingObject).map(obj -> (MovingObject) obj).collect(Collectors.toList());
+        PositionConverter.convertToPixel(planets, FactoryProvider.getSettingRepository().getCanvasWidth(), FactoryProvider.getSettingRepository().getAppHeight()).forEach(planet -> {
 //        FactoryProvider.getUpdateManager().getItems().forEach(p -> {
 //            Planet planet = (Planet) p;
         	IDrawableDetails found = new DrawingDetail(Color.RED);
             //Vector3D v = (Vector3D) PositionConverter.convertToPixel(planet.getPosition(), width, height, planet.getName());
             Vector3D v = (Vector3D) planet.getPosition();
-            System.out.println(planet.getName());
-            System.out.println(v);
             PlanetEnum foundPlanet = PlanetEnum.getByName(planet.getName());
 
             if (foundPlanet != null) {
@@ -89,6 +90,7 @@ public class DrawingManager extends Manager<IDrawable> {
     private void draw() {
         context.reset();
     	background.draw(context);
+    	backgroundCircle.draw(context);
         items.forEach(item -> {
             item.draw(context);
         });
