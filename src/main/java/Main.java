@@ -6,9 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -19,7 +17,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.control.CheckBox;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,32 +67,41 @@ public class Main extends Application {
         title.setFont(new Font(18));
         box.getChildren().add(title);
 
-        addTextField(box, "Frame Interval", Integer.toString(FactoryProvider.getSettingRepository().getRefreshInterval()));
-        addCheckbox(box, "Enable GUI Scaling", FactoryProvider.getSettingRepository().isGuiFormatting());
+        Label frameIntervalLbl = new Label("Frame Interval:");
+        TextField frameIntervalTxt = new TextField();
+        frameIntervalTxt.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+        frameIntervalTxt.setText(Integer.toString(FactoryProvider.getSettingRepository().getRefreshInterval()));
+
+        CheckBox guiScalingTxt = new CheckBox("Enable GUI Scaling");
+        guiScalingTxt.setSelected(FactoryProvider.getSettingRepository().isGuiFormatting());
+
+        box.getChildren().addAll(frameIntervalLbl, frameIntervalTxt, guiScalingTxt);
 
         box.getChildren().add(new Text("Pre-Processing"));
 
-        addTextField(box, "Days to calculate", Integer.toString(FactoryProvider.getSettingRepository().getDayCount()));
-        addTextField(box, "Years to calculate", Integer.toString(FactoryProvider.getSettingRepository().getYearCount()));
+        Label dayCountLbl = new Label("Days to calculate:");
+        TextField dayCountTxt = new TextField();
+        dayCountTxt.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+        dayCountTxt.setText(Integer.toString(FactoryProvider.getSettingRepository().getDayCount()));
 
-        Button saveBtn = new Button("Save Settings");
+        Label yearCountLbl = new Label("Days to calculate:");
+        TextField yearCountTxt = new TextField();
+        yearCountTxt.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+        yearCountTxt.setText(Integer.toString(FactoryProvider.getSettingRepository().getYearCount()));
+
+        box.getChildren().addAll(dayCountLbl, dayCountTxt, yearCountLbl, yearCountTxt);
+
+        Button saveBtn = new Button("Save & Restart");
         saveBtn.setOnAction((e) -> {
-            TextField frameIntervalTxt = (TextField)box.lookup("Frame Interval");
-            CheckBox guiScalingTxt = (CheckBox) box.lookup("Enable GUI Scaling");
-            TextField dayCountTxt = (TextField)box.lookup("Days to calculate");
-            TextField yearCountTxt = (TextField)box.lookup("Years to calculate");
-
-            System.out.println(FactoryProvider.getSettingRepository().getRefreshInterval());
-
             FactoryProvider.getSettingRepository().setRefreshInterval(Integer.parseInt(frameIntervalTxt.getText()));
             FactoryProvider.getSettingRepository().setDayCount(Integer.parseInt(dayCountTxt.getText()));
             FactoryProvider.getSettingRepository().setYearCount(Integer.parseInt(yearCountTxt.getText()));
             FactoryProvider.getSettingRepository().setGuiFormatting(guiScalingTxt.selectedProperty().getValue());
 
-            System.out.println(FactoryProvider.getSettingRepository().getRefreshInterval());
+            // TODO: Restart Pre-processing and simulation.
         });
 
-        box.getChildren().add(saveBtn);
+        box.getChildren().addAll(saveBtn);
 
         box.setSpacing(10);
         root.getChildren().add(box);
