@@ -1,5 +1,6 @@
 package repositories.interfaces;
 
+import domain.MovingObject;
 import domain.Planet;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface SolarSystemInterface {
     Planet findPlanet(String name);
     void init();
     void preprocessing();
+    List<List<MovingObject>> getTimeLine();
 }

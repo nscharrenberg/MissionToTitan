@@ -1,7 +1,9 @@
 package utils.converter;
 
+import domain.MovingObject;
 import domain.Planet;
 import domain.Vector3D;
+import factory.FactoryProvider;
 import interfaces.Vector3dInterface;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
@@ -20,7 +22,7 @@ public class PositionConverter {
         double z = scale.getScale()*v.getZ();
         return new Vector3D(x, y, z);
     }
-    public static List<Planet> convertToPixel(List<Planet> planets, double screenWidth, double screenHeight){
+    public static List<MovingObject> convertToPixel(List<MovingObject> planets, double screenWidth, double screenHeight){
     	Rectangle2D canvas = new Rectangle2D.Double();
         double marginX = 0, marginY = 0;
         if(screenWidth == screenHeight) {
@@ -42,13 +44,12 @@ public class PositionConverter {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         Scale s = new Scale((width/2), 1.51E12);
-        boolean correction = true;
-        for(Planet p : planets) {
+        for(MovingObject p : planets) {
         	String name = p.getName();
         	Vector3D w = (Vector3D) convert(p.getPosition(), s);
             w = (Vector3D) w.add(new Vector3D(width/2, width/2, width/2));
             w = (Vector3D) w.add(new Vector3D(marginX, marginY, 0)); 
-            if(correction) {
+            if(FactoryProvider.getSettingRepository().isGuiFormatting()) {
 		        if(name.equals("Mercury")) {
 		        	w = (Vector3D) w.addMul(1.5, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
@@ -59,14 +60,14 @@ public class PositionConverter {
 		        	w = (Vector3D) w.addMul(2.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
 		        if(name.equals("Moon")) {
-		        	Planet earth = planets.stream().filter(planet -> planet.getName().equals("Earth")).findFirst().orElse(null);
+		        	MovingObject earth = planets.stream().filter(planet -> planet.getName().equals("Earth")).findFirst().orElse(null);
 		        	w = (Vector3D) w.addMul(70, w.sub(earth.getPosition()));
 		        }
 		        if(name.equals("Mars")) {
 		        	w = (Vector3D) w.addMul(1.8, w.sub(new Vector3D(screenWidth/2, screenHeight/2,0)));
 		        }
 		        if(name.equals("Titan")) {
-		        	Planet saturn = planets.stream().filter(planet -> planet.getName().equals("Saturn")).findFirst().orElse(null);
+		        	MovingObject saturn = planets.stream().filter(planet -> planet.getName().equals("Saturn")).findFirst().orElse(null);
 		        	w = (Vector3D) w.addMul(100, w.sub(saturn.getPosition()));
 		        }
             }

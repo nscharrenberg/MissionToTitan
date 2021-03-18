@@ -7,13 +7,13 @@ import interfaces.gui.IUpdate;
 import javafx.application.Platform;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class UpdateManager extends Manager<IUpdate> implements ITimer {
-    public final static int DEFAULT_INTERVAL = 500; // 1 sec
-
     private Timer timer;
+    private int index = 0;
 
     public UpdateManager() {
         items = new LinkedList<>();
@@ -23,8 +23,10 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void init() {
+//        stop();
+        FactoryProvider.getDrawingManager().init();
         FactoryProvider.getSolarSystemFactory().preprocessing();
-        setTimer(DEFAULT_INTERVAL);
+        start();
     }
 
     @Override
@@ -36,24 +38,39 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     @Override
     public void update() {
-        reset();
-        // TODO: This would need to be our timeline array
-        FactoryProvider.getSolarSystemFactory().getPlanets().forEach(MovingObject::update);
-        items.addAll(FactoryProvider.getSolarSystemFactory().getPlanets());
+        try {
+            reset();;
 
-        FactoryProvider.getDrawingManager().update();
+            List<MovingObject> tl = FactoryProvider.getSolarSystemFactory().getTimeLine().get(index);
 
-        //TODO: Also stop timer when timeline is finished.
+            items.addAll(tl);
+
+            FactoryProvider.getDrawingManager().update();
+            index++;
+        } catch (IndexOutOfBoundsException ex) {
+            // Temp fix
+            timer.cancel();
+        }
     }
 
     @Override
-    public void setTimer(int interval) {
+    public void start() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> update());
             }
-        }, 0, interval);
+        }, 0, FactoryProvider.getSettingRepository().getRefreshInterval());
+    }
+
+    @Override
+    public void stop() {
+        if (timer == null) {
+            return;
+        }
+
+        index = 0;
+        timer.cancel();
     }
 }

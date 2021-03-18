@@ -72,4 +72,14 @@ public class MovingObject extends SpaceObject implements IUpdate {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "MovingObject{" +
+                "force=" + force +
+                ", acceleration=" + acceleration +
+                ", velocity=" + velocity +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

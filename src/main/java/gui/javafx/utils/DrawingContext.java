@@ -6,12 +6,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 
 public class DrawingContext implements IDrawableContext {
     private Canvas canvas;
     private GraphicsContext context;
 
-    public DrawingContext(Group root) {
+    public DrawingContext(Pane root) {
         this.canvas = new Canvas();
         root.getChildren().add(canvas);
         this.context = canvas.getGraphicsContext2D();
