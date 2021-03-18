@@ -4,6 +4,7 @@ import domain.MovingObject;
 import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
+import interfaces.Vector3dInterface;
 import physics.gravity.ODEFunction;
 import physics.gravity.ODESolver;
 import physics.gravity.State;
@@ -22,14 +23,11 @@ public class SolarSystemRepository implements SolarSystemInterface {
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
     protected static double dt = 0.01*daySec;
-    private SpaceCraft probe;
 
     @Override
     public void init() {
         ArrayList<MovingObject> planets = PlanetReader.getPlanets();
         setPlanets(planets);
-        probe = new SpaceCraft(0, new Vector3D(0,0,0),new Vector3D(0,0,0),"Probe");//null object
-        //GravityTest.run();
     }
 
     private void sampleSolarSystem() {
@@ -98,12 +96,20 @@ public class SolarSystemRepository implements SolarSystemInterface {
         this.timeLine = new ArrayList<>();
         this.planets = new ArrayList<>();
         double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
+
+
         ODESolver odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
         ODEFunction odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         StateInterface[][] timeLineArray = odes.getData(odef,totalTime, dt);
 
-        GravityTest.run();
 
+
+
+
+        FactoryProvider.getSolarSystemFactory().init();
+        odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
+        odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        timeLineArray = odes.getData(odef,totalTime, dt);
 
         StateInterface[] tmp2 = timeLineArray[0];
         int length = tmp2.length;
@@ -122,13 +128,5 @@ public class SolarSystemRepository implements SolarSystemInterface {
     @Override
     public List<List<MovingObject>> getTimeLine() {
         return timeLine;
-    }
-
-    public SpaceCraft getProbe() {
-        return probe;
-    }
-
-    public void setProbe(SpaceCraft probe) {
-        this.probe = probe;
     }
 }

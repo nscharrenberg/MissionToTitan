@@ -20,6 +20,7 @@ public class ODEFunction implements ODEFunctionInterface {
     public ODEFunction(SolarSystemRepository system){
         this.system = system;
     }
+
     @Override
     public RateInterface call(double t, StateInterface y) {
 
@@ -43,8 +44,6 @@ public class ODEFunction implements ODEFunctionInterface {
      * resetting forces of all planets for a new calculation
      */
     private void resetForces(List<MovingObject> list) {
-        system.getProbe().setForce(new Vector3D(0,0,0));
-
         for (int i = 0; i < list.size(); i++)
             list.get(i).setForce(new Vector3D(0,0,0));
     }

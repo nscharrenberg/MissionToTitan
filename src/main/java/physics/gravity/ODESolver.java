@@ -18,10 +18,10 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     private int currentPlanetIndex;
     private int size;
     private List<MovingObject> planets;
-    private SpaceCraft probe;
 
     public ODESolver(SolarSystemRepository system){
         this.system = system;
+
     }
 
     @Override
@@ -42,18 +42,16 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      */
     private void init(StateInterface y0, double tf, double h) {
         planets = system.getPlanets();
-        size = (int)Math.round(tf/h)+1;
-        allStates = new StateInterface[planets.size()+1][size];
+        size = (int)Math.round(tf/h);
+        allStates = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
-        probe = system.getProbe();
     }
 
     private void init(double tf, double h) {
         system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
-        allStates = new StateInterface[planets.size()+1][size];
-        probe = system.getProbe();
+        allStates = new StateInterface[planets.size()][size];
     }
 
     /**
@@ -71,8 +69,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * for all planets to their initial state
      */
     private void addInitialStates() {
-        allStates[allStates.length-1][0] = new State(probe.getPosition(), probe.getVelocity(), probe);
-
         for (int i = 0; i < planets.size(); i++) {
             StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), planets.get(i));
             allStates[i][0] = state;
@@ -91,12 +87,17 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 allStates[j][i] = step(f, h*i, allStates[j][i - 1], h);
                 State state = (State) allStates[j][i];
 
+                System.out.println(state);
+
                 // updating the MovingObject's (Planet) state
                 system.getPlanets().get(j).setPosition(state.getPosition());
                 system.getPlanets().get(j).setVelocity(state.getVelocity());
+
+
+
             }
-            allStates[allStates.length-1][i] = step(f, h*i, allStates[allStates.length-1][i - 1], h);
         }
+
     }
 
     @Override

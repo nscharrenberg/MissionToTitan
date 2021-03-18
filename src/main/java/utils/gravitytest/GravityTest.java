@@ -45,11 +45,11 @@ public class GravityTest extends Application {
             stateArrayList.add(stateArray);
         }
 
-        SpaceCraft probe = system.getProbe();
-        State probeState = new State(probe.getPosition(), probe.getVelocity(), probe);
-        StateInterface[] probeStateArray = solve.solve(f, probeState, totalTime, dt);
-
-        System.out.println(system.getProbe().getVelocity().norm());
+//        SpaceCraft probe = system.getProbe();
+//        State probeState = new State(probe.getPosition(), probe.getVelocity(), probe);
+//        StateInterface[] probeStateArray = solve.solve(f, probeState, totalTime, dt);
+//
+//        System.out.println(system.getProbe().getVelocity().norm());
 
         for (int i = 0; i < stateArrayList.get(0).length; i++)
         {
@@ -62,7 +62,7 @@ public class GravityTest extends Application {
             State newJupiterState =  (State) stateArrayList.get(6)[i];
             State newSaturnState = (State) stateArrayList.get(7)[i];
             State newTitanState = (State) stateArrayList.get(8)[i];
-            State newProbeState = (State) probeStateArray[i];
+            State newProbeState = (State) stateArrayList.get(9)[i];
         }
     }
 //            // adding the data to the charts
@@ -87,7 +87,7 @@ public class GravityTest extends Application {
         system.init();
         Vector3dInterface unit = unitVecToGoal(startTitanState.getPosition());
         Vector3dInterface velocity = unit.mul(60000);
-        system.setProbe(new SpaceCraft(15000, startEarthState.getPosition().add(LaunchPosition(startTitanState.getPosition())), startEarthState.getVelocity().add(velocity), "Probe"));
+        //system.setProbe(new SpaceCraft(15000, startEarthState.getPosition().add(LaunchPosition(startTitanState.getPosition())), startEarthState.getVelocity().add(velocity), "Probe"));
         System.out.println(velocity.norm());
         simulate();
         System.out.println("Distance from titan: " + distanceFromTitan());
@@ -101,10 +101,10 @@ public class GravityTest extends Application {
         MovingObject earth = system.getPlanets().get(3);
         MovingObject titan = system.getPlanets().get(8);
 
-        system.setProbe(new SpaceCraft(1500, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity(), "Probe"));
+       // system.setProbe(new SpaceCraft(1500, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity(), "Probe"));
     }
 
-    private static Vector3dInterface LaunchPosition(Vector3dInterface goal) {
+    public static Vector3dInterface LaunchPosition(Vector3dInterface goal) {
         return unitVecToGoal(goal).mul(6371);
     }
 
