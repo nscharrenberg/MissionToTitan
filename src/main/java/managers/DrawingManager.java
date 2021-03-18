@@ -73,12 +73,17 @@ public class DrawingManager extends Manager<IDrawable> {
             if (foundPlanet != null) {
                 found = foundPlanet.getDetail();
             }
+
+            System.out.println(planet);
             
             if(planet.getName().equals("Sun")) {
             	items.add(new Circle(30, new AbsolutePoint(v.getX(), v.getY()), found));
             } else if(planet instanceof Moon) {
             	items.add(new Circle(10, new AbsolutePoint(v.getX(), v.getY()), found));
-            } else {
+            } else if (planet instanceof SpaceCraft) {
+                items.add(new Circle(10, new AbsolutePoint(v.getX(), v.getY()), found));
+            }
+            else {
             	items.add(new Circle(18, new AbsolutePoint(v.getX(), v.getY()), found));
             }
         });

@@ -14,7 +14,8 @@ public enum PlanetEnum {
     MARS("mars", new DrawingDetailImage("src/main/resources/sprites/Mars.png")),
     JUPITER("jupiter", new DrawingDetailImage("src/main/resources/sprites/Jupiter.png")),
     SATURN("saturn", new DrawingDetailImage("src/main/resources/sprites/Saturn.png")),
-    TITANT("titan", new DrawingDetailImage("src/main/resources/sprites/Titan.png"));
+    TITANT("titan", new DrawingDetailImage("src/main/resources/sprites/Titan.png")),
+	SHIP("Probe", new DrawingDetailImage("src/main/resources/sprites/spaceship.png"));
 
     private PlanetEnum(String name, IDrawableDetails detail) {
         this.name = name;
