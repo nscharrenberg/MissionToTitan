@@ -1,5 +1,6 @@
 package utils.gravitytest;
 
+import domain.MovingObject;
 import domain.Planet;
 import domain.SpaceCraft;
 import domain.Vector3D;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class GravityTest extends Application {
 
-    protected static List<Planet> planets;
+    protected static List<MovingObject> planets;
     protected static SolarSystemRepository system;
     private static StateInterface[][] allStates;
     private static ArrayList<StateInterface[]> stateArrayList;
@@ -99,8 +100,8 @@ public class GravityTest extends Application {
     }
 
     private static void initProbe() {
-        Planet earth = system.getPlanets().get(4);
-        Planet titan = system.getPlanets().get(8);
+        MovingObject earth = system.getPlanets().get(4);
+        MovingObject titan = system.getPlanets().get(8);
         system.setProbe(new SpaceCraft(1500, earth.getPosition().add(LaunchPosition(titan.getPosition())), earth.getVelocity(), "Probe"));
 
     }
@@ -110,7 +111,7 @@ public class GravityTest extends Application {
     }
 
     private static Vector3dInterface unitVecToGoal(Vector3dInterface goal) {
-        Planet earth = planets.get(4);
+        MovingObject earth = planets.get(4);
         Vector3dInterface aim = goal.sub(earth.getPosition()); // vector between earth and goal
         return aim.mul(1.0/aim.norm());
     }
