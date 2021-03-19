@@ -164,4 +164,8 @@ public class Vector3D implements Vector3dInterface {
     public int hashCode() {
         return Objects.hash(x, y, z);
     }
+    
+    public Vector3D clone() {
+    	return new Vector3D(this.x, this.y, this.z);
+    }
 }

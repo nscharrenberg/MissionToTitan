@@ -82,4 +82,8 @@ public class MovingObject extends SpaceObject implements IUpdate {
                 ", name='" + name + '\'' +
                 '}';
     }
+    
+    public MovingObject clone() {
+    	return new MovingObject(this.getMass(), ((Vector3D) this.getPosition()).clone(), ((Vector3D) this.velocity).clone(), this.name);
+    }
 }
