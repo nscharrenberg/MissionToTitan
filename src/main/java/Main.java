@@ -108,8 +108,22 @@ public class Main extends Application {
             FactoryProvider.getUpdateManager().stop();
             FactoryProvider.getUpdateManager().init();
         });
-
-        box.getChildren().addAll(saveBtn);
+        //Zoom buttons
+        Button zoomIn = new Button("Zoom In");
+        Button zoomOut = new Button("Zoom out");
+        zoomIn.setOnAction((e) -> {
+        	FactoryProvider.getDrawingManager().increaseZoom();
+        });
+        zoomOut.setOnAction((e) -> {
+        	FactoryProvider.getDrawingManager().decreaseZoom();
+        });
+        //Focus on Barycenter button
+        Button barycenter = new Button("Focus on Barycenter");
+        barycenter.setOnAction((e) -> {
+        	FactoryProvider.getDrawingManager().defaultZoom();
+        });
+        
+        box.getChildren().addAll(saveBtn, zoomIn, zoomOut, barycenter);
 
         box.setSpacing(10);
         root.getChildren().add(box);
