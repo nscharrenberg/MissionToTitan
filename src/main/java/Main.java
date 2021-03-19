@@ -1,7 +1,10 @@
 import controllers.ControllerInterface;
+import domain.LayoutView;
 import factory.FactoryProvider;
 import gui.javafx.utils.DrawingContext;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -45,7 +48,11 @@ public class Main extends Application {
         stage.setResizable(false);
         stage.centerOnScreen();
 
-        addControls(root);
+        try {
+            addControls(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         DrawingContext drawingContext = new DrawingContext(root);
 
@@ -55,7 +62,11 @@ public class Main extends Application {
         FactoryProvider.getDrawingManager().setContext(drawingContext);
 
         System.out.println("DEBUG");
-        FactoryProvider.getUpdateManager().init();
+        try {
+            FactoryProvider.getUpdateManager().init();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
 
         stage.getIcons().add(new Image(new FileInputStream("src/main/resources/icon/icon.png")));
@@ -81,7 +92,10 @@ public class Main extends Application {
         CheckBox guiScalingTxt = new CheckBox("Enable GUI Scaling");
         guiScalingTxt.setSelected(FactoryProvider.getSettingRepository().isGuiFormatting());
 
-        box.getChildren().addAll(frameIntervalLbl, frameIntervalTxt, guiScalingTxt);
+        CheckBox realisticSizeTxt = new CheckBox("Enable Realistic Sizing");
+        realisticSizeTxt.setSelected(FactoryProvider.getSettingRepository().isRealisticSize());
+
+        box.getChildren().addAll(frameIntervalLbl, frameIntervalTxt, guiScalingTxt, realisticSizeTxt);
 
         box.getChildren().add(new Text("Pre-Processing"));
 
@@ -103,6 +117,7 @@ public class Main extends Application {
             FactoryProvider.getSettingRepository().setDayCount(Integer.parseInt(dayCountTxt.getText()));
             FactoryProvider.getSettingRepository().setYearCount(Integer.parseInt(yearCountTxt.getText()));
             FactoryProvider.getSettingRepository().setGuiFormatting(guiScalingTxt.selectedProperty().getValue());
+            FactoryProvider.getSettingRepository().setRealisticSize(realisticSizeTxt.selectedProperty().getValue());
 
             // TODO: Restart Pre-processing and simulation.
             FactoryProvider.getUpdateManager().stop();
@@ -122,8 +137,28 @@ public class Main extends Application {
         barycenter.setOnAction((e) -> {
         	FactoryProvider.getDrawingManager().defaultZoom();
         });
-        
-        box.getChildren().addAll(saveBtn, zoomIn, zoomOut, barycenter);
+
+        Label layoutViewLbl = new Label("Viewing from XY-angle");
+        Button xyButton = new Button("XY");
+        xyButton.setDisable(true);
+        Button xzButton = new Button("XZ");
+
+
+        xyButton.setOnAction(v -> {
+            FactoryProvider.getSettingRepository().setLayoutView(LayoutView.XY);
+            xyButton.setDisable(true);
+            xzButton.setDisable(false);
+            layoutViewLbl.setText("Viewing from XY-angle");
+        });
+
+        xzButton.setOnAction(v -> {
+            FactoryProvider.getSettingRepository().setLayoutView(LayoutView.XZ);
+            xzButton.setDisable(true);
+            xyButton.setDisable(false);
+            layoutViewLbl.setText("Viewing from XZ-angle");
+        });
+
+        box.getChildren().addAll(saveBtn, new Separator(),zoomIn, zoomOut, barycenter, new Separator(), layoutViewLbl, xyButton, xzButton);
 
         box.setSpacing(10);
         root.getChildren().add(box);

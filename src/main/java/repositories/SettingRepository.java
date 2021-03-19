@@ -1,5 +1,7 @@
 package repositories;
 
+import domain.LayoutView;
+
 public class SettingRepository implements repositories.interfaces.ISettingRepository {
     private double canvasWidth = 700;
     private double sidebarWidth = 200;
@@ -8,6 +10,8 @@ public class SettingRepository implements repositories.interfaces.ISettingReposi
     private int dayCount = 365;
     private int yearCount = 1;
     private boolean guiFormatting = true;
+    private boolean isRealisticSize = true;
+    private LayoutView layoutView = LayoutView.XY;
 
     @Override
     public double getCanvasWidth() {
@@ -77,5 +81,25 @@ public class SettingRepository implements repositories.interfaces.ISettingReposi
     @Override
     public void setGuiFormatting(boolean guiFormatting) {
         this.guiFormatting = guiFormatting;
+    }
+
+    @Override
+    public boolean isRealisticSize() {
+        return isRealisticSize;
+    }
+
+    @Override
+    public void setRealisticSize(boolean realisticSize) {
+        isRealisticSize = realisticSize;
+    }
+
+    @Override
+    public LayoutView getLayoutView() {
+        return layoutView;
+    }
+
+    @Override
+    public void setLayoutView(LayoutView layoutView) {
+        this.layoutView = layoutView;
     }
 }
