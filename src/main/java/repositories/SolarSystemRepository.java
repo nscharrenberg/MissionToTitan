@@ -104,38 +104,12 @@ public class SolarSystemRepository implements SolarSystemInterface {
         ODESolver odes;
         ODEFunction odef;
 
-
         odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
         odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         StateInterface[][] timeLineArray = odes.getData(odef, totalTime, dt);
 
-
-        State start = (State) timeLineArray[3][0];
-        State goal = (State) timeLineArray[8][22500];
-
-        double min = Double.MAX_VALUE;
-
-        for (int i = 0; i < timeLineArray[0].length; i++) {
-            if (i * dt / daySec < 300) {
-                State probe = (State) timeLineArray[9][i];
-                State titan = (State) timeLineArray[8][i];
-                if (probe.getPosition().sub(titan.getPosition()).norm() < (69911e3 + 20)) {
-                    System.out.println("COLLISION");
-                }
-                double dist = probe.getPosition().sub(titan.getPosition()).norm() - 2575.5e3;
-                if (min > dist) {
-                    min = dist;
-                }
-            }
-        }
-        System.out.println(min);
-
-
-        Vector3dInterface unit = unitVecToGoal(start.getPosition(), goal.getPosition());
-
         FactoryProvider.getSolarSystemFactory().init();
 
-        System.out.println(FactoryProvider.getSolarSystemFactory().getPlanets().get(9).getVelocity());
         odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
         odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         timeLineArray = odes.getData(odef,totalTime, dt);
@@ -149,7 +123,6 @@ public class SolarSystemRepository implements SolarSystemInterface {
         		MovingObject sio = state.getMovingObject();
         		tmp.add(new MovingObject(sio.getMass(), state.getPosition(), state.getVelocity(), sio.getName()));
         	}
-
         	timeLine.add(tmp);
         }
     }

@@ -28,12 +28,24 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         size = ts.length;
         addInitialStates();
-        for (int i = 0; i < size; i++) {
+        for (int i = 1; i < size; i++) {
+            for( int j = 0; j < planets.size(); j++)
+            {
+                int time = 0;
+                for (int k = 0; k < i; k++) {
+                    time += ts[k];
+                }
 
+                // inserting step into the array
+                allStates[j][i] = step(f, time, allStates[j][i - 1], ts[i]-ts[i-1]);
+                State state = (State) allStates[j][i];
+
+                // updating the MovingObject's (Planet) state
+                system.getPlanets().get(j).setPosition(state.getPosition());
+                system.getPlanets().get(j).setVelocity(state.getVelocity());
+            }
         }
-
-
-        return new StateInterface[0];
+        return allStates[currentPlanetIndex];
     }
 
     @Override
@@ -49,13 +61,14 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * determines and initializes variables needed for calculating new states.
      */
     private void init(StateInterface y0) {
+        system.init();
         planets = system.getPlanets();
         allStates = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
     }
 
     private void init(double tf, double h) {
-        //system.init();
+        system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
         allStates = new StateInterface[planets.size()][size];
