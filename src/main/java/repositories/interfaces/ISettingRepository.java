@@ -1,5 +1,7 @@
 package repositories.interfaces;
 
+import domain.LayoutView;
+
 public interface ISettingRepository {
     double getCanvasWidth();
 
@@ -28,4 +30,10 @@ public interface ISettingRepository {
     boolean isGuiFormatting();
 
     void setGuiFormatting(boolean guiFormatting);
+
+    boolean isRealisticSize();
+    void setRealisticSize(boolean realisticSize);
+
+    LayoutView getLayoutView();
+    void setLayoutView(LayoutView layoutView);
 }
