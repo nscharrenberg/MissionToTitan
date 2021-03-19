@@ -32,7 +32,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
     public void init(Vector3dInterface velocity) {
         ArrayList<MovingObject> planets = PlanetReader.getPlanets();
-        planets.get(9).setVelocity(velocity);
+        planets.get(5).setVelocity(velocity);
         setPlanets(planets);
     }
 

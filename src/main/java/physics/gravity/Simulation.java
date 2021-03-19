@@ -4,6 +4,7 @@ import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
+import utils.WriteToFile;
 
 import java.util.ArrayList;
 
@@ -27,17 +28,25 @@ public class Simulation {
         odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
         timeLineArray = odes.getData(odef, totalTime, dt);
 
-        State start = (State) timeLineArray[3][0];
+        State start = (State) timeLineArray[1][0];
+        State titan = (State) timeLineArray[4][0];
+        System.out.println(titan.getPosition().sub(start.getPosition()).norm());
 
-        for (int i = 21000; i < 25000; i+=10) {
-            for (int j = 45000; j < 60000; j+=50) {
-                State goal = (State) timeLineArray[8][i];
-                Vector3dInterface velocity = unitVecToGoal(start.getPosition(), goal.getPosition()).mul(j);
+
+
+        for (int i = 21000; i < 36500; i+=2) {
+                State goal = (State) timeLineArray[4][i];
+
+
+                Vector3dInterface velocity = unitVecToGoal(start.getPosition(), goal.getPosition()).mul(58000);
                 FactoryProvider.getSolarSystemFactory().init(velocity.add(start.getVelocity()));
+                if (i == 21296 ) {
+                    System.out.println(velocity.add(start.getVelocity()));
+                }
                 timeLineArray = odes.getData(odef, totalTime, dt);
                 printMin();
-                System.out.println(".    i: " + i +". j: " + j);
-            }
+                System.out.println(".    i: " + i);
+
         }
     }
 
@@ -51,14 +60,18 @@ public class Simulation {
 
         for (int i = 0; i < timeLineArray[0].length; i++) {
             if (i * dt / daySec < 300) {
-                State probe = (State) timeLineArray[9][i];
-                State titan = (State) timeLineArray[8][i];
+                State probe = (State) timeLineArray[5][i];
+                State titan = (State) timeLineArray[4][i];
                 if (probe.getPosition().sub(titan.getPosition()).norm() < (69911e3 + 20)) {
                     System.out.println("COLLISION");
                 }
                 double dist = probe.getPosition().sub(titan.getPosition()).norm() - 2575.5e3;
                 if (min > dist) {
                     min = dist;
+                    if (dist < 3.6e9)
+                    {
+                        WriteToFile.writeToFile(dist, probe.getVelocity().toString());
+                    }
                 }
             }
         }

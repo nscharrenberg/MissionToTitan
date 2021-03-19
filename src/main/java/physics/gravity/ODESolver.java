@@ -26,12 +26,20 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
+        size = ts.length;
+        addInitialStates();
+        for (int i = 0; i < size; i++) {
+
+        }
+
+
         return new StateInterface[0];
     }
 
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
-        init(y0, tf,h);
+        size = (int)Math.round(tf/h);
+        init(y0);
         addInitialStates();
         computeStates(f,h);
         return allStates[currentPlanetIndex];
@@ -40,9 +48,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     /**
      * determines and initializes variables needed for calculating new states.
      */
-    private void init(StateInterface y0, double tf, double h) {
+    private void init(StateInterface y0) {
         planets = system.getPlanets();
-        size = (int)Math.round(tf/h);
         allStates = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
     }
