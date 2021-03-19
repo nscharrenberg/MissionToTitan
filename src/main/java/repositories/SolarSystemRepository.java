@@ -40,7 +40,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
         addPlanet(new Planet(50, 10, new Vector3D(100, 100, 10), new Vector3D(105, 105, 15), "earth"));
         addPlanet(new Planet(50, 20, new Vector3D(300, 350, 50), new Vector3D(310, 345, 10), "sun"));
     }
-
+  
     @Override
     public List<MovingObject> getPlanets() {
         return this.planets;
