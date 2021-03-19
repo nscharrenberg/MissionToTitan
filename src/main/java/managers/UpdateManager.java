@@ -19,8 +19,6 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
 
     public UpdateManager() {
         items = new LinkedList<>();
-        scheduledAdditions = new LinkedList<>();
-        scheduledRemovals = new LinkedList<>();
     }
 
     @Override
@@ -33,8 +31,6 @@ public class UpdateManager extends Manager<IUpdate> implements ITimer {
     @Override
     public void reset() {
         items = new LinkedList<>();
-        scheduledAdditions = new LinkedList<>();
-        scheduledRemovals = new LinkedList<>();
     }
 
     @Override

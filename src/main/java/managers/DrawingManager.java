@@ -44,8 +44,6 @@ public class DrawingManager extends Manager<IDrawable> {
 
     public DrawingManager() {
         items = new HashSet<>();
-        scheduledAdditions = new HashSet<>();
-        scheduledRemovals = new HashSet<>();
         zoomFactor = 1;
         centered = "Sun";
         newCenter = new AtomicBoolean(false);
@@ -88,10 +86,7 @@ public class DrawingManager extends Manager<IDrawable> {
 
     @Override
     public void reset() {
-        toggleUpdate();
         items = new HashSet<>();
-        scheduledAdditions = new HashSet<>();
-        scheduledRemovals = new HashSet<>();
     }
 
     @Override
