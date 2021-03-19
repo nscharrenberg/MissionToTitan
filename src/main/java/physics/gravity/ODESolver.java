@@ -35,7 +35,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 for (int k = 0; k < i; k++) {
                     time += ts[k];
                 }
-
                 // inserting step into the array
                 allStates[j][i] = step(f, time, allStates[j][i - 1], ts[i]-ts[i-1]);
                 State state = (State) allStates[j][i];

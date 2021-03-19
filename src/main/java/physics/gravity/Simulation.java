@@ -12,7 +12,7 @@ public class Simulation {
 
     protected static double daySec = 60*24*60; // total seconds in a day
     protected static double t;
-    protected static double dt = 0.01*daySec;
+    protected static double dt = 50;
     private static StateInterface[][] timeLineArray;
 
 
@@ -34,7 +34,7 @@ public class Simulation {
 
 
 
-        for (int i = 21000; i < 36500; i+=2) {
+        for (int i = 21000; i < 36500; i+=10000) {
                 State goal = (State) timeLineArray[4][i];
 
 
