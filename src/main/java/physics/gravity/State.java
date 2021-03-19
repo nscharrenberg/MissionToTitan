@@ -2,6 +2,7 @@ package physics.gravity;
 
 import domain.MovingObject;
 import domain.Planet;
+import domain.Vector3D;
 import interfaces.RateInterface;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
@@ -54,5 +55,9 @@ public class State implements StateInterface {
 
     public String toString() {
         return "(p: "  + position + ", v: " + velocity + ", o: " + object.getName() + ")";
+    }
+    
+    public State clone() {
+    	return new State(((Vector3D) this.position).clone(), ((Vector3D)this.velocity).clone(), this.object.clone());
     }
 }

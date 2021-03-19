@@ -7,11 +7,11 @@ public class WriteToFile {
     public static void writeToFile(double distance, String velocity) {
         try {
             velocity = velocity.replaceAll(" ", "");
-            FileWriter myWriter = new FileWriter(velocity+".txt");
+            FileWriter myWriter = new FileWriter(distance+".txt");
             myWriter.write(velocity+"\n");
             myWriter.write(distance+"");
             myWriter.close();
-            System.out.println("Successfully wrote to the file.");
+            //System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
