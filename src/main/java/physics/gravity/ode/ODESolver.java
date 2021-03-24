@@ -1,8 +1,7 @@
-package physics.gravity;
+package physics.gravity.ode;
 
 import domain.MovingObject;
-import domain.Planet;
-import domain.SpaceCraft;
+import factory.FactoryProvider;
 import interfaces.DataInterface;
 import interfaces.ODEFunctionInterface;
 import interfaces.ODESolverInterface;
@@ -19,8 +18,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     private int size;
     private List<MovingObject> planets;
 
-    public ODESolver(SolarSystemRepository system){
-        this.system = system;
+    public ODESolver(){
+        this.system = FactoryProvider.getSolarSystemFactory();
 
     }
 
@@ -67,7 +66,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     }
 
     private void init(double tf, double h) {
-        system.init();
+       // system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
         allStates = new StateInterface[planets.size()][size];

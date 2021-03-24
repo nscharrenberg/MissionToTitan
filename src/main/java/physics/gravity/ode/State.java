@@ -1,7 +1,6 @@
-package physics.gravity;
+package physics.gravity.ode;
 
 import domain.MovingObject;
-import domain.Planet;
 import domain.Vector3D;
 import interfaces.RateInterface;
 import interfaces.StateInterface;

@@ -1,15 +1,14 @@
-package physics.gravity;
+package physics.gravity.ode;
 
 import domain.MovingObject;
-import domain.Planet;
 import domain.Vector3D;
+import factory.FactoryProvider;
 import interfaces.ODEFunctionInterface;
 import interfaces.RateInterface;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
 import repositories.SolarSystemRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ODEFunction implements ODEFunctionInterface {
@@ -17,13 +16,12 @@ public class ODEFunction implements ODEFunctionInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
     private SolarSystemRepository system;
 
-    public ODEFunction(SolarSystemRepository system){
-        this.system = system;
+    public ODEFunction(){
+        this.system = FactoryProvider.getSolarSystemFactory();
     }
 
     @Override
     public RateInterface call(double t, StateInterface y) {
-
         State state = (State) y;
         Vector3dInterface velocity = state.getVelocity();
         MovingObject object = state.getMovingObject();

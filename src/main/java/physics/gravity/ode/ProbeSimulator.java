@@ -1,4 +1,4 @@
-package physics.gravity;
+package physics.gravity.ode;
 
 import factory.FactoryProvider;
 import interfaces.ProbeSimulatorInterface;
@@ -9,9 +9,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double[] ts) {
-        ODESolver solver = new ODESolver(FactoryProvider.getSolarSystemFactory());
+        ODESolver solver = new ODESolver();
 
-        ODEFunction f = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        ODEFunction f = new ODEFunction();
         StateInterface state = new State(p0, v0, FactoryProvider.getSolarSystemFactory().findPlanet("Probe"));
         StateInterface[] stateArray = solver.solve(f, state, ts);
         Vector3dInterface[] posArray = new Vector3dInterface[stateArray.length];
@@ -24,9 +24,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
-        ODESolver solver = new ODESolver(FactoryProvider.getSolarSystemFactory());
+        ODESolver solver = new ODESolver();
 
-        ODEFunction f = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        ODEFunction f = new ODEFunction();
         StateInterface state = new State(p0, v0, FactoryProvider.getSolarSystemFactory().findPlanet("Probe"));
         StateInterface[] stateArray = solver.solve(f, state, tf, h);
         Vector3dInterface[] posArray = new Vector3dInterface[stateArray.length];

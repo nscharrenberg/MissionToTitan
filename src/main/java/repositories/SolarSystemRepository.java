@@ -5,14 +5,12 @@ import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
-import physics.gravity.ODEFunction;
-import physics.gravity.ODESolver;
-import physics.gravity.State;
-import domain.SpaceCraft;
+import physics.gravity.ode.ODEFunction;
+import physics.gravity.ode.ODESolver;
+import physics.gravity.ode.State;
 import domain.Vector3D;
 import repositories.interfaces.SolarSystemInterface;
 import utils.PlanetReader;
-import utils.gravitytest.GravityTest;
 
 import java.util.*;
 
@@ -32,7 +30,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
   
     public void init(Vector3dInterface velocity) {
         ArrayList<MovingObject> planets = PlanetReader.getPlanets();
-        planets.get(5).setVelocity(velocity);
+        planets.get(9).setVelocity(velocity);
         setPlanets(planets);
     }
 
@@ -104,14 +102,14 @@ public class SolarSystemRepository implements SolarSystemInterface {
         ODESolver odes;
         ODEFunction odef;
 
-        odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
-        odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        odes = new ODESolver();
+        odef = new ODEFunction();
         StateInterface[][] timeLineArray = odes.getData(odef, totalTime, dt);
 
         FactoryProvider.getSolarSystemFactory().init();
 
-        odes = new ODESolver(FactoryProvider.getSolarSystemFactory());
-        odef = new ODEFunction(FactoryProvider.getSolarSystemFactory());
+        odes = new ODESolver();
+        odef = new ODEFunction();
         timeLineArray = odes.getData(odef,totalTime, dt);
 
         StateInterface[] tmp2 = timeLineArray[0];

@@ -1,9 +1,6 @@
 package utils.gravitytest;
 
 import domain.MovingObject;
-import domain.Planet;
-import domain.SpaceCraft;
-import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
@@ -12,9 +9,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import physics.gravity.ODEFunction;
-import physics.gravity.ODESolver;
-import physics.gravity.State;
+import physics.gravity.ode.ODEFunction;
+import physics.gravity.ode.ODESolver;
+import physics.gravity.ode.State;
 import repositories.SolarSystemRepository;
 
 import java.util.ArrayList;
@@ -34,8 +31,8 @@ public class GravityTest extends Application {
     protected static double totalTime = 1*365*daySec;
 
     protected static void simulate() {
-        ODESolver solve = new ODESolver(system);
-        ODEFunction f = new ODEFunction(system);
+        ODESolver solve = new ODESolver();
+        ODEFunction f = new ODEFunction();
 
         stateArrayList = new ArrayList<>();
         run(solve,f);

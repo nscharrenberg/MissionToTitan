@@ -1,4 +1,4 @@
-package physics.gravity;
+package physics.gravity.ode;
 
 import interfaces.RateInterface;
 import interfaces.Vector3dInterface;
