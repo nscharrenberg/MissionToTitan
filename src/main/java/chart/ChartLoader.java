@@ -1,4 +1,4 @@
-package utils.gravitytest;
+package chart;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,15 +8,14 @@ import javafx.scene.chart.XYChart;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Chart implements Initializable {
+public class ChartLoader implements Initializable {
 
     private static double daySec = 24.0 * 60 * 60;;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        GravityTest.initSystem();
         openDataSeries();
-        GravityTest.run();
+        Main.run();
         closeDataSeries();
     }
 
@@ -51,10 +50,10 @@ public class Chart implements Initializable {
         seriesE3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
     }
 
-    protected static void addDataF(double t,  double x) {
-        seriesF.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
-     //   seriesF2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
-      //  seriesF3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
+    protected static void addDataF(double t,  double x, double y, double z) {
+        seriesF.getData().addAll(new XYChart.Data(String.valueOf(t), x));
+        seriesF2.getData().addAll(new XYChart.Data(String.valueOf(t), y));
+        seriesF3.getData().addAll(new XYChart.Data(String.valueOf(t), z));
     }
 
     // javaFX

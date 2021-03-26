@@ -14,13 +14,13 @@ public class Sort {
         if (left >= right)
             return;
 
-        int pivot = array[(left+right)/2].getFitness();
+        double pivot = array[(left+right)/2].getFitness();
         int index = partition(array, left, right, pivot);
         quicksort(array, left, index - 1);
         quicksort(array, index, right);
     }
 
-    public static int partition(Individual[] array, int left, int right, int pivot) {
+    public static int partition(Individual[] array, int left, int right, double pivot) {
         while (left <= right) {
             while (array[left].getFitness() < pivot) {
                 left++;

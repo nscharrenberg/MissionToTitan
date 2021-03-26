@@ -1,47 +1,57 @@
 package physics.gravity.simulation;
 
-import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
 import physics.gravity.ode.ODEFunction;
 import physics.gravity.ode.ODESolver;
 import physics.gravity.ode.State;
-import utils.WriteToFile;
+import repositories.SolarSystemRepository;
+import repositories.interfaces.ISettingRepository;
 
 public class Simulation {
 
-    protected static double daySec = 60*24*60; // total seconds in a day
+    protected static double daySec = 60*24*60;
     protected static double t;
-    protected static double dt = 0.01*daySec;
+    protected static double dt = 0.1*daySec;
     public static StateInterface[][] timeLineArray;
 
 	public static double run(Vector3dInterface unit, int velocity) {
-        FactoryProvider.getSolarSystemFactory().init();
-        double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
+        simulate(unit, velocity);
+        return getMinDistance();
+    }
 
-        ODESolver odes;
-        ODEFunction odef;
+    private static void simulate(Vector3dInterface unit, int velocity) {
+        SolarSystemRepository system = FactoryProvider.getSolarSystemFactory();
+        ISettingRepository setting = FactoryProvider.getSettingRepository();
 
-        odes = new ODESolver();
-        odef = new ODEFunction();
-        timeLineArray = odes.getData(odef, totalTime, dt);
+        double totalTime = setting.getYearCount() * setting.getDayCount() * daySec;
+        ODESolver odes = new ODESolver();
+        ODEFunction odef = new ODEFunction();
 
-        State start = (State) timeLineArray[3][0];
+        system.init();
+        // TODO: fix .findPlanet("Earth")
+
         Vector3dInterface initialVelocity = unit.mul(velocity);
-        FactoryProvider.getSolarSystemFactory().init(initialVelocity.add(start.getVelocity()));
+        Vector3dInterface earthVelocity = system.getPlanets().get(3).getVelocity();
+        system.init(initialVelocity.add(earthVelocity));
 
         timeLineArray = odes.getData(odef, totalTime, dt);
-        return getMin();
     }
 
+    public static StateInterface[][] simulate() {
+        SolarSystemRepository system = FactoryProvider.getSolarSystemFactory();
+        ISettingRepository setting = FactoryProvider.getSettingRepository();
 
-    private static Vector3dInterface unitVecToGoal(Vector3dInterface start, Vector3dInterface goal) {
-        Vector3dInterface aim = goal.sub(start); // vector between earth and goal
-        return aim.mul(1.0/aim.norm());
+        double totalTime = setting.getYearCount() * setting.getDayCount() * daySec;
+        ODESolver odes = new ODESolver();
+        ODEFunction odef = new ODEFunction();
+
+        system.init();
+        return odes.getData(odef, totalTime, dt);
     }
 
-    public static double getMin() {
+    public static double getMinDistance() {
         double min = Double.MAX_VALUE;
 
         for (int i = 0; i < timeLineArray[0].length; i++) {
@@ -49,13 +59,11 @@ public class Simulation {
             State titan = (State) timeLineArray[8][i];
 
             double dist = probe.getPosition().dist(titan.getPosition());
-            if (min > dist) {
+
+            if (min > dist)
                 min = dist;
-            }
         }
        return min;
     }
-
-
 }
 

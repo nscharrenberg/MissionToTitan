@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Individual {
     Vector3dInterface vector;
-    int fitness;
+    double fitness;
     int speed;
     private boolean mutated;
 
@@ -34,19 +34,15 @@ public class Individual {
         mutated = true;
     }
 
-    private void determineFitness() {
-        fitness = (int)(Simulation.run(vector, speed)/1e5);
+    public void determineFitness() {
+        fitness = (Simulation.run(vector, speed)/1e5);
     }
 
-    public int getFitness() {
-        if (fitness == 0 || mutated) {
-            determineFitness();
-            mutated = false;
-        }
+    public double getFitness() {
         return fitness;
     }
 
     public String toString() {
-        return "" + getFitness();
+        return "" + (int)getFitness();
     }
 }

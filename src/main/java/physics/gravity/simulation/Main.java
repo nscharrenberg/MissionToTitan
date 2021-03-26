@@ -1,7 +1,6 @@
 package physics.gravity.simulation;
 
 import domain.Vector3D;
-import factory.FactoryProvider;
 import interfaces.Vector3dInterface;
 
 import java.util.Arrays;
@@ -17,20 +16,27 @@ public class Main {
     static Random r;
 
     public static void main(String[] args) {
-        r = new Random();
-        init();
-        min = copyOf(population[0]);
+        Simulate();
+        // 0.01 | 380346.22178186907 | {x=30217.082016337914, y=-41205.24044109956, z=-590.1451151472414}
+        // 0.001 |
 
+        //Simulation.run(new Vector3D(30217.082016337914,-41205.24044109956,-590.1451151472414), 1);
+        //System.out.println(Simulation.getMin());
+    }
+
+    public static void Simulate() {
+        r = new Random();
+        min = new Individual(new Vector3D(1,1,1), 1);
+        min.fitness = Double.MAX_VALUE;
 
         for (int j = 0; j < 100; j++) {
             init();
             for (int i = 0; i < GENERATIONS; i++) {
+                generation();
+                if (min.getFitness() > population[0].getFitness())
+                    min = copyOf(population[0]);
                 System.out.print("Generation " + (i + 1) + " | ");
                 System.out.print("min: " + min + " | ");
-                generation();
-                if (min.fitness > population[0].fitness)
-                    min = copyOf(population[0]);
-
                 print(population);
                 System.out.println("| Min vector: " + min.vector.mul(min.speed));
             }
@@ -50,7 +56,7 @@ public class Main {
 
     public static Individual copyOf(Individual a) {
         Individual copy = new Individual(a.vector, a.speed);
-        copy.fitness = a.fitness;
+        copy.fitness = a.getFitness();
         return copy;
     }
 
@@ -65,6 +71,7 @@ public class Main {
         for(int i = 0; i < MUTATION_RATE; i++) {
             population[r.nextInt(population.length)].mutate();
         }
+        updateFitness();
         population = Sort.quicksort(population);
     }
 
@@ -92,6 +99,8 @@ public class Main {
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population[i] = new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
         }
+
+        updateFitness();
     }
 
     /**
@@ -118,4 +127,11 @@ public class Main {
     private static void print(Individual[] array) {
         System.out.print(Arrays.toString(array));
     }
+
+    private static void updateFitness() {
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            population[i].determineFitness();
+        }
+    }
+
 }
