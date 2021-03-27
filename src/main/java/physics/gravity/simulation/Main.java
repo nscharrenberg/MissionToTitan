@@ -32,13 +32,19 @@ public class Main {
         for (int j = 0; j < 100; j++) {
             init();
             for (int i = 0; i < GENERATIONS; i++) {
+                long startTime = System.currentTimeMillis();
                 generation();
+
                 if (min.getFitness() > population[0].getFitness())
                     min = copyOf(population[0]);
+
                 System.out.print("Generation " + (i + 1) + " | ");
-                System.out.print("min: " + min + " | ");
-                print(population);
-                System.out.println("| Min vector: " + min.vector.mul(min.speed));
+                print();
+                System.out.print("| Min: " + min);
+                System.out.print("| Min vector: [vx=" + min.vector.mul(min.speed).getX() + ",vy=" + min.vector.mul(min.speed).getY() + ",vz=" + min.vector.mul(min.speed).getZ() + "] ");
+                System.out.print("| Speed: [" + min.speed + " m/s] ");
+                long endTime = System.currentTimeMillis();
+                System.out.println("| Compute Time: [" + ((endTime - startTime)/1000) + "s]");
             }
         }
     }
@@ -50,7 +56,7 @@ public class Main {
         if (min != null) {
             population[10] = copyOf(min);
         }
-        print(population);
+        print();
         System.out.println();
     }
 
@@ -63,7 +69,13 @@ public class Main {
     public static void generation() {
         removeWeakest();
         for(int i =  population.length/2; i < population.length; i++) {
-            population[i] = bread(population[r.nextInt(population.length)/2], population[r.nextInt(population.length)/2]);
+            int a = r.nextInt(population.length)/2;
+            int b = r.nextInt(population.length)/2;
+
+            if (a != b)
+                population[i] = breed(population[r.nextInt(population.length) / 2], population[r.nextInt(population.length) / 2]);
+             else if (a == b)
+                i--;
         }
 
         population[population.length-1 ]= new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
@@ -87,7 +99,7 @@ public class Main {
     /**
      * returns a new child from 2 parents a and b
      */
-    public static Individual bread(Individual a, Individual b) {
+    public static Individual breed(Individual a, Individual b) {
         return new Individual(new Vector3D((a.vector.getX() + b.vector.getX())/2, (a.vector.getY() + b.vector.getY())/2, (a.vector.getZ() + b.vector.getZ())/2), (a.speed+b.speed)/2);
     }
 
@@ -124,8 +136,14 @@ public class Main {
             return random;
     }
 
-    private static void print(Individual[] array) {
-        System.out.print(Arrays.toString(array));
+    /**
+     * prints out top 3 individuals
+     */
+    private static void print() {
+        System.out.print("Top 3: ");
+        for (int i = 0; i < 3; i++) {
+            System.out.print("[" + population[i] + "] ");
+        }
     }
 
     private static void updateFitness() {

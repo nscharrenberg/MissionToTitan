@@ -35,7 +35,7 @@ public class Individual {
     }
 
     public void determineFitness() {
-        fitness = (Simulation.run(vector, speed)/1e5);
+        fitness = (Simulation.run(vector, speed));
     }
 
     public double getFitness() {
@@ -43,6 +43,6 @@ public class Individual {
     }
 
     public String toString() {
-        return "" + (int)getFitness();
+        return "" + (int)(getFitness()/1e4) + "e4 m";
     }
 }

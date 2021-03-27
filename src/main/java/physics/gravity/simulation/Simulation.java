@@ -13,7 +13,7 @@ public class Simulation {
 
     protected static double daySec = 60*24*60;
     protected static double t;
-    protected static double dt = 0.1*daySec;
+    protected static double dt = 0.5*daySec;
     public static StateInterface[][] timeLineArray;
 
 	public static double run(Vector3dInterface unit, int velocity) {
