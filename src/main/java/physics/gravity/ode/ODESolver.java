@@ -13,14 +13,13 @@ import java.util.List;
 public class ODESolver implements ODESolverInterface, DataInterface {
 
     private SolarSystemRepository system; // repository for all planets.
-    private StateInterface[][] allStates; // 2d array containing all states of all planets.
+    private List<MovingObject> planets;
+    private StateInterface[][] timelineArray; // 2d array containing all states of all planets.
     private int currentPlanetIndex;
     private int size;
-    private List<MovingObject> planets;
 
     public ODESolver(){
         this.system = FactoryProvider.getSolarSystemFactory();
-
     }
 
     @Override
@@ -35,15 +34,15 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                     time += ts[k];
                 }
                 // inserting step into the array
-                allStates[j][i] = step(f, time, allStates[j][i - 1], ts[i]-ts[i-1]);
-                State state = (State) allStates[j][i];
+                timelineArray[j][i] = step(f, time, timelineArray[j][i - 1], ts[i]-ts[i-1]);
+                State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
                 system.getPlanets().get(j).setPosition(state.getPosition());
                 system.getPlanets().get(j).setVelocity(state.getVelocity());
             }
         }
-        return allStates[currentPlanetIndex];
+        return timelineArray[currentPlanetIndex];
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         init(y0);
         addInitialStates();
         computeStates(f,h);
-        return allStates[currentPlanetIndex];
+        return timelineArray[currentPlanetIndex];
     }
 
     /**
@@ -61,7 +60,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     private void init(StateInterface y0) {
         system.init();
         planets = system.getPlanets();
-        allStates = new StateInterface[planets.size()][size];
+        timelineArray = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
     }
 
@@ -69,7 +68,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
-        allStates = new StateInterface[planets.size()][size];
+        timelineArray = new StateInterface[planets.size()][size];
     }
 
     /**
@@ -79,7 +78,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         for (int i = 0; i <planets.size(); i++)
             if (planets.get(i).getName().equals(y0.getMovingObject().getName()))
                 return i;
-        return allStates.length-1; // if it's not a planet, it returns the last index, which is the index of the probe
+        return timelineArray.length-1; // if it's not a planet, it returns the last index, which is the index of the probe
     }
 
     /**
@@ -89,7 +88,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     private void addInitialStates() {
         for (int i = 0; i < planets.size(); i++) {
             StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), planets.get(i));
-            allStates[i][0] = state;
+            timelineArray[i][0] = state;
         }
     }
 
@@ -102,8 +101,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
             for( int j = 0; j < planets.size(); j++)
             {
                 // inserting step into the array
-                allStates[j][i] = step(f, h*i, allStates[j][i - 1], h);
-                State state = (State) allStates[j][i];
+                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
                 system.getPlanets().get(j).setPosition(state.getPosition());
@@ -122,6 +121,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         init(tf,h);
         addInitialStates();
         computeStates(f,h);
-        return allStates;
+        return timelineArray;
     }
 }

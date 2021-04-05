@@ -1,9 +1,7 @@
 package physics.gravity.ode;
 
-import domain.MovingObject;
 import domain.Vector3D;
 import factory.FactoryProvider;
-import interfaces.ODEFunctionInterface;
 import interfaces.ProbeSimulatorInterface;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;

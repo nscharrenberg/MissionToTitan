@@ -2,34 +2,46 @@ package chart;
 
 import factory.FactoryProvider;
 import interfaces.StateInterface;
+import interfaces.Vector3dInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import physics.gravity.ode.State;
-import physics.gravity.simulation.Simulation;
 
 public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
     }
+    private static int daySec = 60*60*24;
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/sample.fxml"));
-        stage.setTitle("Earth");
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/chart.fxml"));
+        stage.setTitle("Graph");
         stage.setScene(new Scene(root));
         stage.show();
     }
 
     public static void run() {
-        StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(60*60*24, 60*60*24*365);
+        System.out.println("GRAPH:");
 
-        for (int t = 0; t < timeLineArray[0].length; t++) {
-            State earth = (State)timeLineArray[3][t];
-            ChartLoader.addDataA(t, earth.getPosition().getX(), 0, 0);
+        double dt = 6;
+        StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365, dt);
+
+        System.out.println("- Completed computing states");
+
+        double startTime = 256*daySec;
+        double endTime = 261*daySec;
+        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=500) {
+            State probe = (State)timeLineArray[6][t];
+            State titan = (State)timeLineArray[5][t];
+            Vector3dInterface difference = probe.getPosition().sub(titan.getPosition());
+            ChartLoader.addDataA(t, difference.norm(), 0, 0);
         }
+
+        System.out.println("- Completed inserting states into graph");
     }
 }

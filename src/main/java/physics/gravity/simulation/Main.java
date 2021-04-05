@@ -15,6 +15,7 @@ public class Main {
     static Random r;
 
     public static void main(String[] args) {
+        System.out.println("Starting Genetic Simulation");
         Simulate();
     }
 

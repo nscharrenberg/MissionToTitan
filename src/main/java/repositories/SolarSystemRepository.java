@@ -3,6 +3,7 @@ package repositories;
 import domain.MovingObject;
 import domain.Planet;
 import factory.FactoryProvider;
+import interfaces.ODEFunctionInterface;
 import interfaces.StateInterface;
 import physics.gravity.ode.ODEFunction;
 import physics.gravity.ode.ODESolver;
@@ -18,7 +19,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
     private List<List<MovingObject>> timeLine = new ArrayList<>();
 
     private static double daySec = 60*24*60; // total seconds in a day
-    private static double dt = 10;
+    private static double dt = 0.1*daySec;
     private StateInterface[][] timeLineArray;
 
     @Override
@@ -120,7 +121,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
     private void computeTimeLineArray(double totalTime, double dt) {
         ODESolver odes = new ODESolver();
-        ODEFunction odef = new ODEFunction();
+        ODEFunctionInterface odef = new ODEFunction();
         timeLineArray = odes.getData(odef, totalTime, dt);
     }
 
