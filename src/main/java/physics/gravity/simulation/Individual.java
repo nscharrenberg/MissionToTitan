@@ -39,6 +39,6 @@ public class Individual {
     }
 
     public String toString() {
-        return "" + (int)(getFitness()/1e4) + "e4 m";
+        return "" + (int)(getFitness());
     }
 }

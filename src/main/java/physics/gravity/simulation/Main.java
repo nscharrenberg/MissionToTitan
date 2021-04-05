@@ -36,7 +36,7 @@ public class Main {
                 System.out.print("Generation " + (i + 1) + " | ");
                 print();
                 System.out.print("| Min: " + min);
-                System.out.print("| Min vector: [vx=" + min.vector.mul(min.speed).getX() + ",vy=" + min.vector.mul(min.speed).getY() + ",vz=" + min.vector.mul(min.speed).getZ() + "] ");
+                System.out.print("| Min vector: [" + min.vector.mul(min.speed).getX() + "," + min.vector.mul(min.speed).getY() + "," + min.vector.mul(min.speed).getZ() + "] ");
                 System.out.print("| Speed: [" + min.speed + " m/s] ");
                 long endTime = System.currentTimeMillis();
                 System.out.println("| Compute Time: [" + ((endTime - startTime)/1000) + "s]");
