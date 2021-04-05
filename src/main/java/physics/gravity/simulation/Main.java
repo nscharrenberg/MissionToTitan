@@ -1,11 +1,7 @@
 package physics.gravity.simulation;
 
 import domain.Vector3D;
-import factory.FactoryProvider;
-import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
-import physics.gravity.ode.ProbeSimulator;
-import repositories.SolarSystemRepository;
 
 import java.util.Random;
 
@@ -101,15 +97,12 @@ public class Main {
         return new Individual(new Vector3D((a.vector.getX() + b.vector.getX())/2, (a.vector.getY() + b.vector.getY())/2, (a.vector.getZ() + b.vector.getZ())/2), (a.speed+b.speed)/2);
     }
 
-
-
     private static void initPopulation() {
         population = new Individual[POPULATION_SIZE];
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
             population[i] = new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
         }
-
         updateFitness();
     }
 

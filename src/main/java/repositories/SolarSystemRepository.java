@@ -4,7 +4,6 @@ import domain.MovingObject;
 import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
-import interfaces.Vector3dInterface;
 import physics.gravity.ode.ODEFunction;
 import physics.gravity.ode.ODESolver;
 import physics.gravity.ode.State;
@@ -95,9 +94,6 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
         FactoryProvider.getSolarSystemFactory().init();
         timeLineArray = getTimeLineArray(totalTime, dt);
-        Vector3dInterface v = new Vector3D(29573.460638021003,-40275.28329621004,-581.9011987071092);
-        System.out.println(((State)(timeLineArray[1][0])).getVelocity());
-        System.out.println(v.add(((State)(timeLineArray[1][0])).getVelocity()));
 
         StateInterface[] tmp2 = timeLineArray[0];
         int length = tmp2.length;
