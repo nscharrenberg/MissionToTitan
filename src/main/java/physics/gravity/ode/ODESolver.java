@@ -48,7 +48,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
-        size = (int)Math.round(tf/h);
+        size = (int)Math.round(tf/h)+1;
         init(y0);
         addInitialStates();
         computeStates(f,h);
@@ -66,7 +66,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     }
 
     private void init(double tf, double h) {
-       // system.init();
+        system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
         allStates = new StateInterface[planets.size()][size];
@@ -108,17 +108,14 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 // updating the MovingObject's (Planet) state
                 system.getPlanets().get(j).setPosition(state.getPosition());
                 system.getPlanets().get(j).setVelocity(state.getVelocity());
-
             }
         }
-
     }
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
-        return y.addMul(h,f.call(h,y)); // y[i+1] = y[i] + h * f.call(t[i], y[i])
+        return y.addMul(h,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
     }
-
 
     @Override
     public StateInterface[][] getData(ODEFunctionInterface f, double tf, double h) {

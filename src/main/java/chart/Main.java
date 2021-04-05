@@ -1,5 +1,6 @@
 package chart;
 
+import factory.FactoryProvider;
 import interfaces.StateInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +25,7 @@ public class Main extends Application {
     }
 
     public static void run() {
-        StateInterface[][] timeLineArray = Simulation.simulate();
+        StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(60*60*24, 60*60*24*365);
 
         for (int t = 0; t < timeLineArray[0].length; t++) {
             State earth = (State)timeLineArray[3][t];

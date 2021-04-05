@@ -18,19 +18,13 @@ public class SolarSystemRepository implements SolarSystemInterface {
     private List<MovingObject> planets = new ArrayList<>();
     private List<List<MovingObject>> timeLine = new ArrayList<>();
 
-    protected static double daySec = 60*24*60; // total seconds in a day
-    protected static double t;
-    protected static double dt = 0.01*daySec;
+    private static double daySec = 60*24*60; // total seconds in a day
+    private static double dt = 10;
+    private StateInterface[][] timeLineArray;
 
     @Override
     public void init() {
         ArrayList<MovingObject> planets = PlanetReader.getPlanets();
-        setPlanets(planets);
-    }
-  
-    public void init(Vector3dInterface velocity) {
-        ArrayList<MovingObject> planets = PlanetReader.getPlanets();
-        planets.get(9).setVelocity(velocity);
         setPlanets(planets);
     }
 
@@ -99,18 +93,11 @@ public class SolarSystemRepository implements SolarSystemInterface {
         this.planets = new ArrayList<>();
         double totalTime = FactoryProvider.getSettingRepository().getYearCount() * FactoryProvider.getSettingRepository().getDayCount() * daySec;
 
-        ODESolver odes;
-        ODEFunction odef;
-
-        odes = new ODESolver();
-        odef = new ODEFunction();
-        StateInterface[][] timeLineArray = odes.getData(odef, totalTime, dt);
-
         FactoryProvider.getSolarSystemFactory().init();
-
-        odes = new ODESolver();
-        odef = new ODEFunction();
-        timeLineArray = odes.getData(odef,totalTime, dt);
+        timeLineArray = getTimeLineArray(totalTime, dt);
+        Vector3dInterface v = new Vector3D(29573.460638021003,-40275.28329621004,-581.9011987071092);
+        System.out.println(((State)(timeLineArray[1][0])).getVelocity());
+        System.out.println(v.add(((State)(timeLineArray[1][0])).getVelocity()));
 
         StateInterface[] tmp2 = timeLineArray[0];
         int length = tmp2.length;
@@ -125,11 +112,21 @@ public class SolarSystemRepository implements SolarSystemInterface {
         }
     }
 
-    private Vector3dInterface unitVecToGoal(Vector3dInterface start, Vector3dInterface goal) {
-        Vector3dInterface aim = goal.sub(start); // vector between earth and goal
-        return aim.mul(1.0/aim.norm());
+    public StateInterface[][] getTimeLineArray(double totalTime, double dt) {
+        if (this.timeLineArray == null) {
+            computeTimeLineArray(totalTime, dt);
+        }
+        else if (this.timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
+            computeTimeLineArray(totalTime, dt);
+        }
+        return timeLineArray;
     }
 
+    private void computeTimeLineArray(double totalTime, double dt) {
+        ODESolver odes = new ODESolver();
+        ODEFunction odef = new ODEFunction();
+        timeLineArray = odes.getData(odef, totalTime, dt);
+    }
 
     @Override
     public List<List<MovingObject>> getTimeLine() {

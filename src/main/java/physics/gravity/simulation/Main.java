@@ -1,9 +1,12 @@
 package physics.gravity.simulation;
 
 import domain.Vector3D;
+import factory.FactoryProvider;
+import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
+import physics.gravity.ode.ProbeSimulator;
+import repositories.SolarSystemRepository;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Main {
@@ -17,11 +20,6 @@ public class Main {
 
     public static void main(String[] args) {
         Simulate();
-        // 0.01 | 380346.22178186907 | {x=30217.082016337914, y=-41205.24044109956, z=-590.1451151472414}
-        // 0.001 |
-
-        //Simulation.run(new Vector3D(30217.082016337914,-41205.24044109956,-590.1451151472414), 1);
-        //System.out.println(Simulation.getMin());
     }
 
     public static void Simulate() {
@@ -148,8 +146,10 @@ public class Main {
 
     private static void updateFitness() {
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            population[i].determineFitness();
+             population[i].determineFitness();
         }
     }
+
+
 
 }
