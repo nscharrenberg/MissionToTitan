@@ -20,7 +20,16 @@ public class ChartLoader implements Initializable {
     }
 
     // Data
-   protected static void addDataA(double t, double x, double y, double z) {
+    protected static void addDataA(double t, double x) {
+        seriesA.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+    }
+
+    protected static void addDataA(double t, double x, double y) {
+        seriesA.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
+        seriesA2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
+    }
+
+    protected static void addDataA(double t, double x, double y, double z) {
         seriesA.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
         seriesA2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
         seriesA3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
@@ -38,11 +47,11 @@ public class ChartLoader implements Initializable {
     /**
      * initializes the series receiving the chart coordinates
      */
-    private void openDataSeries() {
-        seriesA = new XYChart.Series();
-        seriesA2 = new XYChart.Series();
-        seriesA3 = new XYChart.Series();
-    }
+     private void openDataSeries() {
+         seriesA = new XYChart.Series();
+         seriesA2 = new XYChart.Series();
+         seriesA3 = new XYChart.Series();
+     }
 
     /**
      * closes those series for them to be displayed on the chart

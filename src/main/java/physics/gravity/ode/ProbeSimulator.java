@@ -5,6 +5,8 @@ import factory.FactoryProvider;
 import interfaces.ProbeSimulatorInterface;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
+import physics.gravity.ode.function.ODEFunction;
+import physics.gravity.ode.solver.ODESolver;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
 

@@ -5,8 +5,12 @@ import domain.Planet;
 import factory.FactoryProvider;
 import interfaces.ODEFunctionInterface;
 import interfaces.StateInterface;
-import physics.gravity.ode.ODEFunction;
-import physics.gravity.ode.ODESolver;
+import physics.gravity.ode.function.ODEFunction;
+import physics.gravity.ode.function.ODERungeFunction;
+import physics.gravity.ode.function.ODEVerletFunction;
+import physics.gravity.ode.solver.ODERungeSolver;
+import physics.gravity.ode.solver.ODESolver;
+import physics.gravity.ode.solver.ODEVerletSolver;
 import physics.gravity.ode.State;
 import domain.Vector3D;
 import repositories.interfaces.SolarSystemInterface;
@@ -119,10 +123,25 @@ public class SolarSystemRepository implements SolarSystemInterface {
         return timeLineArray;
     }
 
-    private void computeTimeLineArray(double totalTime, double dt) {
+    public void computeTimeLineArray(double totalTime, double dt) {
         ODESolver odes = new ODESolver();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray = odes.getData(odef, totalTime, dt);
+    }
+
+    public void computeTimeLineArrayVerlet(double totalTime, double dt) {
+        ODEVerletSolver odes = new ODEVerletSolver();
+        ODEFunctionInterface odef = new ODEVerletFunction();
+        timeLineArray = odes.getData(odef, totalTime, dt);
+    }
+
+    /**
+     * TODO: Implement Runge kutta ODE
+     */
+    public void computeTimeLineArrayRunge(double totalTime, double dt) {
+        ODERungeSolver odes = new ODERungeSolver();
+        ODERungeFunction odef = new ODERungeFunction();
+        //timeLineArray = odes.getData(odef, totalTime, dt);
     }
 
     @Override
