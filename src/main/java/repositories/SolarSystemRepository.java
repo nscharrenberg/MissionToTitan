@@ -6,7 +6,9 @@ import factory.FactoryProvider;
 import interfaces.ODEFunctionInterface;
 import interfaces.StateInterface;
 import physics.gravity.ode.function.ODEFunction;
+import physics.gravity.ode.function.ODERungeFunction;
 import physics.gravity.ode.function.ODEVerletFunction;
+import physics.gravity.ode.solver.ODERungeSolver;
 import physics.gravity.ode.solver.ODESolver;
 import physics.gravity.ode.solver.ODEVerletSolver;
 import physics.gravity.ode.State;
@@ -116,7 +118,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
             computeTimeLineArray(totalTime, dt);
         }
         else if (this.timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
-         //   computeTimeLineArray(totalTime, dt);
+            computeTimeLineArray(totalTime, dt);
         }
         return timeLineArray;
     }
@@ -131,6 +133,15 @@ public class SolarSystemRepository implements SolarSystemInterface {
         ODEVerletSolver odes = new ODEVerletSolver();
         ODEFunctionInterface odef = new ODEVerletFunction();
         timeLineArray = odes.getData(odef, totalTime, dt);
+    }
+
+    /**
+     * TODO: Implement Runge kutta ODE
+     */
+    public void computeTimeLineArrayRunge(double totalTime, double dt) {
+        ODERungeSolver odes = new ODERungeSolver();
+        ODERungeFunction odef = new ODERungeFunction();
+        //timeLineArray = odes.getData(odef, totalTime, dt);
     }
 
     @Override

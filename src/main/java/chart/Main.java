@@ -1,15 +1,12 @@
 package chart;
 
-import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
-import interfaces.Vector3dInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import physics.gravity.ode.ProbeSimulator;
 import physics.gravity.ode.State;
 
 public class Main extends Application {
@@ -43,7 +40,7 @@ public class Main extends Application {
         double startTime = 255.2*daySec;
         double endTime = 255.5*daySec;
 
-        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=10) {
+        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=1) {
             State probe = (State)timeLineArray[6][t];
             State titan = (State)timeLineArray[5][t];
             //State earth = (State)timeLineArray[5][t];
