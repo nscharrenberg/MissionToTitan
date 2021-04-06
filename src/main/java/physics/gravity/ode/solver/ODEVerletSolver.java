@@ -1,24 +1,24 @@
-package physics.gravity.ode;
+package physics.gravity.ode.solver;
 
 import domain.MovingObject;
+import domain.Vector3D;
 import factory.FactoryProvider;
-import interfaces.DataInterface;
-import interfaces.ODEFunctionInterface;
-import interfaces.ODESolverInterface;
-import interfaces.StateInterface;
+import interfaces.*;
+import physics.gravity.ode.Rate;
+import physics.gravity.ode.State;
 import repositories.SolarSystemRepository;
 
 import java.util.List;
 
-public class ODESolver implements ODESolverInterface, DataInterface {
+public class ODEVerletSolver implements ODESolverInterface, DataInterface {
 
-    private SolarSystemRepository system; // repository for all planets.
-    private List<MovingObject> planets;
-    private StateInterface[][] timelineArray; // 2d array containing all states of all planets.
-    private int currentPlanetIndex;
-    private int size;
+    protected SolarSystemRepository system; // repository for all planets.
+    protected List<MovingObject> planets;
+    protected StateInterface[][] timelineArray; // 2d array containing all states of all planets.
+    protected int currentPlanetIndex;
+    protected int size;
 
-    public ODESolver(){
+    public ODEVerletSolver(){
         this.system = FactoryProvider.getSolarSystemFactory();
     }
 
@@ -57,14 +57,14 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     /**
      * determines and initializes variables needed for calculating new states.
      */
-    private void init(StateInterface y0) {
+    protected void init(StateInterface y0) {
         system.init();
         planets = system.getPlanets();
         timelineArray = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
     }
 
-    private void init(double tf, double h) {
+    protected void init(double tf, double h) {
         system.init();
         planets = system.getPlanets();
         size = (int)Math.round(tf/h)+1;
@@ -74,7 +74,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     /**
      * determine the index of the planet of y0 in the planets list.
      */
-    private int getIndexOfPlanet(State y0) {
+    protected int getIndexOfPlanet(State y0) {
         for (int i = 0; i <planets.size(); i++)
             if (planets.get(i).getName().equals(y0.getMovingObject().getName()))
                 return i;
@@ -85,9 +85,9 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * setting t[0] in the allStates array
      * for all planets to their initial state
      */
-    private void addInitialStates() {
+    protected void addInitialStates() {
         for (int i = 0; i < planets.size(); i++) {
-            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), planets.get(i));
+            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), new Vector3D(0,0,0), planets.get(i));
             timelineArray[i][0] = state;
         }
     }
@@ -96,7 +96,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * computes all states of all planets for t[1]
      * and up and adds them in the allStates array
      */
-    private void computeStates(ODEFunctionInterface f, double h) {
+    protected void computeStates(ODEFunctionInterface f, double h) {
         for (int i = 1; i < size; i++) {
             for( int j = 0; j < planets.size(); j++)
             {
@@ -113,7 +113,12 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
-        return y.addMul(h,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
+        Rate rate = (Rate)f.call(h, y);
+        State state = (State)y;
+        Vector3dInterface newPosition = state.getPosition().add(state.getVelocity().mul(h)).add(state.getAcceleration().mul(h*h/2));
+        Vector3dInterface newVelocity = rate.getVelocity();
+        Vector3dInterface newAcceleration = rate.getAcceleration();
+        return new State(newPosition, newVelocity, newAcceleration, state.getMovingObject());
     }
 
     @Override
@@ -123,4 +128,5 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         computeStates(f,h);
         return timelineArray;
     }
+
 }
