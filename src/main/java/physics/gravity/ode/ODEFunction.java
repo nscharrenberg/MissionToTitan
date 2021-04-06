@@ -32,7 +32,7 @@ public class ODEFunction implements ODEFunctionInterface {
         return new Rate(rateAcceleration, rateVelocity);
     }
 
-    private void applyForces(MovingObject a){
+    void applyForces(MovingObject a){
         List<MovingObject> list = system.getPlanets();
         resetForces(list);
         addForcesToPlanets(a, list);
