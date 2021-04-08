@@ -48,3 +48,34 @@ Below are some instructions on how you could create a new task:
 
 Note: If an issue has "child issues" under itself, then it would be good practice to make a checklist with all it's child issues as well, so you have a good overview to what issues it depends on.
 
+
+
+## Code Review
+
+When you are attached to an issue for a code review, your task is going to be fairly straight forward: Evaluate the written code and point out any feedback you have. 
+This can be things like:
+
+- Broken code
+- Inefficient Code
+- Unused imports
+- Unused variables, methods, libraries etc...
+- Bugs, exploits
+- weird variable, method, class naming
+- undocumented and unclear code
+- Any other kind of flaws
+
+If anything non-breaking feedback is given, then add comments to those lines and message the person that is responsible for that task fix it. (Don't accept or decline).
+
+If you give feedback because you think it's breaking anything or it's fundamentally flawed, then comment on them, decline the PR and message the person that is responsible for that task to fix and extensively test it. (this is to prevent accidentally merging broken code)
+
+
+Once everything is fine, accept the pull request and make sure the task is send to "Done".
+
+
+
+### Feedback has been given what should I do?
+
+If minor feedback (non-breaking) has been given and the pull request has remained open, then you can simply commit to the branch and the pull request will automatically update with your latest changes. Once you're done just message the reviewer again and he'll handle it again.
+
+If major feedback (breaking) has been given, then you can also just continue on the same branch but when you are done you need to go through the Pull Request process again, and assign a reviewer again and message him to check it out.
+
