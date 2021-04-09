@@ -35,6 +35,17 @@ public class State implements StateInterface {
         return state;
     }
 
+    public StateInterface addMul(double step, StateInterface state) {
+        State r = (State) state;
+        State mul = new State(r.getPosition().mul(step), r.getVelocity().mul(step), object);
+        return new State(position.add(mul.getPosition()), velocity.add(mul.getVelocity()),object);
+    }
+
+    public StateInterface add(StateInterface addedState ) {
+        State state = (State)addedState;
+        return new State(position.add(state.getVelocity()), velocity.add(state.getVelocity()),object);
+    }
+
     public void setPosition(Vector3dInterface position) {
         this.position = position;
     }

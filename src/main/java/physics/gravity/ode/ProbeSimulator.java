@@ -8,7 +8,7 @@ import interfaces.Vector3dInterface;
 import physics.gravity.ode.function.ODEFunction;
 import physics.gravity.ode.solver.ODESolver;
 
-public class ProbeSimulator implements ProbeSimulatorInterface {
+public class  ProbeSimulator implements ProbeSimulatorInterface {
 
     private static final double G = 6.67408e-11; // Gravitational Constant
 

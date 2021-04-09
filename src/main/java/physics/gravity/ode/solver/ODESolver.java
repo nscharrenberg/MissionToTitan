@@ -1,6 +1,7 @@
 package physics.gravity.ode.solver;
 
 import domain.MovingObject;
+import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.DataInterface;
 import interfaces.ODEFunctionInterface;
@@ -88,7 +89,7 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      */
     protected void addInitialStates() {
         for (int i = 0; i < planets.size(); i++) {
-            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), planets.get(i));
+            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), new Vector3D(0,0,0), planets.get(i));
             timelineArray[i][0] = state;
         }
     }
