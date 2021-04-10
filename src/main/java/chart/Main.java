@@ -27,15 +27,8 @@ public class Main extends Application {
     public static void run() {
         System.out.println("GRAPH:");
 
-        double dt = 10;
+        double dt = 100;
         double year = 1;
-        //FactoryProvider.getSolarSystemFactory().computeTimeLineArray(daySec*365.24*year,dt);
-        //StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365.24*year, dt);
-
-
-
-       // FactoryProvider.getSolarSystemFactory().computeTimeLineArrayVerlet(daySec*365.24*year,dt);
-       // StateInterface[][] timeLineArrayVerlet = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365.24*year, dt);
 
         System.out.println("Starting Runge-Kutta");
 
@@ -44,10 +37,10 @@ public class Main extends Application {
 
         System.out.println("- Completed computing states");
 
-        double startTime = 255.3*daySec;
-        double endTime = year*255.4*daySec;
+        double startTime = 0*daySec;
+        double endTime = year*365*daySec;
 
-        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=1) {
+        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=100) {
 
             State probe = (State)timeLineArrayRunge[6][t];
             State titan = (State)timeLineArrayRunge[5][t];
