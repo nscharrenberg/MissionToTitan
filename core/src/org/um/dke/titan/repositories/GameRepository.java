@@ -5,8 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -36,7 +38,7 @@ public class GameRepository implements IGameRepository {
     private static final float MINIMUM_CAMERA_ZOOM = (float)1e5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
-    private Label planetFocusLbl, cameraZoomLbl, cameraLbl;
+    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl;
 
     @Override
     public void create() {
@@ -55,12 +57,15 @@ public class GameRepository implements IGameRepository {
             object.addActor(stage);
         }
 
+        this.planetChooserLbl = new Label("(1) Sun (2) Earth (3) Jupiter (4) Saturn (5) Luna (6) Titan", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.planetChooserLbl.setPosition(15, Gdx.graphics.getHeight() - 25);
         this.cameraLbl = new Label(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z) , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        this.cameraLbl.setPosition(15, Gdx.graphics.getHeight() - 25);
+        this.cameraLbl.setPosition(15, Gdx.graphics.getHeight() - 50);
         this.planetFocusLbl = new Label("Following: None", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        this.planetFocusLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
+        this.planetFocusLbl.setPosition(15, Gdx.graphics.getHeight() - 100);
         this.cameraZoomLbl = new Label("Zoom(Z/X): " + this.camera.zoom, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 50);
+        this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
+        stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
         stage.addActor(cameraZoomLbl);
         stage.addActor(cameraLbl);
@@ -201,9 +206,9 @@ public class GameRepository implements IGameRepository {
             return;
         }
 
-//        this.camera.position.slerp(this.toFollow.getPosition(), deltaTime);
-        this.camera.position.x = this.toFollow.getPosition().x;
-        this.camera.position.y = this.toFollow.getPosition().y;
+        this.camera.position.slerp(this.toFollow.getPosition(), deltaTime);
+//        this.camera.position.x = this.toFollow.getPosition().x;
+//        this.camera.position.y = this.toFollow.getPosition().y;
         this.camera.zoom = this.toFollow.getZoomLevel();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
