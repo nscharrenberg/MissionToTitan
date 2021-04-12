@@ -1,5 +1,6 @@
 package org.um.dke.titan.domain;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,12 +19,14 @@ public class SpaceObject {
     protected float radius;
     protected Vector3 position;
     protected Texture texture;
+    protected float zoomLevel;
 
-    public SpaceObject(String name, float mass, float radius, Vector3 position) {
+    public SpaceObject(String name, float mass, float radius, Vector3 position, float zoomLevel) {
         this.name = new Label(name, GENERIC_LABEL_STYLE);
         this.mass = mass;
         this.position = position;
         this.radius = radius;
+        this.zoomLevel = zoomLevel;
     }
 
     public float getDiameter() {
@@ -78,5 +81,32 @@ public class SpaceObject {
 
     public void setRadius(float radius) {
         this.radius = radius;
+    }
+
+    public float getX() {
+        return this.position.x;
+    }
+
+    public float getY() {
+        return this.position.y;
+    }
+
+    public float getZ() {
+        return this.position.z;
+    }
+
+    public void setTexture(String path) {
+        Texture texture = new Texture(Gdx.files.internal(path));
+        texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        this.texture = texture;
+    }
+
+    public float getZoomLevel() {
+        return zoomLevel;
+    }
+
+    public void setZoomLevel(float zoomLevel) {
+        this.zoomLevel = zoomLevel;
     }
 }
