@@ -4,11 +4,14 @@ package org.um.dke.titan;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.SpaceObject;
@@ -32,6 +35,8 @@ public class Game extends ApplicationAdapter {
 	private float CAMERA_ZOOM_SPEED = (float)5;
 	private static final float MINIMUM_CAMERA_ZOOM = (float)1e5;
 	private static final float CAMERA_MOVE_SPEED = (float)1000;
+
+	private Label planetFocusLbl, cameraZoomLbl, cameraLbl;
 
 	@Override
 	public void create() {
@@ -61,6 +66,19 @@ public class Game extends ApplicationAdapter {
 		for (SpaceObject object : this.objects.values()) {
 			stage.addActor(object.getName());
 		}
+
+		this.cameraLbl = new Label(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z) , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		this.cameraLbl.setPosition(15, Gdx.graphics.getHeight() - 25);
+		this.planetFocusLbl = new Label("Following: None", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		this.planetFocusLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
+		this.cameraZoomLbl = new Label("Zoom(Z/X): " + this.camera.zoom, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 50);
+		stage.addActor(planetFocusLbl);
+		stage.addActor(cameraZoomLbl);
+		stage.addActor(cameraLbl);
+
+		// Start from Earth
+		focusToPlanet(earth);
 	}
 
 	@Override
@@ -116,32 +134,36 @@ public class Game extends ApplicationAdapter {
 	private void uiControls(float deltaTime) {
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
 			this.camera.zoom += CAMERA_ZOOM_SPEED * deltaTime * camera.zoom;
-			System.out.println(this.camera.zoom);
+			cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.X) && this.camera.zoom > MINIMUM_CAMERA_ZOOM) {
 			this.camera.zoom -= CAMERA_ZOOM_SPEED * deltaTime * camera.zoom;
-			System.out.println(this.camera.zoom);
+			cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			camera.position.y += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
-			this.toFollow = null;
+			unfollow();
+			cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			camera.position.y -= CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
-			this.toFollow = null;
+			unfollow();
+			cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
 			camera.position.x -= CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
-			this.toFollow = null;
+			unfollow();
+			cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
 			camera.position.x += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
-			this.toFollow = null;
+			unfollow();
+			cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
 		}
 	}
 
@@ -164,15 +186,23 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
+	private void unfollow() {
+		this.toFollow = null;
+		planetFocusLbl.setText("Following: None");
+	}
+
 	private void follow() {
 		this.camera.position.x = this.toFollow.getX();
 		this.camera.position.y = this.toFollow.getY();
 		this.camera.update();
+
+		cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
 	}
 
 	private void focusToPlanet(SpaceObject object) {
 		this.isFocussing = true;
 		this.toFollow = object;
+		planetFocusLbl.setText(String.format("Following: %s", object.getName().getText().toString()));
 	}
 
 	private void focus(float deltaTime) {
@@ -182,5 +212,8 @@ public class Game extends ApplicationAdapter {
 
 		this.camera.position.slerp(this.toFollow.getPosition(), deltaTime);
 		this.camera.zoom = this.toFollow.getZoomLevel();
+
+		cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
+		cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
 	}
 }
