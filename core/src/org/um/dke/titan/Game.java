@@ -29,8 +29,9 @@ public class Game extends ApplicationAdapter {
 
 	private Stage stage;
 
-	private float CAMERA_ZOOM_SPEED = (float)1e7;
+	private float CAMERA_ZOOM_SPEED = (float)5;
 	private static final float MINIMUM_CAMERA_ZOOM = (float)1e5;
+	private static final float CAMERA_MOVE_SPEED = (float)1000;
 
 	@Override
 	public void create() {
@@ -114,13 +115,33 @@ public class Game extends ApplicationAdapter {
 
 	private void uiControls(float deltaTime) {
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			this.camera.zoom += CAMERA_ZOOM_SPEED * deltaTime;
+			this.camera.zoom += CAMERA_ZOOM_SPEED * deltaTime * camera.zoom;
 			System.out.println(this.camera.zoom);
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.X) && this.camera.zoom > MINIMUM_CAMERA_ZOOM) {
-			this.camera.zoom -= CAMERA_ZOOM_SPEED * deltaTime;
+			this.camera.zoom -= CAMERA_ZOOM_SPEED * deltaTime * camera.zoom;
 			System.out.println(this.camera.zoom);
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			camera.position.y += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
+			this.toFollow = null;
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			camera.position.y -= CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
+			this.toFollow = null;
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+			camera.position.x -= CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
+			this.toFollow = null;
+		}
+
+		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			camera.position.x += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
+			this.toFollow = null;
 		}
 	}
 
