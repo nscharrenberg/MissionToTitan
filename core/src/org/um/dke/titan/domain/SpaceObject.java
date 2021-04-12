@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
@@ -45,6 +45,14 @@ public class SpaceObject {
         }
 
         batch.end();
+    }
+
+    public void addActor(Stage stage) {
+        stage.addActor(this.getName());
+    }
+
+    public void dispose() {
+        texture.dispose();
     }
 
     public Label getName() {
