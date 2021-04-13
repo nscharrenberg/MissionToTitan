@@ -40,10 +40,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 timelineArray[j][i] = step(f, time, timelineArray[j][i - 1], ts[i]-ts[i-1]);
                 State state = (State) timelineArray[j][i];
 
-                if (planet.getName().getText().toString().equals("Probe")) {
-                    System.out.println("Probeeeee");
-                }
-
                 if (planet instanceof Rocket) {
                     // updating the MovingObject's (Planet) state
                     system.getRocketName(planet.getName().getText().toString()).setPosition(state.getPosition());
