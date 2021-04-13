@@ -12,7 +12,8 @@ public enum SpaceObjectEnum {
     JUPITER("Jupiter", "planets/Jupiter.png"),
     SATURN("Saturn", "planets/Saturn.png"),
     TITAN("Titan", "planets/Titan.png"),
-    SHIP("Probe", "planets/Probe.png");
+    SHIP("Probe", "planets/Probe.png"),
+    SHIP_2("OtherProbe", "planets/Probe.png");
 
     private final String name;
     private final String texturePath;

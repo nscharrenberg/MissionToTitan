@@ -183,6 +183,8 @@ public class GameRepository implements IGameRepository {
             found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.SATURN.getName(), SpaceObjectEnum.TITAN.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
             found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
+            found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP_2.getName());
         }
 
         if (found != null) {
