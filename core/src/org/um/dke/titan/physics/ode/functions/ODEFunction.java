@@ -75,6 +75,11 @@ public class ODEFunction implements ODEFunctionInterface {
     protected Vector3dInterface newtonsLaw(MovingObject a, MovingObject b) {
         Vector3D r = (Vector3D) b.getPosition().sub(a.getPosition()); // xi - xj
         double gravConst = G * a.getMass() * b.getMass(); // G * Mi * Mj
+
+        if (r.norm() == 0) {
+            r = new Vector3D(1,1,1);
+        }
+
         double modr3 = Math.pow(r.norm(),3); // ||xi - xj||^3
 
         return r.mul(gravConst/modr3); // full formula together

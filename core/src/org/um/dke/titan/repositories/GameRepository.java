@@ -68,7 +68,7 @@ public class GameRepository implements IGameRepository {
         stage.addActor(cameraLbl);
 
         // Start from Earth
-        focusToPlanet(FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.EARTH.getName()));
+        focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()));
     }
 
     @Override
