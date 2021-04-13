@@ -95,6 +95,7 @@ public class GameRepository implements IGameRepository {
 
         for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
             object.render(batch, camera);
+            object.next();
         }
     }
 

@@ -61,7 +61,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         this.planets = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
-        double dt = 0.1*60*24*60;
+        double dt = 50;
 
         FactoryProvider.getSolarSystemRepository().init();
 
@@ -78,7 +78,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
                 State state = (State) timeLineArray[j][i];
                 MovingObject sio = state.getMovingObject();
                 name = sio.getName().getText().toString();
-                FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new MovingObject(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), sio.getPosition(), sio.getZoomLevel(), sio.getVelocity()));
+                FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new MovingObject(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
             }
         }
     }

@@ -91,4 +91,12 @@ public class MovingObject extends SpaceObject {
     public void setVelocity(Vector3dInterface velocity) {
         this.velocity = velocity;
     }
+
+    public void next() {
+        MovingObject object = this.timeline.remove();
+
+        // TODO: Speed up drawing by relatively removing items.
+
+        this.position = object.getPosition();
+    }
 }
