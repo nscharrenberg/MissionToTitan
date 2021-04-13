@@ -97,6 +97,8 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
      * and up and adds them in the allStates array
      */
     protected void computeStates(ODEFunctionInterface f, double h) {
+        System.out.println("computing states");
+
         for (int i = 1; i < size; i++) {
             for( int j = 0; j < planets.size(); j++)
             {

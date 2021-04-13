@@ -35,12 +35,12 @@ public class Simulation extends Thread{
     }
 
     public static void simulate(Vector3dInterface unit, int velocity) {
-        timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365, dt);
+        timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*280, dt);
 
         Vector3dInterface earthVelocity = ((physics.gravity.ode.State)(timeLineArray[PlanetEnum.EARTH.getId()][0])).getVelocity();
 
         ProbeSimulator probeSimulator = new ProbeSimulator();
-        probePositions = probeSimulator.trajectory(new Vector3D(-1.4729367095433246E11, -2.92689818799422E10, 6581247.7920834115),unit.mul(velocity).add(earthVelocity),daySec*365, dt);
+        probePositions = probeSimulator.trajectory(new Vector3D(-1.4729367095433246E11, -2.92689818799422E10, 6581247.7920834115),unit.mul(velocity).add(earthVelocity),daySec*280, dt);
     }
 }
 

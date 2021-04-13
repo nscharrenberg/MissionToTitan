@@ -50,16 +50,9 @@ public class  ProbeSimulator implements ProbeSimulatorInterface {
         probeStateArray[0] = initialState;
         force = new Vector3D(0,0,0);
 
-
-        boolean[] engineInterval = new boolean[probePositions.length];
-
         for (int i = 1; i < timeLineArray[0].length; i++) {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
-                    if(true){
-                        force = force.add(engineForce(i-1));
-                    }
-
                     probeStateArray[i] = step(probeStateArray[i-1], h);
                     force = new Vector3D(0, 0, 0);
                 } else {
@@ -113,10 +106,11 @@ public class  ProbeSimulator implements ProbeSimulatorInterface {
      *  returns the unit vector of the desired thrust angle
      */
     private Vector3dInterface findThrustVector(int index){
-        Vector3dInterface positionProbe = ((State) probeStateArray[index]).getPosition();
-        State stateTitan = (State) timeLineArray[PlanetEnum.TITANT.getId()][index];
+        State probe = ((State) probeStateArray[index]);
+        State titan = (State) timeLineArray[PlanetEnum.TITANT.getId()][index];
 
-        Vector3dInterface thrustVector = stateTitan.getPosition().sub(positionProbe);
+        Vector3dInterface thrustVector = titan.getPosition().sub(probe.getPosition());
+        thrustVector = thrustVector.sub(probe.getVelocity());
         return thrustVector.mul(1/thrustVector.norm());
     }
 
@@ -124,8 +118,7 @@ public class  ProbeSimulator implements ProbeSimulatorInterface {
      *  returns the force vector of the engine of the probe
      */
     private Vector3dInterface engineForce(int t) {
-        return findThrustVector(t).mul(100);
+        return findThrustVector(t).mul(1000);
     }
-
 
 }

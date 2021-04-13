@@ -106,10 +106,12 @@ public class SolarSystemRepository implements SolarSystemInterface {
 
     public StateInterface[][] getTimeLineArray(double totalTime, double dt) {
         if (this.timeLineArray == null) {
-            computeTimeLineArray(totalTime, dt);
+            computeTimeLineArrayRunge(totalTime, dt);
+            System.out.println("=null" + " " + timeLineArray[0].length);
         }
         else if (this.timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
-            computeTimeLineArray(totalTime, dt);
+            System.out.println("not same size" + " " + timeLineArray[0].length);
+            computeTimeLineArrayRunge(totalTime, dt);
         }
         return timeLineArray;
     }

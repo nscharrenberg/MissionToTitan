@@ -35,8 +35,8 @@ public class Main extends Application {
         System.out.println("GRAPH:");
 
 
-        double dt = 100;
-        double tf = daySec*365*10;
+        double dt = 10;
+        double tf = daySec*365;
         double year = 1;
 
         System.out.println("Starting Runge-Kutta");
