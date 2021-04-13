@@ -1,6 +1,7 @@
 package org.um.dke.titan.domain;
 
 import com.badlogic.gdx.math.Vector3;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
 import java.util.LinkedList;
@@ -100,7 +101,7 @@ public class MovingObject extends SpaceObject {
         MovingObject object = this.timeline.remove();
 
         // TODO: Speed up drawing by relatively removing items.
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < FactoryProvider.getGameRepository().getTimeToSkip(); i++) {
             if (this.timeline.size() > 0) {
                 timeline.remove();
             }

@@ -2,6 +2,7 @@ package org.um.dke.titan.repositories;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
@@ -31,6 +34,9 @@ public class GameRepository implements IGameRepository {
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
     private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl;
+    private TextField timeField;
+
+    private int timeToSkip = 250;
 
     @Override
     public void create() {
@@ -62,6 +68,7 @@ public class GameRepository implements IGameRepository {
         this.planetFocusLbl.setPosition(15, Gdx.graphics.getHeight() - 100);
         this.cameraZoomLbl = new Label("Zoom(Z/X): " + this.camera.zoom, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
+
         stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
         stage.addActor(cameraZoomLbl);
@@ -331,5 +338,10 @@ public class GameRepository implements IGameRepository {
     @Override
     public void setCameraLbl(Label cameraLbl) {
         this.cameraLbl = cameraLbl;
+    }
+
+    @Override
+    public int getTimeToSkip() {
+        return timeToSkip;
     }
 }

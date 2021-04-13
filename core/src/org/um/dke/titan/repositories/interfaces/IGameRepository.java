@@ -56,4 +56,6 @@ public interface IGameRepository {
     Label getCameraLbl();
 
     void setCameraLbl(Label cameraLbl);
+
+    int getTimeToSkip();
 }
