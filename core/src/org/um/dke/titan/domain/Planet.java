@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import org.um.dke.titan.interfaces.Vector3dInterface;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,21 @@ import java.util.Queue;
 
 public class Planet extends MovingObject {
     private Map<String, Moon> moons;
+
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
+        super(name, mass, radius, position, zoomLevel);
+        this.moons = new HashMap<>();
+    }
+
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Map<String, Moon> moons) {
+        super(name, mass, radius, position, zoomLevel);
+        this.moons = moons;
+    }
+
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Queue<SpaceObject> timeline, Map<String, Moon> moons) {
+        super(name, mass, radius, position, zoomLevel, timeline);
+        this.moons = moons;
+    }
 
     public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel) {
         super(name, mass, radius, position, zoomLevel);
@@ -72,5 +88,9 @@ public class Planet extends MovingObject {
         for (Moon moon : getMoons().values()) {
             moon.addActor(stage);
         }
+    }
+
+    public Planet clone() {
+        return new Planet(name.getText().toString(), mass, radius, position, zoomLevel, moons);
     }
 }

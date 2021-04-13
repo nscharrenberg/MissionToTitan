@@ -20,6 +20,7 @@ import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.utils.FileImporter;
+import org.um.dke.titan.utils.VectorConverter;
 
 import java.util.Map;
 
@@ -188,8 +189,8 @@ public class GameRepository implements IGameRepository {
     }
 
     private void follow() {
-        this.camera.position.x = this.toFollow.getX();
-        this.camera.position.y = this.toFollow.getY();
+        this.camera.position.x = (float)this.toFollow.getX();
+        this.camera.position.y = (float)this.toFollow.getY();
         this.camera.update();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
@@ -206,9 +207,7 @@ public class GameRepository implements IGameRepository {
             return;
         }
 
-        this.camera.position.slerp(this.toFollow.getPosition(), deltaTime);
-//        this.camera.position.x = this.toFollow.getPosition().x;
-//        this.camera.position.y = this.toFollow.getPosition().y;
+        this.camera.position.slerp(VectorConverter.convertToVector3(this.toFollow.getPosition()), deltaTime);
         this.camera.zoom = this.toFollow.getZoomLevel();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));

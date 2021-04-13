@@ -17,14 +17,22 @@ public class SpaceObject {
     protected Label name;
     protected float mass;
     protected float radius;
-    protected Vector3 position;
+    protected Vector3dInterface position;
     protected Texture texture;
     protected float zoomLevel;
+
+    public SpaceObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
+        this.name = new Label(name, GENERIC_LABEL_STYLE);
+        this.mass = mass;
+        this.position = position;
+        this.radius = radius;
+        this.zoomLevel = zoomLevel;
+    }
 
     public SpaceObject(String name, float mass, float radius, Vector3 position, float zoomLevel) {
         this.name = new Label(name, GENERIC_LABEL_STYLE);
         this.mass = mass;
-        this.position = position;
+        this.position = new Vector3D(position);
         this.radius = radius;
         this.zoomLevel = zoomLevel;
     }
@@ -34,14 +42,14 @@ public class SpaceObject {
     }
 
     public void render(SpriteBatch batch, OrthographicCamera camera) {
-        Vector3 textPosition = new Vector3(this.position.x + getRadius(), this.position.y + getDiameter(), this.position.z);
+        Vector3 textPosition = new Vector3((float)this.position.getX() + getRadius(), (float)this.position.getY() + getDiameter(), (float)this.position.getZ());
         camera.project(textPosition);
         this.name.setPosition(textPosition.x, textPosition.y);
 
         batch.begin();
 
         if (texture != null) {
-            batch.draw(this.texture, this.position.x, this.position.y, getDiameter(), getDiameter());
+            batch.draw(this.texture, (float)this.position.getX(), (float)this.position.getY(), getDiameter(), getDiameter());
         }
 
         batch.end();
@@ -63,16 +71,16 @@ public class SpaceObject {
         return mass;
     }
 
-    public Vector3 getPosition() {
+    public Vector3dInterface getPosition() {
         return position;
     }
 
     public void setPosition(Vector3 position) {
-        this.position = position;
+        this.position = new Vector3D(position);
     }
 
     public void setPosition(Vector3dInterface position) {
-        this.position = new Vector3((float)position.getX(), (float)position.getY(), (float)position.getZ());
+        this.position = position;
     }
 
     public Texture getTexture() {
@@ -91,16 +99,16 @@ public class SpaceObject {
         this.radius = radius;
     }
 
-    public float getX() {
-        return this.position.x;
+    public double getX() {
+        return this.position.getX();
     }
 
-    public float getY() {
-        return this.position.y;
+    public double getY() {
+        return this.position.getY();
     }
 
-    public float getZ() {
-        return this.position.z;
+    public double getZ() {
+        return this.position.getZ();
     }
 
     public void setTexture(String path) {
