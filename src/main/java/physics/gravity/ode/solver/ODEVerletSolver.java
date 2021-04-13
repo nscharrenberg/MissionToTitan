@@ -10,7 +10,7 @@ import repositories.SolarSystemRepository;
 
 import java.util.List;
 
-public class ODEVerletSolver implements ODESolverInterface, DataInterface {
+public class ODEVerletSolver implements ODESolverInterface ,DataInterface {
 
     protected SolarSystemRepository system; // repository for all planets.
     protected List<MovingObject> planets;

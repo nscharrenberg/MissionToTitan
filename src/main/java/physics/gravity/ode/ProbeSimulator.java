@@ -8,9 +8,11 @@ import interfaces.Vector3dInterface;
 import physics.gravity.ode.function.ODEFunction;
 import physics.gravity.ode.solver.ODESolver;
 
-public class ProbeSimulator implements ProbeSimulatorInterface {
+public class  ProbeSimulator implements ProbeSimulatorInterface {
 
     private static final double G = 6.67408e-11; // Gravitational Constant
+    private Vector3dInterface force;
+    private double probeMass = FactoryProvider.getSolarSystemFactory().getPlanets().get(6).getMass();
 
     /**
      * TODO: Rewrite this method
@@ -38,15 +40,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         StateInterface[] probeStateArray = new StateInterface[timeLineArray[0].length];
         probeStateArray[0] = initialState;
 
-        Vector3dInterface force = new Vector3D(0,0,0);
+        force = new Vector3D(0,0,0);
 
         for (int i = 1; i < timeLineArray[0].length; i++) {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == 6) {
-                    Vector3dInterface rateAcceleration = force.mul(1 / ((State) (probeStateArray[i-1])).getMovingObject().getMass()); // a = F/m
-                    Vector3dInterface rateVelocity = ((State) probeStateArray[i - 1]).getVelocity().add(rateAcceleration.mul(h));
-                    Rate rate = new Rate(rateAcceleration, rateVelocity);
-                    probeStateArray[i] = probeStateArray[i - 1].addMul(h, rate);
+                    probeStateArray[i] = step(probeStateArray[i-1], h);
                     force = new Vector3D(0, 0, 0);
                 } else {
                     force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i-1]));
@@ -59,6 +58,20 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             positionArray[i] = ((State)(probeStateArray[i])).getPosition();
         }
         return positionArray;
+    }
+
+    private Rate call(double t, StateInterface y) {
+        Vector3dInterface rateAcceleration = force.mul(1 / probeMass); // a = F/m
+        Vector3dInterface rateVelocity = ((State)y).getVelocity().add(rateAcceleration.mul(t));
+        return new Rate(rateAcceleration, rateVelocity);
+    }
+
+    private StateInterface step(StateInterface y, double h) {
+        Rate k1 = call(h, y);
+        Rate k2 = call(0.5*h, y.addMul(0.5, k1));
+        Rate k3 = call(0.5*h, y.addMul(0.5, k2));
+        Rate k4 = call(h, y.addMul(1, k3));
+        return y.addMul(h/6d, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
     }
 
     /**

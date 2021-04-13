@@ -6,7 +6,6 @@ import factory.FactoryProvider;
 import interfaces.ODEFunctionInterface;
 import interfaces.StateInterface;
 import physics.gravity.ode.function.ODEFunction;
-import physics.gravity.ode.function.ODERungeFunction;
 import physics.gravity.ode.function.ODEVerletFunction;
 import physics.gravity.ode.solver.ODERungeSolver;
 import physics.gravity.ode.solver.ODESolver;
@@ -140,8 +139,8 @@ public class SolarSystemRepository implements SolarSystemInterface {
      */
     public void computeTimeLineArrayRunge(double totalTime, double dt) {
         ODERungeSolver odes = new ODERungeSolver();
-        ODERungeFunction odef = new ODERungeFunction();
-        //timeLineArray = odes.getData(odef, totalTime, dt);
+        ODEFunction odef = new ODEFunction();
+        timeLineArray = odes.getData(odef, totalTime, dt);
     }
 
     @Override

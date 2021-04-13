@@ -2,11 +2,13 @@ package chart;
 
 import factory.FactoryProvider;
 import interfaces.StateInterface;
+import interfaces.Vector3dInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import physics.gravity.ode.ProbeSimulator;
 import physics.gravity.ode.State;
 
 public class Main extends Application {
@@ -27,26 +29,27 @@ public class Main extends Application {
     public static void run() {
         System.out.println("GRAPH:");
 
-        double dt = 5;
-        double year = 260.0/365.0;
-        FactoryProvider.getSolarSystemFactory().computeTimeLineArray(daySec*365*year,dt);
-        StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365*year, dt);
+        double dt = 10;
+        double year = 1;
 
-        //FactoryProvider.getSolarSystemFactory().computeTimeLineArrayVerlet(daySec*365*year,dt);
-       // StateInterface[][] timeLineArrayVerlet = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365*year, dt);
+        System.out.println("Starting Runge-Kutta");
+
+        FactoryProvider.getSolarSystemFactory().computeTimeLineArrayRunge(daySec*365.24*year,dt);
+        StateInterface[][] timeLineArrayRunge = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365.24*year, dt);
+
+        ProbeSimulator simulator = new ProbeSimulator();
+        Vector3dInterface[] probeArray = simulator.trajectory(((State)timeLineArrayRunge[6][0]).getPosition(), ((State)timeLineArrayRunge[6][0]).getVelocity(), daySec*365.24*year, dt);
 
         System.out.println("- Completed computing states");
 
-        double startTime = 255.2*daySec;
-        double endTime = 255.5*daySec;
+        double startTime = 0*daySec;
+        double endTime = year*365*daySec;
 
-        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=1) {
-            State probe = (State)timeLineArray[6][t];
-            State titan = (State)timeLineArray[5][t];
-            //State earth = (State)timeLineArray[5][t];
-            //State earthVerlet = (State)timeLineArrayVerlet[5][t];
-            ChartLoader.addDataA(t, probe.getPosition().dist(titan.getPosition()));
-           // ChartLoader.addDataA(t,probe.getPosition().dist(titan.getPosition()));
+        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=100) {
+
+            State probe = (State)timeLineArrayRunge[6][t];
+
+            ChartLoader.addDataA(t,   probe.getPosition().dist(probeArray[t]));
         }
 
         System.out.println("- Completed inserting states into graph");
