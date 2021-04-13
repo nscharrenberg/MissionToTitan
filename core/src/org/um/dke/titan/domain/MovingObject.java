@@ -7,32 +7,36 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MovingObject extends SpaceObject {
-    protected Queue<SpaceObject> timeline;
+    protected Queue<MovingObject> timeline;
     protected Vector3dInterface force;
     protected Vector3dInterface acceleration;
     protected Vector3dInterface velocity;
 
-    public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
+    public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity) {
         super(name, mass, radius, position, zoomLevel);
         this.timeline = new LinkedList<>();
+        this.velocity = velocity;
     }
 
-    public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Queue<SpaceObject> timeline) {
+    public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<MovingObject> timeline) {
         super(name, mass, radius, position, zoomLevel);
         this.timeline = timeline;
+        this.velocity = velocity;
     }
 
-    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel) {
+    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
         super(name, mass, radius, position, zoomLevel);
         this.timeline = new LinkedList<>();
+        this.velocity = new Vector3D(velocity);
     }
 
-    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Queue<SpaceObject> timeline) {
+    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity ,Queue<MovingObject> timeline) {
         super(name, mass, radius, position, zoomLevel);
         this.timeline = timeline;
+        this.velocity = new Vector3D(velocity);
     }
 
-    public void add(SpaceObject object) {
+    public void add(MovingObject object) {
         this.timeline.offer(object);
     }
 
@@ -40,16 +44,16 @@ public class MovingObject extends SpaceObject {
         this.timeline.poll();
     }
 
-    public Queue<SpaceObject> getTimeline() {
+    public Queue<MovingObject> getTimeline() {
         return timeline;
     }
 
-    public void setTimeline(Queue<SpaceObject> timeline) {
+    public void setTimeline(Queue<MovingObject> timeline) {
         this.timeline = timeline;
     }
 
     public MovingObject clone() {
-        return new MovingObject(name.getText().toString(), mass, radius, position, zoomLevel);
+        return new MovingObject(name.getText().toString(), mass, radius, position, zoomLevel, velocity);
     }
 
     public Vector3dInterface getForce() {

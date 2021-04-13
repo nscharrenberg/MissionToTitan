@@ -26,7 +26,7 @@ public class FileImporter {
                 zoomLevel = planet.get("zoomLevel").asFloat();
             }
 
-            Planet p = new Planet(found.getName(), planet.get("mass").asFloat(), planet.get("radius").asFloat(), new Vector3(planet.get("x").asFloat(),planet.get("y").asFloat(),0), zoomLevel);
+            Planet p = new Planet(found.getName(), planet.get("mass").asFloat(), planet.get("radius").asFloat(), new Vector3(planet.get("x").asFloat(),planet.get("y").asFloat(),planet.get("z").asFloat()), zoomLevel, new Vector3(planet.get("vx").asFloat(),planet.get("vy").asFloat(),planet.get("vz").asFloat()));
             p.setTexture(found.getTexturePath());
 
             FactoryProvider.getSolarSystemRepository().addPlanet(found.getName(), p);
@@ -41,7 +41,7 @@ public class FileImporter {
                         zoomLevelMoon = moon.get("zoomLevel").asFloat();
                     }
 
-                    Moon m = new Moon(foundMoon.getName(), moon.get("mass").asFloat(), moon.get("radius").asFloat(), new Vector3(moon.get("x").asFloat(),moon.get("y").asFloat(),0), zoomLevelMoon, p);
+                    Moon m = new Moon(foundMoon.getName(), moon.get("mass").asFloat(), moon.get("radius").asFloat(), new Vector3(moon.get("x").asFloat(),moon.get("y").asFloat(),moon.get("z").asFloat()), zoomLevelMoon, new Vector3(moon.get("vx").asFloat(),moon.get("vy").asFloat(),moon.get("vz").asFloat()), p);
                     m.setTexture(foundMoon.getTexturePath());
                     p.addMoon(foundMoon.getName(), m);
                 }

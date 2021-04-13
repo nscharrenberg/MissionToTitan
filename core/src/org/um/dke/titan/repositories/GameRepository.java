@@ -43,7 +43,8 @@ public class GameRepository implements IGameRepository {
 
     @Override
     public void create() {
-        FileImporter.load("data_20200401");
+        FactoryProvider.getSolarSystemRepository().init();
+        FactoryProvider.getSolarSystemRepository().preprocessing();
 
         this.camera = new OrthographicCamera();
         this.camera.zoom = (float)8e6;
@@ -207,7 +208,9 @@ public class GameRepository implements IGameRepository {
             return;
         }
 
-        this.camera.position.slerp(VectorConverter.convertToVector3(this.toFollow.getPosition()), deltaTime);
+//        this.camera.position.slerp(VectorConverter.convertToVector3(this.toFollow.getPosition()), deltaTime);
+        this.camera.position.x = (float) this.toFollow.getPosition().getX();
+        this.camera.position.y = (float) this.toFollow.getPosition().getY();
         this.camera.zoom = this.toFollow.getZoomLevel();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));

@@ -13,33 +13,33 @@ import java.util.Queue;
 public class Planet extends MovingObject {
     private Map<String, Moon> moons;
 
-    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
-        super(name, mass, radius, position, zoomLevel);
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity) {
+        super(name, mass, radius, position, zoomLevel, velocity);
         this.moons = new HashMap<>();
     }
 
-    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel);
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Map<String, Moon> moons) {
+        super(name, mass, radius, position, zoomLevel, velocity);
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Queue<SpaceObject> timeline, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel, timeline);
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<MovingObject> timeline, Map<String, Moon> moons) {
+        super(name, mass, radius, position, zoomLevel, velocity, timeline);
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel) {
-        super(name, mass, radius, position, zoomLevel);
+    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
+        super(name, mass, radius, position, zoomLevel, velocity);
         this.moons = new HashMap<>();
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel);
+    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Map<String, Moon> moons) {
+        super(name, mass, radius, position, zoomLevel, velocity);
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Queue<SpaceObject> timeline, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel, timeline);
+    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Queue<MovingObject> timeline, Map<String, Moon> moons) {
+        super(name, mass, radius, position, zoomLevel, velocity, timeline);
         this.moons = moons;
     }
 
@@ -91,6 +91,6 @@ public class Planet extends MovingObject {
     }
 
     public Planet clone() {
-        return new Planet(name.getText().toString(), mass, radius, position, zoomLevel, moons);
+        return new Planet(name.getText().toString(), mass, radius, position, zoomLevel, velocity, moons);
     }
 }
