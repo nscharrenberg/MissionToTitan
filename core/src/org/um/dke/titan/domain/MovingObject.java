@@ -93,9 +93,18 @@ public class MovingObject extends SpaceObject {
     }
 
     public void next() {
+        if (this.timeline.size() <= 0) {
+            return;
+        }
+
         MovingObject object = this.timeline.remove();
 
         // TODO: Speed up drawing by relatively removing items.
+        for (int i = 0; i < 250; i++) {
+            if (this.timeline.size() > 0) {
+                timeline.remove();
+            }
+        }
 
         this.position = object.getPosition();
     }
