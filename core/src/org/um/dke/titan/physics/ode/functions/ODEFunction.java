@@ -14,7 +14,6 @@ import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ODEFunction implements ODEFunctionInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
@@ -43,6 +42,8 @@ public class ODEFunction implements ODEFunctionInterface {
             list.add(planet);
             list.addAll(planet.getMoons().values());
         }
+
+        list.addAll(system.getRockets().values());
 
         resetForces(list);
         addForcesToPlanets(a, list);

@@ -5,24 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.um.dke.titan.domain.Moon;
-import org.um.dke.titan.domain.Planet;
-import org.um.dke.titan.domain.SpaceObject;
-import org.um.dke.titan.domain.SpaceObjectEnum;
+import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
-import org.um.dke.titan.utils.FileImporter;
-import org.um.dke.titan.utils.VectorConverter;
-
-import java.util.Map;
 
 public class GameRepository implements IGameRepository {
     private Viewport viewport;
@@ -36,7 +27,7 @@ public class GameRepository implements IGameRepository {
     private Stage stage;
 
     private float CAMERA_ZOOM_SPEED = (float)5;
-    private static final float MINIMUM_CAMERA_ZOOM = (float)1e5;
+    private static final float MINIMUM_CAMERA_ZOOM = (float)5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
     private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl;
@@ -56,6 +47,10 @@ public class GameRepository implements IGameRepository {
         this.isFocussing = false;
 
         for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
+            object.addActor(stage);
+        }
+
+        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
             object.addActor(stage);
         }
 
@@ -97,6 +92,11 @@ public class GameRepository implements IGameRepository {
             object.render(batch, camera);
             object.next();
         }
+
+        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
+            object.render(batch, camera);
+            object.next();
+        }
     }
 
     @Override
@@ -104,6 +104,10 @@ public class GameRepository implements IGameRepository {
         batch.dispose();
 
         for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
+            object.dispose();
+        }
+
+        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
             object.dispose();
         }
     }
@@ -177,6 +181,8 @@ public class GameRepository implements IGameRepository {
             found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.EARTH.getName(), SpaceObjectEnum.MOON.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
             found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.SATURN.getName(), SpaceObjectEnum.TITAN.getName());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
+            found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName());
         }
 
         if (found != null) {
@@ -191,8 +197,8 @@ public class GameRepository implements IGameRepository {
     }
 
     private void follow() {
-        this.camera.position.x = (float)this.toFollow.getX();
-        this.camera.position.y = (float)this.toFollow.getY();
+        this.camera.position.x = (float) this.toFollow.getPosition().getX() + this.toFollow.getRadius();
+        this.camera.position.y = (float) this.toFollow.getPosition().getY() + this.toFollow.getRadius();
         this.camera.update();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));

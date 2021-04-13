@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import org.um.dke.titan.domain.Moon;
-import org.um.dke.titan.domain.Planet;
-import org.um.dke.titan.domain.SpaceObject;
-import org.um.dke.titan.domain.SpaceObjectEnum;
+import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 
 public class FileImporter {
@@ -16,7 +13,7 @@ public class FileImporter {
         JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("data/%s.json", name)));
 
         JsonValue planets = base.get("planets");
-//        JsonValue rockets = base.get("rockets");
+        JsonValue rockets = base.get("rockets");
 
         for (JsonValue planet : planets) {
             SpaceObjectEnum found = SpaceObjectEnum.getByName(planet.get("name").asString());
@@ -48,8 +45,18 @@ public class FileImporter {
             }
         }
 
-//        for (JsonValue rocket: rockets) {
-//
-//        }
+        for (JsonValue rocket: rockets) {
+            SpaceObjectEnum found = SpaceObjectEnum.getByName(rocket.get("name").asString());
+            float zoomLevel = (float) ((rocket.get("radius").asFloat() * 2) / 1e2);
+
+            if (rocket.has("zoomLevel")) {
+                zoomLevel = rocket.get("zoomLevel").asFloat();
+            }
+
+            Rocket r = new Rocket(found.getName(), rocket.get("mass").asFloat(), rocket.get("radius").asFloat(), new Vector3(rocket.get("x").asFloat(),rocket.get("y").asFloat(),rocket.get("z").asFloat()), zoomLevel, new Vector3(rocket.get("vx").asFloat(),rocket.get("vy").asFloat(),rocket.get("vz").asFloat()));
+            r.setTexture(found.getTexturePath());
+
+            FactoryProvider.getSolarSystemRepository().addRocket(found.getName(), r);
+        }
     }
 }

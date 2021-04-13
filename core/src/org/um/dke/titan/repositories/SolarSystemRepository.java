@@ -3,6 +3,7 @@ package org.um.dke.titan.repositories;
 import org.um.dke.titan.domain.Moon;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
+import org.um.dke.titan.domain.Rocket;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
@@ -15,10 +16,12 @@ import java.util.*;
 
 public class SolarSystemRepository implements org.um.dke.titan.repositories.interfaces.ISolarSystemRepository {
     private Map<String, Planet> planets;
+    private Map<String, Rocket> rockets;
     private StateInterface[][] timeLineArray;
 
     public SolarSystemRepository() {
         this.planets = new HashMap<>();
+        this.rockets = new HashMap<>();
     }
 
     @Override
@@ -60,6 +63,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         this.planets = new HashMap<>();
+        this.rockets = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
         double dt = 100;
 
@@ -83,6 +87,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
                     Planet planet = ((Moon) sio).getPlanet();
                     String planetName = planet.getName().getText().toString();
                     FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(new Moon(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity(), planet));
+                } else if (sio instanceof Rocket) {
+                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(new Rocket(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
                 }
             }
         }
@@ -102,5 +108,33 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         ODESolver odes = new ODESolver();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);
+    }
+
+    @Override
+    public Map<String, Rocket> getRockets() {
+        return rockets;
+    }
+
+    @Override
+    public void setRockets(Map<String, Rocket> rockets) {
+        this.rockets = rockets;
+    }
+
+    @Override
+    public Rocket getRocketName(String name) {
+        return this.rockets.get(name);
+    }
+
+    @Override
+    public void addRocket(String name, Rocket object) {
+        this.rockets.put(name, object);
+    }
+
+    public StateInterface[][] getTimeLineArray() {
+        return timeLineArray;
+    }
+
+    public void setTimeLineArray(StateInterface[][] timeLineArray) {
+        this.timeLineArray = timeLineArray;
     }
 }

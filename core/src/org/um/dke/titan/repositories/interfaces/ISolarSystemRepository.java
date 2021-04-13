@@ -3,6 +3,7 @@ package org.um.dke.titan.repositories.interfaces;
 import org.um.dke.titan.domain.Moon;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
+import org.um.dke.titan.domain.Rocket;
 
 import java.util.Map;
 
@@ -18,6 +19,14 @@ public interface ISolarSystemRepository {
     Planet getPlanetByName(String name);
 
     Moon getMoonByName(String planetName, String moonName);
+
+    Map<String, Rocket> getRockets();
+
+    void setRockets(Map<String, Rocket> rockets);
+
+    Rocket getRocketName(String name);
+
+    void addRocket(String name, Rocket object);
 
     void init();
 
