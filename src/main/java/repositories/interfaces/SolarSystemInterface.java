@@ -2,7 +2,6 @@ package repositories.interfaces;
 
 import domain.MovingObject;
 import domain.Planet;
-import interfaces.Vector3dInterface;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ public interface SolarSystemInterface {
     void addPlanet(Planet planet);
     void addPlanets(Planet... planets);
     boolean removePlanet(String name);
-    Planet findPlanet(String name);
+    MovingObject findPlanet(String name);
     void init();
     void preprocessing();
     List<List<MovingObject>> getTimeLine();

@@ -119,6 +119,7 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
         Rate k4 = (Rate) f.call(h, y.addMul(1, k3));
         return y.addMul(h/6d, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
 
+
     }
 
     @Override

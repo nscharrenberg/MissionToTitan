@@ -1,5 +1,6 @@
 package physics.gravity.simulation;
 
+import domain.PlanetEnum;
 import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
@@ -22,7 +23,7 @@ public class Simulation extends Thread{
         double min = Double.MAX_VALUE;
 
         for (int i = 0; i < timeLineArray[0].length; i++) {
-            physics.gravity.ode.State titan = (physics.gravity.ode.State) timeLineArray[5][i];
+            physics.gravity.ode.State titan = (physics.gravity.ode.State) timeLineArray[PlanetEnum.TITANT.getId()][i];
             Vector3dInterface probe = probePositions[i];
 
             double dist = probe.dist(titan.getPosition()) - 2574000;
@@ -36,7 +37,7 @@ public class Simulation extends Thread{
     public static void simulate(Vector3dInterface unit, int velocity) {
         timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365, dt);
 
-        Vector3dInterface earthVelocity = ((physics.gravity.ode.State)(timeLineArray[1][0])).getVelocity();
+        Vector3dInterface earthVelocity = ((physics.gravity.ode.State)(timeLineArray[PlanetEnum.EARTH.getId()][0])).getVelocity();
 
         ProbeSimulator probeSimulator = new ProbeSimulator();
         probePositions = probeSimulator.trajectory(new Vector3D(-1.4729367095433246E11, -2.92689818799422E10, 6581247.7920834115),unit.mul(velocity).add(earthVelocity),daySec*365, dt);

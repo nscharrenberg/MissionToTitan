@@ -1,5 +1,7 @@
 package chart;
 
+import domain.Planet;
+import domain.PlanetEnum;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
@@ -17,6 +19,9 @@ public class Main extends Application {
         launch(args);
     }
     private static int daySec = 60*60*24;
+    private static int probeId = PlanetEnum.SHIP.getId();
+    private static int titanId = PlanetEnum.TITANT.getId();
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -29,27 +34,30 @@ public class Main extends Application {
     public static void run() {
         System.out.println("GRAPH:");
 
-        double dt = 10;
+
+        double dt = 100;
+        double tf = daySec*365*10;
         double year = 1;
 
         System.out.println("Starting Runge-Kutta");
 
-        FactoryProvider.getSolarSystemFactory().computeTimeLineArrayRunge(daySec*365.24*year,dt);
-        StateInterface[][] timeLineArrayRunge = FactoryProvider.getSolarSystemFactory().getTimeLineArray(daySec*365.24*year, dt);
+        FactoryProvider.getSolarSystemFactory().computeTimeLineArrayRunge(tf,dt);
+        StateInterface[][] timeLineArrayRunge = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, dt);
 
         ProbeSimulator simulator = new ProbeSimulator();
-        Vector3dInterface[] probeArray = simulator.trajectory(((State)timeLineArrayRunge[6][0]).getPosition(), ((State)timeLineArrayRunge[6][0]).getVelocity(), daySec*365.24*year, dt);
+        Vector3dInterface[] probeArray = simulator.trajectory(((State)timeLineArrayRunge[probeId][0]).getPosition(), ((State)timeLineArrayRunge[probeId][0]).getVelocity(), tf, dt);
 
         System.out.println("- Completed computing states");
 
-        double startTime = 0*daySec;
-        double endTime = year*365*daySec;
+        double startTime = 0;
+        double endTime = tf;
 
-        for (int t = (int)Math.round(startTime/dt)+1; t < (int)Math.round(endTime/dt)+1; t+=100) {
+        for (int t = (int)Math.round(startTime/dt); t < (int)Math.round(endTime/dt)+1; t+=1000) {
 
-            State probe = (State)timeLineArrayRunge[6][t];
+            State probe = (State)timeLineArrayRunge[probeId][t];
+            State titan = (State)timeLineArrayRunge[titanId][t];
 
-            ChartLoader.addDataA(t,   probe.getPosition().dist(probeArray[t]));
+            ChartLoader.addDataA(t,   probeArray[t].getX(), titan.getPosition().getX());
         }
 
         System.out.println("- Completed inserting states into graph");

@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 
 public class ChartLoader implements Initializable {
 
-    private static double daySec = 24.0 * 60 * 60;;
+    private static double daySec = 60*60*24;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -6,7 +6,6 @@ import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.Vector3dInterface;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
 import java.util.List;
 
 public class PositionConverter {

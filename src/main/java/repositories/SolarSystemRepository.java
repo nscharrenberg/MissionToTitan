@@ -31,11 +31,6 @@ public class SolarSystemRepository implements SolarSystemInterface {
         setPlanets(planets);
     }
 
-    private void sampleSolarSystem() {
-        addPlanet(new Planet(50, 10, new Vector3D(100, 100, 10), new Vector3D(105, 105, 15), "earth"));
-        addPlanet(new Planet(50, 20, new Vector3D(300, 350, 50), new Vector3D(310, 345, 10), "sun"));
-    }
-
     @Override
     public List<MovingObject> getPlanets() {
         return this.planets;
@@ -63,7 +58,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
             return false;
         }
 
-        Planet planet = findPlanet(name);
+        MovingObject planet = findPlanet(name);
 
         if (planet == null) {
             return false;
@@ -73,21 +68,18 @@ public class SolarSystemRepository implements SolarSystemInterface {
     }
 
     @Override
-    public Planet findPlanet(String name) {
+    public MovingObject findPlanet(String name) {
         if (this.planets.size() <= 0) {
             return null;
         }
         if (this.planets.size() == 1) {
             MovingObject tmp = this.planets.get(0);
-            if (tmp instanceof Planet) {
-                return this.planets.get(0).getName().equals(name) ? (Planet)tmp : null;
-            }
+            return this.planets.get(0).getName().equals(name) ? tmp : null;
         }
+
         MovingObject tmp = this.planets.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
-        if (tmp instanceof Planet) {
-            return (Planet)tmp;
-        }
-       return null;
+
+        return tmp;
     }
 
     @Override
