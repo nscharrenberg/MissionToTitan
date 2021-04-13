@@ -1,5 +1,6 @@
 package org.um.dke.titan.physics.ode.solvers;
 
+import org.um.dke.titan.domain.Moon;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Vector3D;
@@ -43,9 +44,21 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getPlanets().get(planet.getName().getText().toString()).setPosition(state.getPosition());
-                system.getPlanets().get(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                system.getPlanetByName(planet.getName().getText().toString()).setPosition(state.getPosition());
+                system.getPlanetByName(planet.getName().getText().toString()).setVelocity(state.getVelocity());
                 j++;
+
+                Planet p = (Planet) planet;
+
+                for (Moon moon : p.getMoons().values()) {
+                    // inserting step into the array
+                    timelineArray[j][i] = step(f, time, timelineArray[j][i - 1], ts[i]-ts[i-1]);
+                    State stateMoon = (State) timelineArray[j][i];
+
+                    system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setPosition(stateMoon.getPosition());
+                    system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setVelocity(stateMoon.getVelocity());
+                    j++;
+                }
             }
         }
         return timelineArray[currentPlanetIndex];
@@ -65,14 +78,26 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      */
     protected void init(StateInterface y0) {
         system.init();
-        planets = new ArrayList<>(system.getPlanets().values());
+
+        for (Planet planet : system.getPlanets().values()) {
+            planets.add(planet);
+            planets.addAll(planet.getMoons().values());
+        }
+
         timelineArray = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
     }
 
     protected void init(double tf, double h) {
         system.init();
-        planets = new ArrayList<>(system.getPlanets().values());
+
+        this.planets = new ArrayList<>();
+
+        for (Planet planet : system.getPlanets().values()) {
+            planets.add(planet);
+            planets.addAll(planet.getMoons().values());
+        }
+
         size = (int)Math.round(tf/h)+1;
         timelineArray = new StateInterface[planets.size()][size];
     }
@@ -105,16 +130,27 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     protected void computeStates(ODEFunctionInterface f, double h) {
         for (int i = 1; i < size; i++) {
             int j = 0;
-            for(MovingObject planet : planets)
+            for(MovingObject planet : system.getPlanets().values())
             {
                 // inserting step into the array
                 timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getPlanets().get(planet.getName().getText().toString()).setPosition(state.getPosition());
-                system.getPlanets().get(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                system.getPlanetByName(planet.getName().getText().toString()).setPosition(state.getPosition());
+                system.getPlanetByName(planet.getName().getText().toString()).setVelocity(state.getVelocity());
                 j++;
+
+                Planet p = (Planet) planet;
+                for (Moon moon : p.getMoons().values()) {
+                    // inserting step into the array
+                    timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                    State stateMoon = (State) timelineArray[j][i];
+
+                    system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setPosition(stateMoon.getPosition());
+                    system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setVelocity(stateMoon.getVelocity());
+                    j++;
+                }
             }
         }
     }

@@ -61,7 +61,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         this.planets = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
-        double dt = 50;
+        double dt = 100;
 
         FactoryProvider.getSolarSystemRepository().init();
 
@@ -72,13 +72,18 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
 
         for (int i = 0; i < length; i++) {
             Queue<MovingObject> tmp = new LinkedList<>();
-            String name = null;
 
             for (int j = 0; j < timeLineArray.length; j++) {
                 State state = (State) timeLineArray[j][i];
                 MovingObject sio = state.getMovingObject();
-                name = sio.getName().getText().toString();
-                FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new MovingObject(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
+                String name = sio.getName().getText().toString();
+                if (sio instanceof Planet) {
+                    FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new Planet(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
+                } else if (sio instanceof Moon) {
+                    Planet planet = ((Moon) sio).getPlanet();
+                    String planetName = planet.getName().getText().toString();
+                    FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(new Moon(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity(), planet));
+                }
             }
         }
     }

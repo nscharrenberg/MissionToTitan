@@ -69,6 +69,7 @@ public class Planet extends MovingObject {
 
         for (Moon moon : getMoons().values()) {
             moon.render(batch, camera);
+            moon.next();
         }
     }
 

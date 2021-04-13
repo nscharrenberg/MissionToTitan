@@ -1,6 +1,7 @@
 package org.um.dke.titan.physics.ode.functions;
 
 import org.um.dke.titan.domain.MovingObject;
+import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
@@ -13,6 +14,7 @@ import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ODEFunction implements ODEFunctionInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
@@ -35,7 +37,13 @@ public class ODEFunction implements ODEFunctionInterface {
     }
 
     protected void applyForces(MovingObject a){
-        List<MovingObject> list = new ArrayList<>(system.getPlanets().values());
+        List<MovingObject> list = new ArrayList<>();
+
+        for (Planet planet : system.getPlanets().values()) {
+            list.add(planet);
+            list.addAll(planet.getMoons().values());
+        }
+
         resetForces(list);
         addForcesToPlanets(a, list);
     }
