@@ -219,7 +219,7 @@ public class GameRepository implements IGameRepository {
     private void focusToPlanet(SpaceObject object) {
         this.isFocussing = true;
         this.toFollow = object;
-        planetFocusLbl.setText(String.format("Following: %s", object.getName().getText().toString()));
+        planetFocusLbl.setText(String.format("Following: %s", object.getName()));
     }
 
     private void focus(float deltaTime) {

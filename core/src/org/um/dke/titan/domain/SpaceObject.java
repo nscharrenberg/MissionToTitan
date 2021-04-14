@@ -14,15 +14,16 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 public class SpaceObject {
     public static final Label.LabelStyle GENERIC_LABEL_STYLE = new Label.LabelStyle(new BitmapFont(), Color.PINK);
 
-    protected Label name;
+    protected String name;
     protected float mass;
     protected float radius;
     protected Vector3dInterface position;
     protected Texture texture;
     protected float zoomLevel;
+    protected Label label;
 
     public SpaceObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
-        this.name = new Label(name, GENERIC_LABEL_STYLE);
+        this.name = name;
         this.mass = mass;
         this.position = position;
         this.radius = radius;
@@ -30,7 +31,7 @@ public class SpaceObject {
     }
 
     public SpaceObject(String name, float mass, float radius, Vector3 position, float zoomLevel) {
-        this.name = new Label(name, GENERIC_LABEL_STYLE);
+        this.name = name;
         this.mass = mass;
         this.position = new Vector3D(position);
         this.radius = radius;
@@ -44,7 +45,7 @@ public class SpaceObject {
     public void render(SpriteBatch batch, OrthographicCamera camera) {
         Vector3 textPosition = new Vector3((float)this.position.getX() + getRadius(), (float)this.position.getY() + getDiameter(), (float)this.position.getZ());
         camera.project(textPosition);
-        this.name.setPosition(textPosition.x, textPosition.y);
+        this.label.setPosition(textPosition.x, textPosition.y);
 
         batch.begin();
 
@@ -56,14 +57,15 @@ public class SpaceObject {
     }
 
     public void addActor(Stage stage) {
-        stage.addActor(this.getName());
+        this.label = new Label(name, GENERIC_LABEL_STYLE);
+        stage.addActor(this.label);
     }
 
     public void dispose() {
         texture.dispose();
     }
 
-    public Label getName() {
+    public String getName() {
         return name;
     }
 
@@ -124,5 +126,13 @@ public class SpaceObject {
 
     public void setZoomLevel(float zoomLevel) {
         this.zoomLevel = zoomLevel;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
     }
 }

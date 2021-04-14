@@ -54,7 +54,7 @@ public class MovingObject extends SpaceObject {
     }
 
     public MovingObject clone() {
-        return new MovingObject(name.getText().toString(), mass, radius, position, zoomLevel, velocity);
+        return new MovingObject(name, mass, radius, position, zoomLevel, velocity);
     }
 
     public Vector3dInterface getForce() {

@@ -92,6 +92,6 @@ public class Planet extends MovingObject {
     }
 
     public Planet clone() {
-        return new Planet(name.getText().toString(), mass, radius, position, zoomLevel, velocity, moons);
+        return new Planet(name, mass, radius, position, zoomLevel, velocity, moons);
     }
 }

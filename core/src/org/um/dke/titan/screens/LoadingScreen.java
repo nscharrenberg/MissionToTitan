@@ -39,6 +39,8 @@ public class LoadingScreen extends ScreenAdapter {
         viewport = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         texture = new Texture(Gdx.files.internal("splash.jpg"));
         createFonts();
+        FactoryProvider.getSolarSystemRepository().init();
+        loadGame();
     }
 
     private void createFonts() {
@@ -66,10 +68,11 @@ public class LoadingScreen extends ScreenAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                FactoryProvider.getSolarSystemRepository().preprocessing();
+
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        FactoryProvider.getGameRepository().load();
                         game.setScreen(new SimulationScreen());
                     }
                 });
