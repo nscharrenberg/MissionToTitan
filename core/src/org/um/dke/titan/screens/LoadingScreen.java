@@ -63,7 +63,7 @@ public class LoadingScreen extends ScreenAdapter {
         creditFontLayout.setText(textFont, creditText);
         loadingFontLayout.setText(loadingFont, loadingText);
     }
-
+  
     private void loadGame() {
         new Thread(new Runnable() {
             @Override
