@@ -14,11 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.um.dke.titan.Game;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
+import org.um.dke.titan.screens.LoadingScreen;
 
 public class GameRepository implements IGameRepository {
+    private final Game game = (Game) Gdx.app.getApplicationListener();
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -36,7 +39,7 @@ public class GameRepository implements IGameRepository {
     private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl;
     private TextField timeField;
 
-    private int timeToSkip = 0;
+    private int timeToSkip = 250;
 
     @Override
     public void load() {
@@ -98,14 +101,28 @@ public class GameRepository implements IGameRepository {
 
         // TODO: Add Starry Night Background Image
 
+        int whoIsDone = 0;
+
         for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
             object.render(batch, camera);
             object.next();
+
+            if(object.getTimeline().size() <= 0) {
+                whoIsDone++;
+            }
         }
 
         for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
             object.render(batch, camera);
             object.next();
+
+            if(object.getTimeline().size() <= 0) {
+                whoIsDone++;
+            }
+        }
+
+        if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
+            game.setScreen(new LoadingScreen());
         }
     }
 
