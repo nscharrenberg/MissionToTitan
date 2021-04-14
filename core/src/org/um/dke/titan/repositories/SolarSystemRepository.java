@@ -62,12 +62,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        this.planets = new HashMap<>();
-        this.rockets = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
         double dt = 100;
-
-        FactoryProvider.getSolarSystemRepository().init();
 
         timeLineArray = getTimeLineArray(totalTime, dt);
 

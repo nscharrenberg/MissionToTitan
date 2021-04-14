@@ -84,8 +84,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
      * determines and initializes variables needed for calculating new states.
      */
     protected void init(StateInterface y0) {
-        system.init();
-
         for (Planet planet : system.getPlanets().values()) {
             planets.add(planet);
             planets.addAll(planet.getMoons().values());
@@ -98,7 +96,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     }
 
     protected void init(double tf, double h) {
-        system.init();
 
         this.planets = new ArrayList<>();
 

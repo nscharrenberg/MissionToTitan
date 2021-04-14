@@ -39,7 +39,8 @@ public class LoadingScreen extends ScreenAdapter {
         viewport = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         texture = new Texture(Gdx.files.internal("splash.jpg"));
         createFonts();
-//        loadGame();
+        FactoryProvider.getSolarSystemRepository().init();
+        loadGame();
     }
 
     private void createFonts() {
@@ -62,21 +63,22 @@ public class LoadingScreen extends ScreenAdapter {
         creditFontLayout.setText(textFont, creditText);
         loadingFontLayout.setText(loadingFont, loadingText);
     }
+  
+    private void loadGame() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FactoryProvider.getSolarSystemRepository().preprocessing();
 
-//    private void loadGame() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Gdx.app.postRunnable(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        FactoryProvider.getGameRepository().load();
-//                        game.setScreen(new SimulationScreen());
-//                    }
-//                });
-//            }
-//        }).start();
-//    }
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.setScreen(new SimulationScreen());
+                    }
+                });
+            }
+        }).start();
+    }
 
     @Override
     public void render(float delta) {
