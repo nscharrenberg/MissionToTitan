@@ -1,30 +1,20 @@
 package org.um.dke.titan;
 
 
-import com.badlogic.gdx.ApplicationAdapter;
-import org.um.dke.titan.factory.FactoryProvider;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import org.um.dke.titan.screens.LoadingScreen;
 
-public class Game extends ApplicationAdapter {
+public class Game extends com.badlogic.gdx.Game {
+	private final AssetManager assetManager = new AssetManager();
+
 	@Override
 	public void create() {
-		FactoryProvider.getGameRepository().create();
+//		FactoryProvider.getGameRepository().load();
+		setScreen(new LoadingScreen());
 	}
 
-	@Override
-	public void render() {
-		FactoryProvider.getGameRepository().render();
+	public AssetManager getAssetManager() {
+		return assetManager;
 	}
-
-	@Override
-	public void resize(int width, int height) {
-		super.resize(width, height);
-		FactoryProvider.getGameRepository().resize(width, height);
-	}
-
-	@Override
-	public void dispose() {
-		FactoryProvider.getGameRepository().dispose();
-	}
-
-
 }

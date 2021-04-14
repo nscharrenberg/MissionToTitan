@@ -11,6 +11,8 @@ import org.um.dke.titan.domain.SpaceObject;
 import java.util.Map;
 
 public interface IGameRepository {
+    void load();
+
     void create();
 
     void render();

@@ -36,13 +36,16 @@ public class GameRepository implements IGameRepository {
     private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl;
     private TextField timeField;
 
-    private int timeToSkip = 250;
+    private int timeToSkip = 0;
+
+    @Override
+    public void load() {
+        FactoryProvider.getSolarSystemRepository().init();
+        FactoryProvider.getSolarSystemRepository().preprocessing();
+    }
 
     @Override
     public void create() {
-        FactoryProvider.getSolarSystemRepository().init();
-        FactoryProvider.getSolarSystemRepository().preprocessing();
-
         this.camera = new OrthographicCamera();
         this.camera.zoom = (float)8e6;
         this.viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
