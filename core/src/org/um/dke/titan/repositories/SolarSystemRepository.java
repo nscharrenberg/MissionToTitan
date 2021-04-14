@@ -80,15 +80,15 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
             for (int j = 0; j < timeLineArray.length; j++) {
                 State state = (State) timeLineArray[j][i];
                 MovingObject sio = state.getMovingObject();
-                String name = sio.getName().getText().toString();
+                String name = sio.getName();
                 if (sio instanceof Planet) {
-                    FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new Planet(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
+                    FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new Planet(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
                 } else if (sio instanceof Moon) {
                     Planet planet = ((Moon) sio).getPlanet();
-                    String planetName = planet.getName().getText().toString();
-                    FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(new Moon(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity(), planet));
+                    String planetName = planet.getName();
+                    FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(new Moon(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity(), planet));
                 } else if (sio instanceof Rocket) {
-                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(new Rocket(sio.getName().getText().toString(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
+                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(new Rocket(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
                 }
             }
         }

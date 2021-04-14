@@ -40,8 +40,8 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getPlanets().get(planet.getName().getText().toString()).setPosition(state.getPosition());
-                system.getPlanets().get(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                system.getPlanets().get(planet.getName()).setPosition(state.getPosition());
+                system.getPlanets().get(planet.getName()).setVelocity(state.getVelocity());
                 j++;
             }
         }
@@ -109,8 +109,8 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getPlanets().get(planet.getName().getText().toString()).setPosition(state.getPosition());
-                system.getPlanets().get(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                system.getPlanets().get(planet.getName()).setPosition(state.getPosition());
+                system.getPlanets().get(planet.getName()).setVelocity(state.getVelocity());
                 j++;
             }
         }

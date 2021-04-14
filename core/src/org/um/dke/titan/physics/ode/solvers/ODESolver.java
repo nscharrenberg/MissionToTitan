@@ -42,14 +42,14 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
                 if (planet instanceof Rocket) {
                     // updating the MovingObject's (Planet) state
-                    system.getRocketName(planet.getName().getText().toString()).setPosition(state.getPosition());
-                    system.getRocketName(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                    system.getRocketName(planet.getName()).setPosition(state.getPosition());
+                    system.getRocketName(planet.getName()).setVelocity(state.getVelocity());
 
                     j++;
                 } else {
                     // updating the MovingObject's (Planet) state
-                    system.getPlanetByName(planet.getName().getText().toString()).setPosition(state.getPosition());
-                    system.getPlanetByName(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                    system.getPlanetByName(planet.getName()).setPosition(state.getPosition());
+                    system.getPlanetByName(planet.getName()).setVelocity(state.getVelocity());
                     j++;
 
                     if (planet instanceof Planet) {
@@ -60,8 +60,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                             timelineArray[j][i] = step(f, time, timelineArray[j][i - 1], ts[i]-ts[i-1]);
                             State stateMoon = (State) timelineArray[j][i];
 
-                            system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setPosition(stateMoon.getPosition());
-                            system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setVelocity(stateMoon.getVelocity());
+                            system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
+                            system.getMoonByName(planet.getName(), moon.getName()).setVelocity(stateMoon.getVelocity());
                             j++;
                         }
                     }
@@ -148,8 +148,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getPlanetByName(planet.getName().getText().toString()).setPosition(state.getPosition());
-                system.getPlanetByName(planet.getName().getText().toString()).setVelocity(state.getVelocity());
+                system.getPlanetByName(planet.getName()).setPosition(state.getPosition());
+                system.getPlanetByName(planet.getName()).setVelocity(state.getVelocity());
                 j++;
 
                 if (planet instanceof Planet) {
@@ -159,8 +159,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                         timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                         State stateMoon = (State) timelineArray[j][i];
 
-                        system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setPosition(stateMoon.getPosition());
-                        system.getMoonByName(planet.getName().getText().toString(), moon.getName().getText().toString()).setVelocity(stateMoon.getVelocity());
+                        system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
+                        system.getMoonByName(planet.getName(), moon.getName()).setVelocity(stateMoon.getVelocity());
                         j++;
                     }
                 }
@@ -172,8 +172,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getRocketName(rocket.getName().getText().toString()).setPosition(state.getPosition());
-                system.getRocketName(rocket.getName().getText().toString()).setVelocity(state.getVelocity());
+                system.getRocketName(rocket.getName()).setPosition(state.getPosition());
+                system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
             }
         }

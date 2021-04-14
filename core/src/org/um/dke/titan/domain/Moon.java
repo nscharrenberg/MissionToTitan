@@ -33,6 +33,6 @@ public class Moon extends MovingObject {
     }
 
     public Moon clone() {
-        return new Moon(name.getText().toString(), mass, radius, position, zoomLevel, velocity, planet);
+        return new Moon(name, mass, radius, position, zoomLevel, velocity, planet);
     }
 }
