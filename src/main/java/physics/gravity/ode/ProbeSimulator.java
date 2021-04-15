@@ -10,7 +10,6 @@ import physics.gravity.ode.function.ODEFunction;
 import physics.gravity.ode.solver.ODESolver;
 import repositories.SolarSystemRepository;
 
-
 public class  ProbeSimulator implements ProbeSimulatorInterface {
 
     private static final double G = 6.67408e-11; // Gravitational Constant
@@ -120,5 +119,4 @@ public class  ProbeSimulator implements ProbeSimulatorInterface {
     private Vector3dInterface engineForce(int t) {
         return findThrustVector(t).mul(1000);
     }
-
 }

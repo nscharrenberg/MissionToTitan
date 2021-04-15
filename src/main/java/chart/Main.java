@@ -1,7 +1,7 @@
 package chart;
 
-import domain.Planet;
 import domain.PlanetEnum;
+import domain.Vector3D;
 import factory.FactoryProvider;
 import interfaces.StateInterface;
 import interfaces.Vector3dInterface;
@@ -15,12 +15,22 @@ import physics.gravity.ode.State;
 
 public class Main extends Application {
 
+    private static int probeId = PlanetEnum.SHIP.getId();
+    private static int titanId = PlanetEnum.TITANT.getId();
+
+    private static StateInterface[][] timeLineArrayRunge;
+    private static Vector3dInterface[] probeArray;
+
+    private static int daySec = 60*60*24;
+    private static int dataPointStepSize = 1;
+
+    private static double dt = 10;
+    private static double tf = 1*daySec*222.39;
+    private static double startTime = daySec*222.37;
+
     public static void main(String[] args) {
         launch(args);
     }
-    private static int daySec = 60*60*24;
-    private static int probeId = PlanetEnum.SHIP.getId();
-    private static int titanId = PlanetEnum.TITANT.getId();
 
 
     @Override
@@ -32,34 +42,37 @@ public class Main extends Application {
     }
 
     public static void run() {
-        System.out.println("GRAPH:");
+        System.out.println("|| Chart:");
+        runSolver();
+        runProbeSimulator();
+        insertData();
+    }
 
-
-        double dt = 10;
-        double tf = daySec*365;
-        double year = 1;
-
-        System.out.println("Starting Runge-Kutta");
-
+    private static void runSolver() {
+        System.out.println("|| Computing Solver");
         FactoryProvider.getSolarSystemFactory().computeTimeLineArrayRunge(tf,dt);
-        StateInterface[][] timeLineArrayRunge = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, dt);
+        timeLineArrayRunge = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, dt);
+        System.out.println("|| Finished Solver");
+    }
 
+    private static void runProbeSimulator() {
+        System.out.println("|| Computing Probe Simulator");
         ProbeSimulator simulator = new ProbeSimulator();
-        Vector3dInterface[] probeArray = simulator.trajectory(((State)timeLineArrayRunge[probeId][0]).getPosition(), ((State)timeLineArrayRunge[probeId][0]).getVelocity(), tf, dt);
+        probeArray = simulator.trajectory(((State)timeLineArrayRunge[probeId][0]).getPosition(), ((State)timeLineArrayRunge[1][0]).getVelocity().add(new Vector3D(47630.51324475152,-14136.648010470884,-970.3424308897135)), tf, dt);
+        System.out.println("|| Finished Probe Simulator");
+    }
 
-        System.out.println("- Completed computing states");
-
-        double startTime = 0;
-        double endTime = tf;
-
-        for (int t = (int)Math.round(startTime/dt); t < (int)Math.round(endTime/dt)+1; t+=1000) {
-
-            State probe = (State)timeLineArrayRunge[probeId][t];
-            State titan = (State)timeLineArrayRunge[titanId][t];
-
-            ChartLoader.addDataA(t,   probeArray[t].getX(), titan.getPosition().getX());
+    private static void insertData() {
+        System.out.println("|| Inserting data into chart");
+        for (int t = (int)Math.round(startTime/dt); t < (int)Math.round(tf/dt)+1; t+=dataPointStepSize) {
+            getData(t);
         }
+        System.out.println("|| Completed chart");
+    }
 
-        System.out.println("- Completed inserting states into graph");
+    private static void getData(int t) {
+        State titan = (State)timeLineArrayRunge[titanId][t];
+        State probe = (State)timeLineArrayRunge[6][t];
+        ChartLoader.addDataA(t, probeArray[t].dist(titan.getPosition()), probe.getPosition().dist(titan.getPosition()));
     }
 }

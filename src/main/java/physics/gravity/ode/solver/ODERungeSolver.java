@@ -18,6 +18,9 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
     protected int currentPlanetIndex;
     protected int size;
 
+    private long start;
+    private long end;
+
     public ODERungeSolver(){
         this.system = FactoryProvider.getSolarSystemFactory();
     }
@@ -87,7 +90,7 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
      */
     protected void addInitialStates() {
         for (int i = 0; i < planets.size(); i++) {
-            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), new Vector3D(0,0,0), planets.get(i));
+            StateInterface state = new State(planets.get(i).getPosition(), planets.get(i).getVelocity(), new Vector3D(0, 0, 0), planets.get(i));
             timelineArray[i][0] = state;
         }
     }
@@ -97,8 +100,7 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
      * and up and adds them in the allStates array
      */
     protected void computeStates(ODEFunctionInterface f, double h) {
-        System.out.println("computing states");
-
+        start = System.currentTimeMillis();
         for (int i = 1; i < size; i++) {
             for( int j = 0; j < planets.size(); j++)
             {
@@ -111,6 +113,8 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
                 system.getPlanets().get(j).setVelocity(state.getVelocity());
             }
         }
+        end = System.currentTimeMillis();
+        System.out.println("time = " + (end-start));
     }
 
     @Override
@@ -120,8 +124,6 @@ public class ODERungeSolver implements ODESolverInterface,DataInterface {
         Rate k3 = (Rate) f.call(0.5*h, y.addMul(0.5, k2));
         Rate k4 = (Rate) f.call(h, y.addMul(1, k3));
         return y.addMul(h/6d, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
-
-
     }
 
     @Override
