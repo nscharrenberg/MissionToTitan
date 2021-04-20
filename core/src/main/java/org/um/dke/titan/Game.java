@@ -1,7 +1,5 @@
 package org.um.dke.titan;
 
-
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import org.um.dke.titan.screens.LoadingScreen;
 
