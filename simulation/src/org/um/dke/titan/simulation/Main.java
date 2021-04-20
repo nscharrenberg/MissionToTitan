@@ -1,5 +1,7 @@
-package org.um.dke.titan.physics.simulation;
+package org.um.dke.titan.simulation;
 
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
@@ -14,8 +16,14 @@ public class Main {
     static Random r;
 
     public static void main(String[] args) {
-        System.out.println("Starting Genetic Simulation");
-        Simulate();
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = "Mission To  Titan";
+        config.resizable = false;
+        config.vSyncEnabled = true;
+        config.width = 1260;
+        config.height = 720;
+        config.foregroundFPS = 120;
+        new LwjglApplication(new Game(false), config);
     }
 
     public static void Simulate() {

@@ -29,11 +29,13 @@ public interface ISolarSystemRepository {
 
     void addRocket(String name, Rocket object);
 
-    void init();
+    void initWithGdx();
 
     void preprocessing();
 
     StateInterface[][] getTimeLineArray(double totalTime, double dt);
 
     void computeTimeLineArray(double totalTime, double dt);
+
+    void init();
 }

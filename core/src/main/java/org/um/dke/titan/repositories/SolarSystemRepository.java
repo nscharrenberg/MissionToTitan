@@ -1,5 +1,6 @@
 package org.um.dke.titan.repositories;
 
+import com.badlogic.gdx.files.FileHandle;
 import org.um.dke.titan.domain.Moon;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
@@ -52,6 +53,11 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public Moon getMoonByName(String planetName, String moonName) {
         return this.planets.get(planetName).getMoons().get(moonName);
+    }
+
+    @Override
+    public void initWithGdx() {
+        FileImporter.load("data_20200401");
     }
 
     @Override

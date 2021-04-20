@@ -1,5 +1,6 @@
 package org.um.dke.titan.repositories.interfaces;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -60,4 +61,12 @@ public interface IGameRepository {
     void setCameraLbl(Label cameraLbl);
 
     int getTimeToSkip();
+
+    Game getGame();
+
+    void setGame(Game game);
+
+    boolean isGdx();
+
+    void setGdx(boolean gdx);
 }

@@ -1,8 +1,8 @@
 package org.um.dke.titan.repositories;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,18 +10,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.um.dke.titan.Game;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
 
 public class GameRepository implements IGameRepository {
-    private final Game game = (Game) Gdx.app.getApplicationListener();
+    private boolean isGdx = true;
+    private Game game = null;
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -43,7 +42,7 @@ public class GameRepository implements IGameRepository {
 
     @Override
     public void load() {
-        FactoryProvider.getSolarSystemRepository().init();
+        FactoryProvider.getSolarSystemRepository().initWithGdx();
         FactoryProvider.getSolarSystemRepository().preprocessing();
     }
 
@@ -363,5 +362,25 @@ public class GameRepository implements IGameRepository {
     @Override
     public int getTimeToSkip() {
         return timeToSkip;
+    }
+
+    @Override
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    @Override
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public boolean isGdx() {
+        return isGdx;
+    }
+
+    @Override
+    public void setGdx(boolean gdx) {
+        isGdx = gdx;
     }
 }
