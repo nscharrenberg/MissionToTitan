@@ -1,8 +1,6 @@
 package org.um.dke.titan.physics.ode.solvers;
 
-
-import org.um.dke.titan.domain.MovingObject;
-import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.*;
 import org.um.dke.titan.physics.ode.Rate;
@@ -29,7 +27,7 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
         addInitialStates();
         for (int i = 1; i < size; i++) {
             int j = 0;
-            for( MovingObject planet : planets)
+            for(MovingObject planet : planets)
             {
                 int time = 0;
                 for (int k = 0; k < i; k++) {
@@ -39,10 +37,32 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
                 timelineArray[j][i] = step(f, time, timelineArray[j][i - 1], ts[i]-ts[i-1]);
                 State state = (State) timelineArray[j][i];
 
-                // updating the MovingObject's (Planet) state
-                system.getPlanets().get(planet.getName()).setPosition(state.getPosition());
-                system.getPlanets().get(planet.getName()).setVelocity(state.getVelocity());
-                j++;
+                if (planet instanceof Rocket) {
+                    // updating the MovingObject's (Planet) state
+                    system.getRocketName(planet.getName()).setPosition(state.getPosition());
+                    system.getRocketName(planet.getName()).setVelocity(state.getVelocity());
+
+                    j++;
+                } else {
+                    // updating the MovingObject's (Planet) state
+                    system.getPlanetByName(planet.getName()).setPosition(state.getPosition());
+                    system.getPlanetByName(planet.getName()).setVelocity(state.getVelocity());
+                    j++;
+
+                    if (planet instanceof Planet) {
+                        Planet p = (Planet) planet;
+
+                        for (Moon moon : p.getMoons().values()) {
+                            // inserting step into the array
+                            timelineArray[j][i] = step(f, time, timelineArray[j][i - 1], ts[i]-ts[i-1]);
+                            State stateMoon = (State) timelineArray[j][i];
+
+                            system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
+                            system.getMoonByName(planet.getName(), moon.getName()).setVelocity(stateMoon.getVelocity());
+                            j++;
+                        }
+                    }
+                }
             }
         }
         return timelineArray[currentPlanetIndex];
@@ -61,15 +81,28 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
      * determines and initializes variables needed for calculating new states.
      */
     protected void init(StateInterface y0) {
-        system.init();
-        planets = new ArrayList<>(system.getPlanets().values());
+        for (Planet planet : system.getPlanets().values()) {
+            planets.add(planet);
+            planets.addAll(planet.getMoons().values());
+        }
+
+        planets.addAll(system.getRockets().values());
+
         timelineArray = new StateInterface[planets.size()][size];
         currentPlanetIndex = getIndexOfPlanet((State)y0);
     }
 
     protected void init(double tf, double h) {
-        system.init();
-        planets = new ArrayList<>(system.getPlanets().values());
+
+        this.planets = new ArrayList<>();
+
+        for (Planet planet : system.getPlanets().values()) {
+            planets.add(planet);
+            planets.addAll(planet.getMoons().values());
+        }
+
+        planets.addAll(system.getRockets().values());
+
         size = (int)Math.round(tf/h)+1;
         timelineArray = new StateInterface[planets.size()][size];
     }
@@ -102,15 +135,39 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
     protected void computeStates(ODEFunctionInterface f, double h) {
         for (int i = 1; i < size; i++) {
             int j = 0;
-            for( MovingObject planet : planets)
+            for(MovingObject planet : system.getPlanets().values())
             {
                 // inserting step into the array
                 timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getPlanets().get(planet.getName()).setPosition(state.getPosition());
-                system.getPlanets().get(planet.getName()).setVelocity(state.getVelocity());
+                system.getPlanetByName(planet.getName()).setPosition(state.getPosition());
+                system.getPlanetByName(planet.getName()).setVelocity(state.getVelocity());
+                j++;
+
+                if (planet instanceof Planet) {
+                    Planet p = (Planet) planet;
+                    for (Moon moon : p.getMoons().values()) {
+                        // inserting step into the array
+                        timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                        State stateMoon = (State) timelineArray[j][i];
+
+                        system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
+                        system.getMoonByName(planet.getName(), moon.getName()).setVelocity(stateMoon.getVelocity());
+                        j++;
+                    }
+                }
+            }
+
+            for (Rocket rocket : system.getRockets().values()) {
+                // inserting step into the array
+                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                State state = (State) timelineArray[j][i];
+
+                // updating the MovingObject's (Planet) state
+                system.getRocketName(rocket.getName()).setPosition(state.getPosition());
+                system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
             }
         }
@@ -128,9 +185,9 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
 
     @Override
     public StateInterface[][] getData(ODEFunctionInterface f, double tf, double h) {
-        init(tf,h);
+        init(tf, h);
         addInitialStates();
-        computeStates(f,h);
+        computeStates(f, h);
         return timelineArray;
     }
 }
