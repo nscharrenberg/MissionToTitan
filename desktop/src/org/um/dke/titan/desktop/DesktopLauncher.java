@@ -1,6 +1,5 @@
 package org.um.dke.titan.desktop;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.um.dke.titan.Game;
@@ -13,6 +12,7 @@ public class DesktopLauncher {
 		config.vSyncEnabled = true;
 		config.width = 1260;
 		config.height = 720;
+		config.foregroundFPS = 120;
 		new LwjglApplication(new Game(), config);
 	}
 }
