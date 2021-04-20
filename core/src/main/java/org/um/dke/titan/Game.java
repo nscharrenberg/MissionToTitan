@@ -1,14 +1,22 @@
 package org.um.dke.titan;
 
 import com.badlogic.gdx.assets.AssetManager;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.screens.LoadingScreen;
 
 public class Game extends com.badlogic.gdx.Game {
 	private final AssetManager assetManager = new AssetManager();
 
+	public Game() {
+	}
+
+	public Game(boolean isGdx) {
+		FactoryProvider.getGameRepository().setGdx(isGdx);
+	}
+
 	@Override
 	public void create() {
-//		FactoryProvider.getGameRepository().load();
+		FactoryProvider.getGameRepository().setGame(this);
 		setScreen(new LoadingScreen());
 	}
 

@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.simulation;
+package org.um.dke.titan.simulation;
 
 public class Sort {
     public static Individual[] quicksort(Individual[] array) {

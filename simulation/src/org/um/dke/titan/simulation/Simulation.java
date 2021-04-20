@@ -1,6 +1,5 @@
-package org.um.dke.titan.physics.simulation;
+package org.um.dke.titan.simulation;
 
-import org.um.dke.titan.domain.SpaceObject;
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
@@ -13,7 +12,7 @@ public class Simulation {
     private static Vector3dInterface[] probePositions;
 
     private static double daySec = 60*24*60;
-    private static double dt = 10;
+    private static double dt = 1000;
     private static double tf = daySec*280;
 
     private static double titanRadius = 2574000;
