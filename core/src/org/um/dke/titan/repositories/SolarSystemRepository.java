@@ -90,7 +90,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         }
     }
 
-    private StateInterface[][] getTimeLineArray(double totalTime, double dt) {
+    @Override
+    public StateInterface[][] getTimeLineArray(double totalTime, double dt) {
         if (timeLineArray == null) {
             computeTimeLineArray(totalTime, dt);
         } else if (timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
@@ -100,7 +101,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         return timeLineArray;
     }
 
-    private void computeTimeLineArray(double totalTime, double dt) {
+    @Override
+    public void computeTimeLineArray(double totalTime, double dt) {
         ODESolver odes = new ODESolver();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);

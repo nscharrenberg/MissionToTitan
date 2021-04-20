@@ -4,6 +4,7 @@ import org.um.dke.titan.domain.Moon;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Rocket;
+import org.um.dke.titan.interfaces.StateInterface;
 
 import java.util.Map;
 
@@ -31,4 +32,8 @@ public interface ISolarSystemRepository {
     void init();
 
     void preprocessing();
+
+    StateInterface[][] getTimeLineArray(double totalTime, double dt);
+
+    void computeTimeLineArray(double totalTime, double dt);
 }
