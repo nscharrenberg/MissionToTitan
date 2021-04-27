@@ -59,7 +59,6 @@ public enum PlanetEnum {
                 return val;
             }
         }
-
         return null;
     }
 }

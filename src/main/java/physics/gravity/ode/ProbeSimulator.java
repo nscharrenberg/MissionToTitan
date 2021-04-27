@@ -42,7 +42,7 @@ public class  ProbeSimulator implements ProbeSimulatorInterface {
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
         timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, h);
-        StateInterface initialState = new State(p0, v0, system.findPlanet(probeName));
+        StateInterface initialState = new State(p0, v0, system.getPlanets().get(PlanetEnum.SHIP.getId()));
 
         probeStateArray = new StateInterface[timeLineArray[0].length];
         Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];

@@ -10,7 +10,7 @@ public class Main {
     static Individual[] population;
     static final int MUTATION_RATE = 10;
     static final int POPULATION_SIZE = 90;
-    static final int GENERATIONS = 50;
+    static final int GENERATIONS = 1000;
     static Individual min;
     static Random r;
 
@@ -21,7 +21,7 @@ public class Main {
 
     public static void Simulate() {
         r = new Random();
-        min = new Individual(new Vector3D(1,1,1), 1);
+        min = new Individual(new Vector3D(1,1,1));
         min.fitness = Double.MAX_VALUE;
 
         for (int j = 0; j < 100; j++) {
@@ -36,8 +36,8 @@ public class Main {
                 System.out.print("Generation " + (i + 1) + " | ");
                 print();
                 System.out.print("| Min: " + min);
-                System.out.print("| Min vector: [" + min.vector.mul(min.speed).getX() + "," + min.vector.mul(min.speed).getY() + "," + min.vector.mul(min.speed).getZ() + "] ");
-                System.out.print("| Speed: [" + min.speed + " m/s] ");
+                System.out.print("| Min vector: [" + min.velocity.getX() + "," + min.velocity.getY() + "," + min.velocity.getZ() + "] ");
+                System.out.print("| Speed: [" + min.velocity.norm() + " m/s] ");
                 long endTime = System.currentTimeMillis();
                 System.out.println("| Compute Time: [" + ((endTime - startTime)/1000) + "s]");
             }
@@ -56,8 +56,8 @@ public class Main {
     }
 
     public static Individual copyOf(Individual a) {
-        Individual copy = new Individual(a.vector, a.speed);
-        copy.fitness = a.getFitness();
+        Individual copy = new Individual(a.velocity);
+        copy.determineFitness();
         return copy;
     }
 
@@ -73,10 +73,10 @@ public class Main {
                 i--;
         }
 
-        population[population.length-1 ]= new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
+        population[population.length-1 ]= new Individual(randomVector());
 
         for(int i = 0; i < MUTATION_RATE; i++) {
-            population[r.nextInt(population.length)].mutate();
+            population[r.nextInt(population.length-1)+1].mutate();
         }
         updateFitness();
         population = Sort.quicksort(population);
@@ -95,14 +95,14 @@ public class Main {
      * returns a new child from 2 parents a and b
      */
     public static Individual breed(Individual a, Individual b) {
-        return new Individual(new Vector3D((a.vector.getX() + b.vector.getX())/2, (a.vector.getY() + b.vector.getY())/2, (a.vector.getZ() + b.vector.getZ())/2), (a.speed+b.speed)/2);
+        return new Individual(new Vector3D((a.velocity.getX() + b.velocity.getX())/2, (a.velocity.getY() + b.velocity.getY())/2, (a.velocity.getZ() + b.velocity.getZ())/2));
     }
 
     private static void initPopulation() {
         population = new Individual[POPULATION_SIZE];
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            population[i] = new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
+            population[i] = new Individual(randomVector());
         }
         updateFitness();
     }
@@ -110,22 +110,10 @@ public class Main {
     /**
      * creates a random unit vector
      */
-    public static Vector3dInterface randomUnitVector() {
-        Vector3dInterface vector = new Vector3D(r.nextDouble(), r.nextDouble()*-1, randomDouble()/10);
-        double norm = vector.norm();
-        return vector.mul(1/norm);
-    }
-
-    /**
-     * returns a random double between -1 and 1
-     * @return
-     */
-    public static double randomDouble() {
-        double random = r.nextDouble();
-        if (r.nextBoolean())
-            return random * -1;
-        else
-            return random;
+    public static Vector3dInterface randomVector() {
+        Vector3D randomVector = new Vector3D(r.nextDouble(), r.nextDouble()*-1.5, r.nextDouble()/-10);
+        randomVector = (Vector3D)randomVector.mul(1/randomVector.norm());
+        return randomVector.mul(40000 + r.nextDouble()*20000.0);
     }
 
     /**
@@ -143,7 +131,4 @@ public class Main {
              population[i].determineFitness();
         }
     }
-
-
-
 }

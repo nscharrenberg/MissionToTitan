@@ -18,15 +18,16 @@ public class Main extends Application {
     private static int probeId = PlanetEnum.SHIP.getId();
     private static int titanId = PlanetEnum.TITANT.getId();
 
-    private static StateInterface[][] timeLineArrayRunge;
+    private static StateInterface[][] timeLineArray;
     private static Vector3dInterface[] probeArray;
 
-    private static int daySec = 60*60*24;
-    private static int dataPointStepSize = 1;
 
-    private static double dt = 10;
-    private static double tf = 1*daySec*222.39;
-    private static double startTime = daySec*222.37;
+    private static int daySec = 60*60*24;
+    private static int dataPointStepSize = 100;
+
+    private static double dt = 20;
+    private static double tf = 365*daySec;
+    private static double startTime = 0*daySec;
 
     public static void main(String[] args) {
         launch(args);
@@ -51,15 +52,22 @@ public class Main extends Application {
     private static void runSolver() {
         System.out.println("|| Computing Solver");
         FactoryProvider.getSolarSystemFactory().computeTimeLineArrayRunge(tf,dt);
-        timeLineArrayRunge = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, dt);
+        timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, dt);
         System.out.println("|| Finished Solver");
     }
 
     private static void runProbeSimulator() {
         System.out.println("|| Computing Probe Simulator");
         ProbeSimulator simulator = new ProbeSimulator();
-        probeArray = simulator.trajectory(((State)timeLineArrayRunge[probeId][0]).getPosition(), ((State)timeLineArrayRunge[1][0]).getVelocity().add(new Vector3D(47630.51324475152,-14136.648010470884,-970.3424308897135)), tf, dt);
+        Vector3dInterface velocityVector = ((State) timeLineArray[PlanetEnum.EARTH.getId()][0]).getVelocity().add(new Vector3D(40872.537001884506,-24780.003680313042,-930.5306010940334));
+        //Vector3dInterface velocityVector = ((State) timeLineArray[PlanetEnum.EARTH.getId()][0]).getVelocity().add(new Vector3D(48887.51612513939,-19725.47474325983,-797.8491816542717)); // dt 10 6e6m
+        System.out.println(velocityVector);
+        probeArray = simulator.trajectory(((State) timeLineArray[PlanetEnum.SHIP.getId()][0]).getPosition(), velocityVector,tf, dt);
+        System.out.println("finished");
+
         System.out.println("|| Finished Probe Simulator");
+
+        System.out.println(getMinDistance());
     }
 
     private static void insertData() {
@@ -71,8 +79,29 @@ public class Main extends Application {
     }
 
     private static void getData(int t) {
-        State titan = (State)timeLineArrayRunge[titanId][t];
-        State probe = (State)timeLineArrayRunge[6][t];
-        ChartLoader.addDataA(t, probeArray[t].dist(titan.getPosition()), probe.getPosition().dist(titan.getPosition()));
+        State titan = (State) timeLineArray[titanId][t];
+        ChartLoader.addDataA(t, probeArray[t].dist(titan.getPosition()));
     }
+
+    private static double getMinDistance() {
+        double min = Double.MAX_VALUE;
+        double minI = 0;
+
+        for (int i = 0; i < timeLineArray[0].length; i++) {
+            State titan = (State) timeLineArray[PlanetEnum.TITANT.getId()][i];
+            Vector3dInterface probe = probeArray[i];
+
+            double dist = probe.dist(titan.getPosition()) - 2574000;
+
+            if (min > dist && dist > 0) {
+                min = dist;
+                minI = i;
+            }
+        }
+        System.out.println("minI = " + minI);
+        return min;
+    }
+
+
+
 }

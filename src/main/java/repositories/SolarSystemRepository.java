@@ -22,7 +22,7 @@ public class SolarSystemRepository implements SolarSystemInterface {
     private List<List<MovingObject>> timeLine = new ArrayList<>();
 
     private static double daySec = 60*24*60; // total seconds in a day
-    private static double dt = 0.1*daySec;
+    private static double dt = 20;
     private StateInterface[][] timeLineArray;
 
     @Override

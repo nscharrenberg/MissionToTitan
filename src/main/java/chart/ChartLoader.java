@@ -29,10 +29,13 @@ public class ChartLoader implements Initializable {
         seriesA2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
     }
 
-    protected static void addDataA(double t, double x, double y, double z) {
+    protected static void addDataA(double t, double x, double y, double z, double a, double b, double c) {
         seriesA.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), x));
         seriesA2.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), y));
         seriesA3.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), z));
+        seriesA4.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), a));
+        seriesA5.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), b));
+        seriesA6.getData().addAll(new XYChart.Data(String.valueOf(t / daySec), c));
     }
 
 
@@ -40,6 +43,9 @@ public class ChartLoader implements Initializable {
     private static XYChart.Series seriesA;
     private static XYChart.Series seriesA2;
     private static XYChart.Series seriesA3;
+    private static XYChart.Series seriesA4;
+    private static XYChart.Series seriesA5;
+    private static XYChart.Series seriesA6;
     @FXML
     private LineChart<?, ?> LineChartA;
 
@@ -51,6 +57,9 @@ public class ChartLoader implements Initializable {
          seriesA = new XYChart.Series();
          seriesA2 = new XYChart.Series();
          seriesA3 = new XYChart.Series();
+         seriesA4 = new XYChart.Series();
+         seriesA5 = new XYChart.Series();
+         seriesA6 = new XYChart.Series();
      }
 
     /**
@@ -60,6 +69,9 @@ public class ChartLoader implements Initializable {
         LineChartA.getData().addAll(seriesA);
         LineChartA.getData().addAll(seriesA2);
         LineChartA.getData().addAll(seriesA3);
+        LineChartA.getData().addAll(seriesA4);
+        LineChartA.getData().addAll(seriesA5);
+        LineChartA.getData().addAll(seriesA6);
     }
 
 }

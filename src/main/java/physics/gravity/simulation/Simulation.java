@@ -14,12 +14,10 @@ public class Simulation{
 
     private static double daySec = 60*24*60;
     private static double dt = 10;
-    private static double tf = daySec*280;
+    private static double tf = daySec*365;
 
-    private static double titanRadius = 2574000;
-
-	public static double run(Vector3dInterface unit, int velocity) {
-        simulate(unit, velocity);
+	public static double run(Vector3dInterface velocity) {
+        simulate(velocity);
         return getMinDistance();
     }
 
@@ -27,10 +25,10 @@ public class Simulation{
         double min = Double.MAX_VALUE;
 
         for (int i = 0; i < timeLineArray[0].length; i++) {
-            physics.gravity.ode.State titan = (physics.gravity.ode.State) timeLineArray[PlanetEnum.TITANT.getId()][i];
+            State titan = (State) timeLineArray[PlanetEnum.TITANT.getId()][i];
             Vector3dInterface probe = probePositions[i];
 
-            double dist = probe.dist(titan.getPosition()) - titanRadius;
+            double dist = probe.dist(titan.getPosition()) - 2574000;
 
             if (min > dist && dist > 0)
                 min = dist;
@@ -38,13 +36,16 @@ public class Simulation{
         return min;
     }
 
-    public static void simulate(Vector3dInterface unit, int velocity) {
+    public static void simulate(Vector3dInterface velocity) {
         timeLineArray = FactoryProvider.getSolarSystemFactory().getTimeLineArray(tf, dt);
-
-        Vector3dInterface earthVelocity = ((physics.gravity.ode.State)(timeLineArray[PlanetEnum.EARTH.getId()][0])).getVelocity();
-
         ProbeSimulator probeSimulator = new ProbeSimulator();
-        probePositions = probeSimulator.trajectory(((State)timeLineArray[PlanetEnum.SHIP.getId()][0]).getPosition(),unit.mul(velocity).add(earthVelocity),tf, dt);
+
+        Vector3dInterface earthVelocity = ((State)(timeLineArray[PlanetEnum.EARTH.getId()][0])).getVelocity();
+        Vector3dInterface probePosition = ((State)timeLineArray[PlanetEnum.SHIP.getId()][0]).getPosition();
+
+        probePositions = probeSimulator.trajectory(probePosition,velocity.add(earthVelocity),tf, dt);
     }
+
+
 }
 

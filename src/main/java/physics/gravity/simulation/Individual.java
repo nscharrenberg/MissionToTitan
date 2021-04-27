@@ -5,13 +5,12 @@ import interfaces.Vector3dInterface;
 import java.util.Random;
 
 public class Individual {
-    Vector3dInterface vector;
-    double fitness;
-    int speed;
 
-    public Individual(Vector3dInterface vector, int speed) {
-        this.vector = vector;
-        this.speed = speed;
+    Vector3dInterface velocity;
+    double fitness;
+
+    public Individual(Vector3dInterface velocity) {
+        this.velocity = velocity;
     }
 
     public void mutate() {
@@ -19,19 +18,16 @@ public class Individual {
         int rand = r.nextInt(100);
 
         if (rand > 75)
-            vector.setX(vector.getX() * r.nextDouble());
+            velocity.setX(velocity.getX() * r.nextDouble());
         else if (rand > 50)
-            vector.setY(vector.getY() *r.nextDouble());
+            velocity.setY(velocity.getY() * r.nextDouble());
         else if (rand > 25)
-            vector.setZ(vector.getZ() *r.nextDouble());
-        else if (rand >= 0) {
-            this.speed = 40000 + r.nextInt(20000);
-        }
-        vector = vector.mul(1/vector.norm());
+            velocity.setZ(velocity.getZ() * r.nextDouble());
+        determineFitness();
     }
 
     public void determineFitness() {
-        fitness = Simulation.run(vector, speed);
+        fitness = Simulation.run(velocity);
     }
 
     public double getFitness() {
@@ -39,6 +35,6 @@ public class Individual {
     }
 
     public String toString() {
-        return "" + (int)(getFitness());
+        return "" + getFitness();
     }
 }
