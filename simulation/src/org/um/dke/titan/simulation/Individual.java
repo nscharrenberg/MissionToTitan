@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.simulation;
+package org.um.dke.titan.simulation;
 
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Individual {
     Vector3dInterface vector;
-    double fitness;
+    public double fitness;
     int speed;
 
     public Individual(Vector3dInterface vector, int speed) {
