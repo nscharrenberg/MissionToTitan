@@ -39,6 +39,7 @@ public class GameRepository implements IGameRepository {
     private TextField timeField;
 
     private int timeToSkip = 250;
+    private boolean paused = false;
 
     @Override
     public void load() {
@@ -104,21 +105,28 @@ public class GameRepository implements IGameRepository {
 
         for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
             object.render(batch, camera);
-            object.next();
 
-            if(object.getTimeline().size() <= 0) {
-                whoIsDone++;
+            if (!paused) {
+                object.next();
+
+                if(object.getTimeline().size() <= 0) {
+                    whoIsDone++;
+                }
             }
         }
 
         for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
             object.render(batch, camera);
-            object.next();
 
-            if(object.getTimeline().size() <= 0) {
-                whoIsDone++;
+            if(!paused) {
+                object.next();
+
+                if(object.getTimeline().size() <= 0) {
+                    whoIsDone++;
+                }
             }
         }
+
 
         if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
             game.setScreen(new LoadingScreen());
@@ -189,6 +197,10 @@ public class GameRepository implements IGameRepository {
             camera.position.x += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
             unfollow();
             cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            paused = !paused;
         }
     }
 
@@ -382,5 +394,10 @@ public class GameRepository implements IGameRepository {
     @Override
     public void setGdx(boolean gdx) {
         isGdx = gdx;
+    }
+
+    @Override
+    public boolean isPaused() {
+        return this.paused;
     }
 }
