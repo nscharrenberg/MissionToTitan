@@ -14,6 +14,9 @@ import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
+
+    private double engineForce = 100000;
+
     private int probeId = SpaceObjectEnum.SHIP.getId();
     private String probeName = SpaceObjectEnum.SHIP.getName();
     private Vector3dInterface force;
@@ -50,13 +53,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         probeStateArray[0] = initialState;
         force = new Vector3D(0,0,0);
 
-        for (int i = 1; i < timeLineArray[0].length; i++) {
-            for (int j = 0; j < timeLineArray.length; j++) {
-                if (j == probeId) {
-                    probeStateArray[i] = step(probeStateArray[i-1], h);
+        for (int t = 1; t < timeLineArray[0].length; t++) {
+            for (int p = 0; p < timeLineArray.length; p++) {
+                if (p == probeId) {
+                    probeStateArray[t] = step(probeStateArray[t-1], h);
                     force = new Vector3D(0, 0, 0);
                 } else {
-                    force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
+                    force = force.add(newtonsLaw((State)probeStateArray[t-1], (State)timeLineArray[p][t]));
+                    force = force.add(engineForce(t-1));
                 }
             }
         }
@@ -105,19 +109,18 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     /**
      *  returns the unit vector of the desired thrust angle
      */
-    private Vector3dInterface findThrustVector(int index){
+    private Vector3dInterface unitThrustVector(int index){
         State probe = ((State) probeStateArray[index]);
-        State titan = (State) timeLineArray[SpaceObjectEnum.TITAN.getId()][index];
-
-        Vector3dInterface thrustVector = titan.getPosition().sub(probe.getPosition());
-        thrustVector = thrustVector.sub(probe.getVelocity());
-        return thrustVector.mul(1/thrustVector.norm());
+        return probe.getVelocity().mul(-1/probe.getVelocity().norm());
     }
 
     /**
      *  returns the force vector of the engine of the probe
      */
     private Vector3dInterface engineForce(int t) {
-        return findThrustVector(t).mul(1000);
+        if (t > 1467351 && t < 1467400) {
+            return unitThrustVector(t).mul(engineForce);
+        }
+        return new Vector3D(0,0,0);
     }
 }

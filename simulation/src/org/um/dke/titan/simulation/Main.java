@@ -10,7 +10,7 @@ import java.util.Random;
 public class Main {
     static Individual[] population;
     static final int MUTATION_RATE = 10;
-    static final int POPULATION_SIZE = 90;
+    static final int POPULATION_SIZE = 50;
     static final int GENERATIONS = 50;
     static Individual min;
     static Random r;
@@ -28,7 +28,7 @@ public class Main {
 
     public static void Simulate() {
         r = new Random();
-        min = new Individual(new Vector3D(1,1,1), 1);
+        min = new Individual(new Vector3D(1,-1,0.1), 1);
         min.fitness = Double.MAX_VALUE;
 
         for (int j = 0; j < 100; j++) {

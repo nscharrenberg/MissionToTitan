@@ -1,15 +1,16 @@
 package org.um.dke.titan.repositories;
 
 import com.badlogic.gdx.files.FileHandle;
-import org.um.dke.titan.domain.Moon;
-import org.um.dke.titan.domain.MovingObject;
-import org.um.dke.titan.domain.Planet;
-import org.um.dke.titan.domain.Rocket;
+import com.badlogic.gdx.math.Vector3;
+import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.ProbeSimulator;
 import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
+import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -69,9 +70,12 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
-        double dt = 100;
+        double dt = 15;
 
-        timeLineArray = getTimeLineArray(totalTime, dt);
+        getTimeLineArray(totalTime, dt);
+
+        ProbeSimulator simulator = new ProbeSimulator();
+        Vector3dInterface[] probeArray = simulator.trajectory(new Vector3D(-1.471922101663588e+11, -2.860995816266412e+10, 8.278183193596080e+06), new Vector3D(46299.73040768241,-54090.56990296325,-929.8730582782176),totalTime, dt);
 
         StateInterface[] tmp2 = timeLineArray[0];
         int length = tmp2.length;
@@ -90,7 +94,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
                     String planetName = planet.getName();
                     FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(new Moon(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity(), planet));
                 } else if (sio instanceof Rocket) {
-                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(new Rocket(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
+                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(new Rocket(sio.getName(), sio.getMass(), sio.getRadius(), probeArray[i], sio.getZoomLevel(), new Vector3D(0,0,0)));
                 }
             }
         }
@@ -109,7 +113,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
 
     @Override
     public void computeTimeLineArray(double totalTime, double dt) {
-        ODESolver odes = new ODESolver();
+        ODERungeSolver odes = new ODERungeSolver();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);
     }
@@ -141,4 +145,5 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     public void setTimeLineArray(StateInterface[][] timeLineArray) {
         this.timeLineArray = timeLineArray;
     }
+
 }
