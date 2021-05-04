@@ -69,4 +69,6 @@ public interface IGameRepository {
     boolean isGdx();
 
     void setGdx(boolean gdx);
+
+    boolean isPaused();
 }

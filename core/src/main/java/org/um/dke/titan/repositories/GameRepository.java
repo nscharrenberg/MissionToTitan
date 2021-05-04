@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
@@ -19,6 +18,8 @@ import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
 
 public class GameRepository implements IGameRepository {
+    private static int DEFAULT_SKIP_SPEED = 250;
+    private static int DEFAULT_SKIP_SPEED_INCREMENT = 10;
     private boolean isGdx = true;
     private Game game = null;
     private Viewport viewport;
@@ -35,10 +36,10 @@ public class GameRepository implements IGameRepository {
     private static final float MINIMUM_CAMERA_ZOOM = (float)5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
-    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl;
-    private TextField timeField;
+    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel;
 
-    private int timeToSkip = 250;
+    private int timeToSkip = DEFAULT_SKIP_SPEED;
+    private boolean paused = false;
 
     @Override
     public void load() {
@@ -73,11 +74,14 @@ public class GameRepository implements IGameRepository {
         this.planetFocusLbl.setPosition(15, Gdx.graphics.getHeight() - 100);
         this.cameraZoomLbl = new Label("Zoom(Z/X): " + this.camera.zoom, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
+        this.speedLabel = new Label("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.speedLabel.setPosition(15, Gdx.graphics.getHeight() - 125);
 
         stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
         stage.addActor(cameraZoomLbl);
         stage.addActor(cameraLbl);
+        stage.addActor(speedLabel);
 
         // Start from Earth
         focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()));
@@ -104,19 +108,25 @@ public class GameRepository implements IGameRepository {
 
         for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
             object.render(batch, camera);
-            object.next();
 
-            if(object.getTimeline().size() <= 0) {
-                whoIsDone++;
+            if (!paused) {
+                object.next();
+
+                if(object.getTimeline().size() <= 0) {
+                    whoIsDone++;
+                }
             }
         }
 
         for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
             object.render(batch, camera);
-            object.next();
 
-            if(object.getTimeline().size() <= 0) {
-                whoIsDone++;
+            if(!paused) {
+                object.next();
+
+                if(object.getTimeline().size() <= 0) {
+                    whoIsDone++;
+                }
             }
         }
 
@@ -157,38 +167,68 @@ public class GameRepository implements IGameRepository {
     }
 
     private void uiControls(float deltaTime) {
+        // Zoom In
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
             this.camera.zoom += CAMERA_ZOOM_SPEED * deltaTime * camera.zoom;
             cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
         }
 
+        // Zoom Out
         if (Gdx.input.isKeyPressed(Input.Keys.X) && this.camera.zoom > MINIMUM_CAMERA_ZOOM) {
             this.camera.zoom -= CAMERA_ZOOM_SPEED * deltaTime * camera.zoom;
             cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
         }
 
+        // Move Up
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.position.y += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
             unfollow();
             cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
         }
 
+        // Move Down
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             camera.position.y -= CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
             unfollow();
             cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
         }
 
+        // Move Left
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             camera.position.x -= CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
             unfollow();
             cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
         }
 
+        // Move Right
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             camera.position.x += CAMERA_MOVE_SPEED * deltaTime* camera.zoom;
             unfollow();
             cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
+        }
+
+        // Pause / Resume day
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            paused = !paused;
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+            timeToSkip = timeToSkip + DEFAULT_SKIP_SPEED_INCREMENT;
+            speedLabel.setText("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.O)) {
+            if ((timeToSkip - DEFAULT_SKIP_SPEED_INCREMENT) <= 0) {
+                timeToSkip = 0;
+            }
+
+            timeToSkip = timeToSkip - DEFAULT_SKIP_SPEED_INCREMENT;
+            speedLabel.setText("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.I)) {
+            timeToSkip = DEFAULT_SKIP_SPEED;
+            speedLabel.setText("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip);
         }
     }
 
@@ -382,5 +422,10 @@ public class GameRepository implements IGameRepository {
     @Override
     public void setGdx(boolean gdx) {
         isGdx = gdx;
+    }
+
+    @Override
+    public boolean isPaused() {
+        return this.paused;
     }
 }

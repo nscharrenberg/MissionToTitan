@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
 import java.util.HashMap;
@@ -69,7 +70,10 @@ public class Planet extends MovingObject {
 
         for (Moon moon : getMoons().values()) {
             moon.render(batch, camera);
-            moon.next();
+
+            if (!FactoryProvider.getGameRepository().isPaused()) {
+                moon.next();
+            }
         }
     }
 
