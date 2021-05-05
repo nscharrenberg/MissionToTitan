@@ -358,6 +358,7 @@ public class ODEFunctionTest {
 
         assertEquals(l, list);
     }
+
     /** Tests for addForcesToPlanets **/
     @Test
     @DisplayName("Testing the method addForcesToPlanets passing a null list f moving objects")
@@ -634,21 +635,93 @@ public class ODEFunctionTest {
                 () -> assertEquals(m.getForce(), new Vector3D(1,1,1))
         );
     }
-    /**Testing the newtonsLaw method**/
 
+    /**Testing the newtonsLaw method**/
     @Test
     @DisplayName("Testing the method newTownsLaw passing two differently named and non null objects with diffent masses and positions")
     public void twoNonNullObjects() {
 
-        MovingObject j = new MovingObject("Jupiter", 5.5F, 7, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
-        MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(33, 33, 33),1, new Vector3D(1, 999999, 1));
-
-        j.setForce(new Vector3D(1,1,1));m.setForce(new Vector3D(1,1,1));
+        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertAll(
-                () -> assertEquals(j.getForce(), new Vector3D(1,1,1)),
-                () -> assertEquals(m.getForce(), new Vector3D(1,1,1)));
+        assertEquals(f.newtonsLaw(j, m), new Vector3D(25.5714, 0, 0));
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing one null element")
+    public void oneNullObjectPassedToNewtonslaw() {
+
+        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        MovingObject m = null;
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing one null element")
+    public void secondNullObjectPassedToNewtonslaw() {
+
+        MovingObject j = null;
+        MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing two null elements")
+    public void bothNullObjectsPassedToNewtonslaw() {
+
+        MovingObject j = null;
+        MovingObject m = null;
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing one element with mass equal to zero")
+    public void oneObjectPassedToNewtonslawWithMassZero() {
+
+        MovingObject j = new MovingObject("Jupiter", 0, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing the second element with mass equal to zero")
+    public void secondObjectPassedToNewtonslawWithMassZero() {
+
+        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        MovingObject m = new MovingObject("Mars", 0, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing two elements with mass equal to zero")
+    public void bothObjectsPassedToNewtonslawWithMassZero() {
+
+        MovingObject j = new MovingObject("Jupiter", 0, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        MovingObject m = new MovingObject("Mars", 0, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+
+    }
+    @Test
+    @DisplayName("Testing the method newTownsLaw passing two differently named and non null objects with different masses and positions but with distace == 0")
+    public void twoNonNullObjectsWithDistanceEqualToZero() {
+
+        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+
+        f = new ODEFunction();
+        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
     }
 
 }
