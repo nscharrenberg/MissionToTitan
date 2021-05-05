@@ -100,8 +100,6 @@ public class MovingObject extends SpaceObject {
 
         MovingObject object = this.timeline.remove();
 
-        // TODO: Speed up drawing by relatively removing items.
-        System.out.println(FactoryProvider.getGameRepository().getTimeToSkip());
         for (int i = 0; i < FactoryProvider.getGameRepository().getTimeToSkip(); i++) {
             if (this.timeline.size() > 0) {
                 timeline.remove();
