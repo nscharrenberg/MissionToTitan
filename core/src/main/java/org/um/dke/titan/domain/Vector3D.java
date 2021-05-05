@@ -10,24 +10,19 @@ public class Vector3D implements Vector3dInterface {
     protected double y;
     protected double z;
 
-    protected Vector3 position;
-
     public Vector3D(Vector3 position) {
-        this.position = position;
         this.x = position.x;
         this.y = position.y;
         this.z = position.z;
     }
 
     public Vector3D(double x, double y, double z) {
-        position = new Vector3((float)x, (float)y, (float)z);
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
     public Vector3D(float x, float y, float z) {
-        position = new Vector3(x, y, z);
         this.x = x;
         this.y = y;
         this.z = z;
@@ -40,7 +35,6 @@ public class Vector3D implements Vector3dInterface {
 
     @Override
     public void setX(double x) {
-        position.x = (float)x;
         this.x = x;
     }
 
@@ -51,7 +45,6 @@ public class Vector3D implements Vector3dInterface {
 
     @Override
     public void setY(double y) {
-        position.y = (float)y;
         this.y = y;
     }
 
@@ -62,7 +55,6 @@ public class Vector3D implements Vector3dInterface {
 
     @Override
     public void setZ(double z) {
-        position.z = (float)z;
         this.z = z;
     }
 
