@@ -1,5 +1,6 @@
 package org.um.dke.titan.physics.ode;
 
+import com.badlogic.gdx.math.Vector3;
 import org.um.dke.titan.domain.SpaceObject;
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
@@ -111,15 +112,18 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      */
     private Vector3dInterface unitThrustVector(int index){
         State probe = ((State) probeStateArray[index]);
-        return probe.getVelocity().mul(-1/probe.getVelocity().norm());
+        Vector3D a = new Vector3D(-3.485438214248535E9,5.68422097169873E9,2.8004064091119003E8);
+        return a.mul(1/a.norm());
+        //return probe.getVelocity().mul(-1/probe.getVelocity().norm());
     }
 
     /**
      *  returns the force vector of the engine of the probe
      */
     private Vector3dInterface engineForce(int t) {
-        if (t > 1051690 && t < 1051695) {
-            return unitThrustVector(t).mul(engineForce);
+        if (t >1051693 && t < 1051720) {
+
+            return unitThrustVector(0).mul(engineForce);
         }
         return new Vector3D(0,0,0);
     }

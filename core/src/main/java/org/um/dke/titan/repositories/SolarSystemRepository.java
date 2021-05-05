@@ -102,6 +102,10 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         System.out.println(min);
         System.out.println("minI = " + minI);
 
+        State saturn = (State) timeLineArray[SpaceObjectEnum.SATURN.getId()][1051693];
+        State probe = (State) timeLineArray[SpaceObjectEnum.SHIP.getId()][1051693];
+        System.out.println(saturn.getPosition().sub(probe.getPosition()));
+
 
 
 
