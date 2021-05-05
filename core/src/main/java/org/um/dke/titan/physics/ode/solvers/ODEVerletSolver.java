@@ -174,6 +174,11 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
     }
 
     @Override
+    /** t>0, t < 0; t = 0
+     *  h >0; h < 0; h = 0
+     *  y = null
+     *
+     */
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
         Rate rate = (Rate)f.call(h, y);
         State state = (State)y;

@@ -52,7 +52,7 @@ public class ODEFunction implements ODEFunctionInterface {
     /**
      * resetting forces of all planets for a new calculation
      */
-    protected void resetForces(List<MovingObject> list) {
+    public void resetForces(List<MovingObject> list) {
         for (int i = 0; i < list.size(); i++)
             list.get(i).setForce(new Vector3D(0,0,0));
     }
@@ -60,7 +60,7 @@ public class ODEFunction implements ODEFunctionInterface {
     /**
      * calculates and adds forces to all planets relative to object a.
      */
-    protected void addForcesToPlanets(MovingObject a, List<MovingObject> list) {
+    public void addForcesToPlanets(MovingObject a, List<MovingObject> list) {
         for (int i=0; i<list.size(); i++)
             if(!list.get(i).getName().equals(a.getName())) {
                 Vector3dInterface force = newtonsLaw(a, list.get(i));

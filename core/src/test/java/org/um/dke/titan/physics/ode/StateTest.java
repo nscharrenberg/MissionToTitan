@@ -7,7 +7,7 @@ import org.um.dke.titan.domain.Vector3D;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StateTest {
-
+/**
     private State s;
     @BeforeAll
     public void message(){
@@ -21,7 +21,7 @@ public class StateTest {
 
     }
 
-    /*Suite of tests for addMul(step, rate)*/
+
     @Test
     @DisplayName("Test addMul with an null rate")
     public void testAddMulPassingNullRate() {
@@ -32,7 +32,7 @@ public class StateTest {
 
         //an error should be thrown whenever a null rate is passed
         Assertions.assertThrows(RuntimeException.class, () -> {
-            /*don't know what to put here*/;
+            ;
         });
     }
     @Test
@@ -44,11 +44,11 @@ public class StateTest {
         s.addMul(step, r);
         //an error should be thrown by the addMul method whenever a negative step size is passed
         Assertions.assertThrows(RuntimeException.class, () -> {
-            /*don't know what to put here*/;
+            ;
         });
     }
 
-    /*Suite of tests for addMul(step, state)*/
+
     @Test
     @DisplayName("Test addMul with an null state")
     public void testAddMulPassingNullRate() {
@@ -59,7 +59,7 @@ public class StateTest {
 
         //an error should be thrown whenever a null rate is passed
         Assertions.assertThrows(RuntimeException.class, () -> {
-            /*don't know what to put here*/;
+            ;
         });
     }
     @Test
@@ -71,11 +71,11 @@ public class StateTest {
         s.addMul(step, st);
         //an error should be thrown by the addMul method whenever a negative step size is passed
         Assertions.assertThrows(RuntimeException.class, () -> {
-            /*don't know what to put here*/;
+            ;
         });
     }
 
-    /*Suite of tests for add*/
+
     @Test
     @DisplayName("Test addMul with a non null state as argument")
     public void testAddPassingANonNullState() {
@@ -95,10 +95,10 @@ public class StateTest {
         int step = 3;
         //an error should be thrown whenever a null rate is passed
         Assertions.assertThrows(RuntimeException.class, () -> {
-            /*don't know what to put here*/;
+            ;
         });
     }
 
 
-
+*/
 }
