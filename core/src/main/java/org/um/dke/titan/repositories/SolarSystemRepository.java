@@ -70,15 +70,42 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
-        double dt = 15;
+        double dt = 20;
 
-        getTimeLineArray(totalTime, dt);
+        timeLineArray = getTimeLineArray(totalTime, dt);
+
+        timeLineArray = getTimeLineArray(totalTime ,dt);
 
         ProbeSimulator simulator = new ProbeSimulator();
-        Vector3dInterface[] probeArray = simulator.trajectory(new Vector3D(-1.471922101663588e+11, -2.860995816266412e+10, 8.278183193596080e+06), new Vector3D(46299.73040768241,-54090.56990296325,-929.8730582782176),totalTime, dt);
+        Vector3dInterface[] probeArray = simulator.trajectory(new Vector3D(-1.471922101663588e+11, -2.860995816266412e+10, 8.278183193596080e+06),((State)timeLineArray[0][0]).getVelocity().add(new Vector3D(41878.56337407961,-28602.250664987056,-885.8769882128352)),totalTime, dt);
 
         StateInterface[] tmp2 = timeLineArray[0];
         int length = tmp2.length;
+
+
+
+
+        //TODO: remove this method/print
+        double min = Double.MAX_VALUE;
+        int minI = 0;
+        for (int i = 0; i < timeLineArray[0].length; i++) {
+            State titan = (State) timeLineArray[4][i];
+            Vector3dInterface probe = probeArray[i];
+
+            double dist = probe.dist(titan.getPosition()) - 2574000;
+
+            if (min > dist && dist > 0) {
+                min = dist;
+                minI = i;
+            }
+        }
+        System.out.println(min);
+        System.out.println("minI = " + minI);
+
+
+
+
+
 
         for (int i = 0; i < length; i++) {
             Queue<MovingObject> tmp = new LinkedList<>();

@@ -15,7 +15,7 @@ import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 public class ProbeSimulator implements ProbeSimulatorInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
 
-    private double engineForce = 100000;
+    private double engineForce = 30000;
 
     private int probeId = SpaceObjectEnum.SHIP.getId();
     private String probeName = SpaceObjectEnum.SHIP.getName();
@@ -118,7 +118,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      *  returns the force vector of the engine of the probe
      */
     private Vector3dInterface engineForce(int t) {
-        if (t > 1467351 && t < 1467400) {
+        if (t > 1051690 && t < 1051695) {
             return unitThrustVector(t).mul(engineForce);
         }
         return new Vector3D(0,0,0);
