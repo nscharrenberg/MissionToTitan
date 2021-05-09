@@ -8,6 +8,7 @@ import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.Rate;
 import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
@@ -164,11 +165,11 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
             }
 
             for (Rocket rocket : system.getRockets().values()) {
-                // inserting step into the array
+                //inserting step into the array
                 timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
-                // updating the MovingObject's (Planet) state
+                //updating the MovingObject's (Planet) state
                 system.getRocketName(rocket.getName()).setPosition(state.getPosition());
                 system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
@@ -192,4 +193,5 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
         computeStates(f, h);
         return timelineArray;
     }
+
 }

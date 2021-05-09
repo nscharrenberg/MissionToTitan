@@ -24,4 +24,6 @@ public class ODEVerletFunction extends ODEFunction {
         Vector3dInterface rateVelocity = velocity.add( (acceleration.add(rateAcceleration)).mul(t/2) );   // vel + (acc + rateAcc)*dt*1/2
         return new Rate(rateAcceleration, rateVelocity);
     }
+
+
 }
