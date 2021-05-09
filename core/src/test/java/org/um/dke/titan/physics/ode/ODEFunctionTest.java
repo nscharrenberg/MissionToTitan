@@ -638,7 +638,7 @@ public class ODEFunctionTest {
 
     /**Testing the newtonsLaw method**/
     @Test
-    @DisplayName("Testing the method newTownsLaw passing two differently named and non null objects with diffent masses and positions")
+    @DisplayName("Testing the method newTonsLaw passing two differently named and non null objects with diffent masses and positions")
     public void twoNonNullObjects() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
@@ -659,7 +659,7 @@ public class ODEFunctionTest {
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing one null element")
+    @DisplayName("Testing the method newTonsLaw passing one null element")
     public void secondNullObjectPassedToNewtonslaw() {
 
         MovingObject j = null;
@@ -670,7 +670,7 @@ public class ODEFunctionTest {
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing two null elements")
+    @DisplayName("Testing the method newTonsLaw passing two null elements")
     public void bothNullObjectsPassedToNewtonslaw() {
 
         MovingObject j = null;
@@ -681,7 +681,7 @@ public class ODEFunctionTest {
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing one element with mass equal to zero")
+    @DisplayName("Testing the method newTonsLaw passing one element with mass equal to zero")
     public void oneObjectPassedToNewtonslawWithMassZero() {
 
         MovingObject j = new MovingObject("Jupiter", 0, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
@@ -692,7 +692,7 @@ public class ODEFunctionTest {
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing the second element with mass equal to zero")
+    @DisplayName("Testing the method newTonsLaw passing the second element with mass equal to zero")
     public void secondObjectPassedToNewtonslawWithMassZero() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
@@ -714,7 +714,7 @@ public class ODEFunctionTest {
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing two differently named and non null objects with different masses and positions but with distace == 0")
+    @DisplayName("Testing the method newTownsLaw passing two differently named and non null objects with different masses and positions but with distance == 0")
     public void twoNonNullObjectsWithDistanceEqualToZero() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
