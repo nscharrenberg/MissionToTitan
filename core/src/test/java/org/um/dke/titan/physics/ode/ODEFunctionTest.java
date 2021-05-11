@@ -1,8 +1,6 @@
 package org.um.dke.titan.physics.ode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
@@ -13,14 +11,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+
 
 public class ODEFunctionTest {
     private double timeStep;
     private ODEFunction f;
 /** Tests for the call method  **/
     @Test
-    @DisplayName("Testing the method call passing a time step smaller than zero")
     public void testTimeStepSmallerThanZero() {
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -28,10 +27,10 @@ public class ODEFunctionTest {
 
         timeStep = -10;
 
-       Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+       assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
+
     @Test
-    @DisplayName("Testing the method call passing a time step equal to zero")
     public void testTimeStepEqualToZero() {
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -39,11 +38,10 @@ public class ODEFunctionTest {
 
         timeStep = 0;
 
-       Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+       assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     //I have some doubts on this one since we are already testing what happens if we pass a null object to applyforces but yeah
     @Test
-    @DisplayName("Testing the method call passing a null moving object")
     public void movingObjectisNull() {
         MovingObject m = null;
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -51,19 +49,17 @@ public class ODEFunctionTest {
 
         timeStep = 0;
 
-        Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+        assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     @Test
-    @DisplayName("Testing the method call passing a null state")
     public void statePassedIsNull() {
         State state = null;
         timeStep = 0.5;
         f = new ODEFunction();
 
-       Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+       assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     @Test
-    @DisplayName("Checking for a time step equal to zero")
     public void computationsAreDoneCorretlyInTheCallMethod() {
         MovingObject m = new MovingObject("Mars", 100, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -81,15 +77,14 @@ public class ODEFunctionTest {
 
     /** Tests for resetForces **/
     @Test
-    @DisplayName("Testing the method resetForces passing a null list f moving objects")
     public void listPassedIsNullResetForces() {
         List<MovingObject> l = null;
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.resetForces(l));
+        assertThrows(RuntimeException.class, () -> f.resetForces(l));
     }
+
     //This is very trivial i have to say
     @Test
-    @DisplayName("Testing the method resetForces passing a not null list f moving objects and cheking if the forces of all objects are set to zero")
     public void listPassedIsNotNull() {
         List<MovingObject> l = new List<MovingObject>() {
             @Override
@@ -361,16 +356,15 @@ public class ODEFunctionTest {
 
     /** Tests for addForcesToPlanets **/
     @Test
-    @DisplayName("Testing the method addForcesToPlanets passing a null list f moving objects")
     public void listPassedIsNullAddForcesToPLanets() {
         List<MovingObject> l = null;
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.addForcesToPlanets(m, l));
+        assertThrows(RuntimeException.class, () -> f.addForcesToPlanets(m, l));
     }
+
     @Test
-    @DisplayName("Testing the method addForcesToPlanets passing a null list f moving objects")
     public void movingObjectPassedIsNullAddForcesToPLanets() {
         List<MovingObject> l = new List<MovingObject>() {
             @Override
@@ -494,10 +488,10 @@ public class ODEFunctionTest {
         MovingObject m = null;
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.addForcesToPlanets(m, l));
+        assertThrows(RuntimeException.class, () -> f.addForcesToPlanets(m, l));
     }
+
     @Test
-    @DisplayName("Testing the method addForcesToPlanets passing a list moving objects containing planets that are all named  in the same way as the one passed as argument")
     public void movingObjectPassedIsNamedAsAllTheOtherPlanetsInTheList() {
         List<MovingObject> l = new List<MovingObject>() {
             @Override
@@ -628,17 +622,15 @@ public class ODEFunctionTest {
         m.setForce(new Vector3D(1,1,1));
 
         f = new ODEFunction();
-        Assertions.assertAll(
-                () -> assertEquals(jupiter1.getForce(), new Vector3D(1,1,1)),
-                () -> assertEquals(jupiter2.getForce(), new Vector3D(1,1,1)),
-                () -> assertEquals(jupiter3.getForce(), new Vector3D(1,1,1)),
-                () -> assertEquals(m.getForce(), new Vector3D(1,1,1))
-        );
+
+        assertEquals(jupiter1.getForce(), new Vector3D(1,1,1));
+        assertEquals(jupiter2.getForce(), new Vector3D(1,1,1));
+        assertEquals(jupiter3.getForce(), new Vector3D(1,1,1));
+        assertEquals(m.getForce(), new Vector3D(1,1,1));
     }
 
     /**Testing the newtonsLaw method**/
     @Test
-    @DisplayName("Testing the method newTonsLaw passing two differently named and non null objects with diffent masses and positions")
     public void twoNonNullObjects() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
@@ -648,80 +640,73 @@ public class ODEFunctionTest {
         assertEquals(f.newtonsLaw(j, m), new Vector3D(25.5714, 0, 0));
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing one null element")
     public void oneNullObjectPassedToNewtonslaw() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
         MovingObject m = null;
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
-    @DisplayName("Testing the method newTonsLaw passing one null element")
     public void secondNullObjectPassedToNewtonslaw() {
 
         MovingObject j = null;
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
-    @DisplayName("Testing the method newTonsLaw passing two null elements")
     public void bothNullObjectsPassedToNewtonslaw() {
 
         MovingObject j = null;
         MovingObject m = null;
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
-    @DisplayName("Testing the method newTonsLaw passing one element with mass equal to zero")
     public void oneObjectPassedToNewtonslawWithMassZero() {
 
         MovingObject j = new MovingObject("Jupiter", 0, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
-    @DisplayName("Testing the method newTonsLaw passing the second element with mass equal to zero")
     public void secondObjectPassedToNewtonslawWithMassZero() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
         MovingObject m = new MovingObject("Mars", 0, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing two elements with mass equal to zero")
     public void bothObjectsPassedToNewtonslawWithMassZero() {
 
         MovingObject j = new MovingObject("Jupiter", 0, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
         MovingObject m = new MovingObject("Mars", 0, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
-    @DisplayName("Testing the method newTownsLaw passing two differently named and non null objects with different masses and positions but with distance == 0")
     public void twoNonNullObjectsWithDistanceEqualToZero() {
 
         MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        Assertions.assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
     }
 
 }

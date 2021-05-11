@@ -1,14 +1,14 @@
 package org.um.dke.titan.physics.ode;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.graalvm.compiler.debug.Assertions;
+import org.junit.Test;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.ODEVerletFunction;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 public class VerletFunctionTest {
 
@@ -16,7 +16,6 @@ public class VerletFunctionTest {
     private ODEVerletFunction f;
     /** Tests for the call method  **/
     @Test
-    @DisplayName("Testing the method call passing a time step smaller than zero")
     public void testTimeStepSmallerThanZero() {
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -24,10 +23,9 @@ public class VerletFunctionTest {
 
         timeStep = -10;
 
-        Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+        assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     @Test
-    @DisplayName("Testing the method call passing a time step equal to zero")
     public void testTimeStepEqualToZero() {
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -35,11 +33,10 @@ public class VerletFunctionTest {
 
         timeStep = 0;
 
-        Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+        assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     //I have some doubts on this one since we are already testing what happens if we pass a null object to applyforces but yeah
     @Test
-    @DisplayName("Testing the method call passing a null moving object")
     public void movingObjectisNull() {
         MovingObject m = null;
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);
@@ -47,19 +44,17 @@ public class VerletFunctionTest {
 
         timeStep = 0;
 
-        Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+        assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     @Test
-    @DisplayName("Testing the method call passing a null state")
     public void statePassedIsNull() {
         State state = null;
         timeStep = 0.5;
         f = new ODEVerletFunction();
 
-        Assertions.assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+        assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
     }
     @Test
-    @DisplayName("Testing what happens in the call method if legal parameters are passed")
     public void computationsAreDoneCorretlyInTheCallMethod() {
         MovingObject m = new MovingObject("Mars", 100, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         State state = new State(new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), new Vector3D(1, 1, 1), m);

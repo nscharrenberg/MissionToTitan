@@ -1,11 +1,5 @@
 package org.um.dke.titan.physics.ode;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.um.dke.titan.domain.Vector3D;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 public class StateTest {
 /**
     private State s;
