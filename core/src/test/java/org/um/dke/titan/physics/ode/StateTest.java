@@ -1,6 +1,26 @@
 package org.um.dke.titan.physics.ode;
 
 public class StateTest {
+	 @Test
+	 @DisplayName("State addMul")
+	 public void addMullTest() {
+		 Vector3D posS, velS, posT, velT, posResult, velResult;
+		 double step;
+		 //TODO ADD CORRECT VALUES
+		 posS = new Vector3D(3, 5, 9);
+		 velS = new Vector3D(3, 5, 9);
+		 posT = new Vector3D(3, 5, 9);
+		 velT = new Vector3D(3, 5, 9);
+		 posResult = new Vector3D(3, 5, 9);
+		 velResult = new Vector3D(3, 5, 9);
+		 step = 2;
+		 State s = new State(posS, velS, null);
+		 State t = new State(posT, velT, null);
+		 
+		 State result = (State) s.addMul(step, t);
+		 
+		 assertEquals(result, new State(posResult, velResult, null));
+	 }	
 /**
     private State s;
     @BeforeAll
