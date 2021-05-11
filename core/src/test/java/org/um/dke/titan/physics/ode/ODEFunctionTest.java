@@ -1,11 +1,15 @@
 package org.um.dke.titan.physics.ode;
 
+import org.graalvm.compiler.debug.Assertions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
+import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +18,7 @@ import java.util.ListIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
-
+@RunWith(GdxTestRunner.class)
 public class ODEFunctionTest {
     private double timeStep;
     private ODEFunction f;
@@ -220,6 +224,7 @@ public class ODEFunctionTest {
         f = new ODEFunction();
         f.resetForces(l);
 
+
         List<MovingObject> list = new List<MovingObject>() {
             @Override
             public int size() {
@@ -350,13 +355,21 @@ public class ODEFunctionTest {
         MovingObject jupi = new MovingObject("Jupiter", 5.5F, 7, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         MovingObject earth = new MovingObject("Earth", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
         mars.setForce(new Vector3D(0,0,0)); jupi.setForce(new Vector3D(0,0,0)); earth.setForce(new Vector3D(0,0,0));
+        list.add(mars); list.add(jupi);list.add(earth);
 
-        assertEquals(l, list);
+
+        System.out.println("SBALLO");
+
+        System.out.println(list.get(1).getForce());
+
+        assertEquals(list.get(1).getForce(), l.get(1).getForce());
+        assertEquals(list.get(2).getForce(), l.get(2).getForce());
+        assertEquals(list.get(3).getForce(), l.get(3).getForce());
     }
 
     /** Tests for addForcesToPlanets **/
     @Test
-    public void listPassedIsNullAddForcesToPLanets() {
+    public void listPassedIsNullAddForcesToPlanets() {
         List<MovingObject> l = null;
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
 
@@ -632,12 +645,16 @@ public class ODEFunctionTest {
     /**Testing the newtonsLaw method**/
     @Test
     public void twoNonNullObjects() {
-
-        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+        double G = 6.67408e-11;
+        MovingObject j = new MovingObject("Jupiter", 10, 7, new Vector3D(9, 9, 9),1, new Vector3D(1, 1, 1));
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertEquals(f.newtonsLaw(j, m), new Vector3D(25.5714, 0, 0));
+
+        Vector3dInterface v = j.getPosition().sub(m.getPosition());
+        double grav = j.getMass() * m.getMass() * G;
+        double norm_third = Math.pow(v.norm(), 3);
+        assertEquals(f.newtonsLaw(j, m), new Vector3D(v.getX() * (-grav/norm_third), v.getY() * (-grav/norm_third), v.getZ() * (-grav/norm_third)));
     }
     @Test
     public void oneNullObjectPassedToNewtonslaw() {

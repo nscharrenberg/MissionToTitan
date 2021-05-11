@@ -53,6 +53,9 @@ public class ODEFunction implements ODEFunctionInterface {
      * resetting forces of all planets for a new calculation
      */
     public void resetForces(List<MovingObject> list) {
+        if(list == null)  {
+            throw new RuntimeException("The list passed is null");
+        }
         for (int i = 0; i < list.size(); i++)
             list.get(i).setForce(new Vector3D(0,0,0));
     }
@@ -61,6 +64,11 @@ public class ODEFunction implements ODEFunctionInterface {
      * calculates and adds forces to all planets relative to object a.
      */
     public void addForcesToPlanets(MovingObject a, List<MovingObject> list) {
+
+        if(a == null) {
+            throw new RuntimeException("Object a is null");
+        }
+
         for (int i=0; i<list.size(); i++)
             if(!list.get(i).getName().equals(a.getName())) {
                 Vector3dInterface force = newtonsLaw(a, list.get(i));
@@ -73,6 +81,26 @@ public class ODEFunction implements ODEFunctionInterface {
      * calculates the Gravitational force of 2 moving objects.
      */
     public Vector3dInterface newtonsLaw(MovingObject a, MovingObject b) {
+        //exceptions
+        if(a == null || b== null) {
+            throw new RuntimeException("Invalid arguments; one of teh objects passed is null");
+        }
+        if(a.getPosition().sub(b.getPosition()).getX() == 0 && a.getPosition().sub(b.getPosition()).getY() == 0 && a.getPosition().sub(b.getPosition()).getZ() == 0) {
+            throw new RuntimeException("Invalid arguments; the distance between the 2 objects is zero");
+        }
+        if(a.getMass() == 0 || b.getMass() == 0){
+            if(a.getMass() == 0 || b.getMass() != 0){
+                throw new RuntimeException("Invalid arguments; object a has zero mass");
+            }
+            if(a.getMass() != 0 || b.getMass() == 0){
+                throw new RuntimeException("Invalid arguments; object b has zero mass");
+            }
+            if(a.getMass() == 0 && b.getMass() == 0){
+                throw new RuntimeException("Invalid arguments; objects a and b have zero mass");
+            }
+
+        }
+
         Vector3D r = (Vector3D) b.getPosition().sub(a.getPosition()); // xi - xj
         double gravConst = G * a.getMass() * b.getMass(); // G * Mi * Mj
 

@@ -40,7 +40,7 @@ public class State implements StateInterface {
         return new State(position.add(mul.getPosition()), velocity.add(mul.getVelocity()),object);
     }
 
-    public StateInterface add(StateInterface addedState ) {
+    public StateInterface add(StateInterface addedState) {
         State state = (State)addedState;
         return new State(position.add(state.getVelocity()), velocity.add(state.getVelocity()),object);
     }
