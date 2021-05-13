@@ -1,8 +1,10 @@
 package org.um.dke.titan.simulation2;
 
 import org.um.dke.titan.domain.SpaceObjectEnum;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.ProbeSimulator;
 import org.um.dke.titan.physics.ode.State;
 
 import java.util.HashMap;
@@ -10,17 +12,21 @@ import java.util.HashMap;
 public class Simulation {
     private static StateInterface[][] timelineArray;
     private static Vector3dInterface[] probePositions;
-    private static SimulationResults results;
+    private static HashMap<String, Double> engineUsageTimelineArray;
+    private static SimulationResults results = new SimulationResults();
 
     private static double daySec = 60*24*60;
     private static double dt = 20;
-    private static double tf = daySec*280;
+    private static double tf = daySec*360;
 
     private static double titanRadius = 2575.5e3;
     private static double earthRadius = 6371e3;
 
-    public static SimulationResults run(Vector3dInterface unit, int velocity, HashMap<String, Double> engineForce) {
-        simulate(unit, velocity, engineForce);
+    public static SimulationResults run(Vector3dInterface unit, int velocity) {
+        simulate(unit, velocity);
+
+        getMinDistanceToTitan();
+        getMinDistanceToEarth();
 
         return results;
     }
@@ -59,5 +65,14 @@ public class Simulation {
         }
 
         return results;
+    }
+
+    public static void simulate(Vector3dInterface unit, int velocity) {
+        timelineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, dt);
+
+        Vector3dInterface earthVelocity = ((State)(timelineArray[SpaceObjectEnum.EARTH.getId()][0])).getVelocity();
+        ProbeSimulator probeSimulator = new ProbeSimulator();
+
+        probePositions = probeSimulator.trajectory(((State) timelineArray[SpaceObjectEnum.SHIP.getId()][0]).getPosition(), unit.mul(velocity).add(earthVelocity), tf, dt);
     }
 }

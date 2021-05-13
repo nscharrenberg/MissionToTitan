@@ -36,7 +36,9 @@ public class StaticScreen extends ScreenAdapter {
         createFonts();
         FactoryProvider.getSolarSystemRepository().initWithGdx();
 
-        System.out.println("Starting Generation:");    }
+        System.out.println("Starting Generation:");
+        Main.simulate();
+    }
 
     private void createFonts() {
         FileHandle fontFile = Gdx.files.internal("fonts/Roboto-Black.ttf");
