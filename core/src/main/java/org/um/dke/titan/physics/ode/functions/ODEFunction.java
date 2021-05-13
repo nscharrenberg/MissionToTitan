@@ -41,6 +41,8 @@ public class ODEFunction implements ODEFunctionInterface {
         for (Planet planet : system.getPlanets().values()) {
             list.add(planet);
             list.addAll(planet.getMoons().values());
+            System.out.println("test running here");
+
         }
 
         list.addAll(system.getRockets().values());
