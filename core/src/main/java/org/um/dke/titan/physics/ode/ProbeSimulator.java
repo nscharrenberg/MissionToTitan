@@ -56,6 +56,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 1; i < timeLineArray[0].length; i++) {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
+                    force = force.add(engineForce(100, findThrustVectorTitan(i)));
+
                     probeStateArray[i] = step(probeStateArray[i-1], h);
                     force = new Vector3D(0, 0, 0);
                 } else {
@@ -135,8 +137,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private double calculateMassUsed(int percentageOfPower){
 
-        double massUsed = -1*((percentageOfPower/100)*-1*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
-        return massUsed;
+        return -1*((percentageOfPower/100)*-1*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
     }
 
 }
