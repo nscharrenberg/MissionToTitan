@@ -6,48 +6,56 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import java.util.Objects;
 
 public class Vector3D implements Vector3dInterface {
-    protected Vector3 position;
+    protected double x;
+    protected double y;
+    protected double z;
 
     public Vector3D(Vector3 position) {
-        this.position = position;
+        this.x = position.x;
+        this.y = position.y;
+        this.z = position.z;
     }
 
     public Vector3D(double x, double y, double z) {
-        position = new Vector3((float)x, (float)y, (float)z);
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public Vector3D(float x, float y, float z) {
-        position = new Vector3(x, y, z);
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     @Override
     public double getX() {
-        return position.x;
+        return x;
     }
 
     @Override
     public void setX(double x) {
-        position.x = (float)x;
+        this.x = x;
     }
 
     @Override
     public double getY() {
-        return position.y;
+        return y;
     }
 
     @Override
     public void setY(double y) {
-        position.y = (float)y;
+        this.y = y;
     }
 
     @Override
     public double getZ() {
-        return position.z;
+        return z;
     }
 
     @Override
     public void setZ(double z) {
-        position.z = (float)z;
+        this.z = z;
     }
 
     /**
@@ -57,7 +65,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface add(Vector3dInterface other) {
-        return new Vector3D(position.x + other.getX(), position.y + other.getY(), position.z + other.getZ());
+        return new Vector3D(x + other.getX(), y + other.getY(), z + other.getZ());
     }
 
     /**
@@ -67,7 +75,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface sub(Vector3dInterface other) {
-        return new Vector3D(position.x - other.getX(), position.y - other.getY(), position.z - other.getZ());
+        return new Vector3D(x - other.getX(), y - other.getY(), z - other.getZ());
     }
 
     /**
@@ -77,7 +85,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface mul(double scalar) {
-        return new Vector3D(position.x * scalar, position.y * scalar, position.z * scalar);
+        return new Vector3D(x * scalar, y * scalar, z * scalar);
     }
 
     /**
@@ -98,7 +106,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public Vector3dInterface addMul(double scalar, Vector3dInterface other) {
-        Vector3dInterface resultant = new Vector3D(position.x, position.y, position.z);
+        Vector3dInterface resultant = new Vector3D(x, y, z);
         other = other.mul(scalar);
         resultant = resultant.add(other);
 
@@ -110,7 +118,7 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public double norm() {
-        return Math.sqrt(Math.pow(position.x, 2) + Math.pow(position.y, 2) + Math.pow(position.z, 2));
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
     }
 
     /**
@@ -118,15 +126,15 @@ public class Vector3D implements Vector3dInterface {
      */
     @Override
     public double dist(Vector3dInterface other) {
-        return Math.sqrt(Math.pow(position.x-other.getX(), 2) + Math.pow(position.y-other.getY(), 2) + Math.pow(position.z-other.getZ(), 2));
+        return Math.sqrt(Math.pow(x-other.getX(), 2) + Math.pow(y-other.getY(), 2) + Math.pow(z-other.getZ(), 2));
     }
 
     @Override
     public String toString() {
         return "Vector3D{" +
-                "x=" + position.x +
-                ", y=" + position.y +
-                ", z=" + position.z +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
                 '}';
     }
 
@@ -135,15 +143,17 @@ public class Vector3D implements Vector3dInterface {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector3D vector3D = (Vector3D) o;
-        return Objects.equals(position, vector3D.position);
+        return Double.compare(vector3D.x, x) == 0 &&
+                Double.compare(vector3D.y, y) == 0 &&
+                Double.compare(vector3D.z, z) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position);
+        return Objects.hash(x, y, z);
     }
 
     public Vector3D clone() {
-        return new Vector3D(position);
+        return new Vector3D(x, y, z);
     }
 }

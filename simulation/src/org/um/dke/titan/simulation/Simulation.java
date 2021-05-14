@@ -12,7 +12,7 @@ public class Simulation {
     private static Vector3dInterface[] probePositions;
 
     private static double daySec = 60*24*60;
-    private static double dt = 1000;
+    private static double dt = 20;
     private static double tf = daySec*280;
 
     private static double titanRadius = 2574000;

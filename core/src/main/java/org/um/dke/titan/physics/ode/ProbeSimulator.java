@@ -110,7 +110,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     /**
      *  returns the unit vector of the desired thrust angle
      */
-    private Vector3dInterface findThrustVectorTitan(int index){
+    private Vector3dInterface findThrustVector(int index){
         State probe = ((State) probeStateArray[index]);
         State titan = (State) timeLineArray[SpaceObjectEnum.TITAN.getId()][index];
 
