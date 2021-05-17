@@ -61,7 +61,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
                     force = new Vector3D(0, 0, 0);
                 } else {
                     force = force.add(newtonsLaw((State)probeStateArray[t-1], (State)timeLineArray[p][t]));
-                    force = force.add(engineForce(t-1));
+//                    force = force.add(engineForce(t-1));
                 }
             }
         }
