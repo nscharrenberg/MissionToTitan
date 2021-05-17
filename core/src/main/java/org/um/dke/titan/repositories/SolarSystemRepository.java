@@ -2,6 +2,7 @@ package org.um.dke.titan.repositories;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Json;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
@@ -19,7 +20,7 @@ import java.util.*;
 public class SolarSystemRepository implements org.um.dke.titan.repositories.interfaces.ISolarSystemRepository {
     private Map<String, Planet> planets;
     private Map<String, Rocket> rockets;
-    private StateInterface[][] timeLineArray;
+    private transient StateInterface[][] timeLineArray;
 
     public SolarSystemRepository() {
         this.planets = new HashMap<>();
@@ -104,7 +105,12 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
 
         State saturn = (State) timeLineArray[SpaceObjectEnum.SATURN.getId()][1051693];
         State probe = (State) timeLineArray[SpaceObjectEnum.SHIP.getId()][1051693];
+        State earth = (State) timeLineArray[SpaceObjectEnum.EARTH.getId()][0];
+
         System.out.println(saturn.getPosition().sub(probe.getPosition()));
+
+        Json json = new Json();
+        System.out.println(json.prettyPrint(this));
 
 
 

@@ -1,5 +1,7 @@
 package org.um.dke.titan.physics.ode;
 
+import com.badlogic.gdx.math.Vector3;
+import org.um.dke.titan.domain.SpaceObject;
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
@@ -8,10 +10,14 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.repositories.SolarSystemRepository;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
+
+    private double engineForce = 30000;
+
     private int probeId = SpaceObjectEnum.SHIP.getId();
     private String probeName = SpaceObjectEnum.SHIP.getName();
     private Vector3dInterface force;
@@ -19,11 +25,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private double probeMass = system.getRocketName(probeName).getMass();
     private StateInterface[][] timeLineArray;
     private StateInterface[] probeStateArray;
-    private final double EXHAUST_VELOCITY = 2e4;
-    private final double MAXIMUM_THRUST = 3e7;
-    private final double MASS_FLOW_RATE = 2000;
-    private final double AREA = 4.55;
-    private final double PRESSURE = 100000;
 
     /**
      * TODO: Rewrite this method
@@ -52,16 +53,15 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];
         probeStateArray[0] = initialState;
         force = new Vector3D(0,0,0);
-        System.out.println("MASS USED FOR THRUST: " + calculateMassUsed(100));
-        for (int i = 1; i < timeLineArray[0].length; i++) {
-            for (int j = 0; j < timeLineArray.length; j++) {
-                if (j == probeId) {
-                    force = force.add(engineForce(100, findThrustVectorTitan(i)));
 
-                    probeStateArray[i] = step(probeStateArray[i-1], h);
+        for (int t = 1; t < timeLineArray[0].length; t++) {
+            for (int p = 0; p < timeLineArray.length; p++) {
+                if (p == probeId) {
+                    probeStateArray[t] = step(probeStateArray[t-1], h);
                     force = new Vector3D(0, 0, 0);
                 } else {
-                    force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
+                    force = force.add(newtonsLaw((State)probeStateArray[t-1], (State)timeLineArray[p][t]));
+                    force = force.add(engineForce(t-1));
                 }
             }
         }
@@ -110,34 +110,21 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     /**
      *  returns the unit vector of the desired thrust angle
      */
-    private Vector3dInterface findThrustVector(int index){
+    private Vector3dInterface unitThrustVector(int index){
         State probe = ((State) probeStateArray[index]);
-        State titan = (State) timeLineArray[SpaceObjectEnum.TITAN.getId()][index];
-
-        Vector3dInterface thrustVector = titan.getPosition().sub(probe.getPosition());
-        thrustVector = thrustVector.sub(probe.getVelocity());
-        return thrustVector.mul(1/thrustVector.norm());
-    }
-
-    private Vector3dInterface findThrustVectorEarth(int index){
-        State probe = ((State) probeStateArray[index]);
-        State earth = (State) timeLineArray[SpaceObjectEnum.EARTH.getId()][index];
-
-        Vector3dInterface thrustVector = earth.getPosition().sub(probe.getPosition());
-        thrustVector = thrustVector.sub(probe.getVelocity());
-        return thrustVector.mul(1/thrustVector.norm());
+        Vector3D a = new Vector3D(-3.485438214248535E9,5.68422097169873E9,2.8004064091119003E8);
+        return a.mul(1/a.norm());
+        //return probe.getVelocity().mul(-1/probe.getVelocity().norm());
     }
 
     /**
      *  returns the force vector of the engine of the probe
      */
-    private Vector3dInterface engineForce(int percentageOfPower, Vector3dInterface thrustVector) {
-        return thrustVector.mul(MAXIMUM_THRUST*(percentageOfPower/100));
+    private Vector3dInterface engineForce(int t) {
+        if (t >1051693 && t < 1051720) {
+
+            return unitThrustVector(0).mul(engineForce);
+        }
+        return new Vector3D(0,0,0);
     }
-
-    private double calculateMassUsed(int percentageOfPower){
-
-        return -1*((percentageOfPower/100)*-1*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
-    }
-
 }
