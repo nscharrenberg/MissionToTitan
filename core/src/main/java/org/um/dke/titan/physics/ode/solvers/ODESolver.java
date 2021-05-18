@@ -22,12 +22,12 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
     public ODESolver(){
         this.system = FactoryProvider.getSolarSystemRepository();
-        this.planets = new ArrayList<>();
-        this.timelineArray = new StateInterface[1][1];
     }
     //test this
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
+    	if(y0.equals(null))
+    		throw new NullPointerException();
         size = ts.length;
         addInitialStates();
         for (int i = 1; i < size; i++) {
