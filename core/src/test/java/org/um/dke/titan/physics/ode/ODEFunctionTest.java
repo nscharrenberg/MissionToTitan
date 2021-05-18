@@ -28,7 +28,7 @@ public class ODEFunctionTest {
 
         timeStep = -10;
 
-       assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+       assertThrows(IllegalArgumentException.class, () -> f.call(timeStep, state));
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ODEFunctionTest {
 
         timeStep = 0;
 
-       assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+       assertThrows(IllegalArgumentException.class, () -> f.call(timeStep, state));
     }
     //I have some doubts on this one since we are already testing what happens if we pass a null object to applyforces but yeah
     @Test
@@ -50,7 +50,7 @@ public class ODEFunctionTest {
 
         timeStep = 0;
 
-        assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+        assertThrows(NullPointerException.class, () -> f.call(timeStep, state));
     }
     @Test
     public void statePassedIsNull() {
@@ -58,7 +58,7 @@ public class ODEFunctionTest {
         timeStep = 0.5;
         f = new ODEFunction();
 
-       assertThrows(RuntimeException.class, () -> f.call(timeStep, state));
+       assertThrows(NullPointerException.class, () -> f.call(timeStep, state));
     }
 //    @Test
 //    //I don't think i can really test thi one without applying all the forces from the planets in the system
@@ -90,7 +90,7 @@ public class ODEFunctionTest {
     public void listPassedIsNullResetForces() {
         List<MovingObject> l = null;
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.resetForces(l));
+        assertThrows(NullPointerException.class, () -> f.resetForces(l));
     }
 
     //This is very trivial i have to say
@@ -131,7 +131,7 @@ public class ODEFunctionTest {
         MovingObject m = new MovingObject("Mars", 5.5F, 6, new Vector3D(1, 1, 1),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.addForcesToPlanets(m, l));
+        assertThrows(NullPointerException.class, () -> f.addForcesToPlanets(m, l));
     }
 
     @Test
@@ -258,7 +258,7 @@ public class ODEFunctionTest {
         MovingObject m = null;
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.addForcesToPlanets(m, l));
+        assertThrows(NullPointerException.class, () -> f.addForcesToPlanets(m, l));
     }
 
     @Test
@@ -420,7 +420,7 @@ public class ODEFunctionTest {
         MovingObject m = null;
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(NullPointerException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
@@ -430,7 +430,7 @@ public class ODEFunctionTest {
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(NullPointerException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
@@ -440,7 +440,7 @@ public class ODEFunctionTest {
         MovingObject m = null;
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(NullPointerException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
@@ -450,7 +450,7 @@ public class ODEFunctionTest {
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
@@ -460,7 +460,7 @@ public class ODEFunctionTest {
         MovingObject m = new MovingObject("Mars", 0, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
@@ -470,7 +470,7 @@ public class ODEFunctionTest {
         MovingObject m = new MovingObject("Mars", 0, 6, new Vector3D(10, 10, 10),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
 
     }
     @Test
@@ -480,7 +480,7 @@ public class ODEFunctionTest {
         MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
 
         f = new ODEFunction();
-        assertThrows(RuntimeException.class, () -> f.newtonsLaw(m, j));
+        assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
     }
 
 }

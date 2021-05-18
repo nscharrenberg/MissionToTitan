@@ -1,4 +1,7 @@
 sourceCompatibility = 1.8
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+}
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/main/java/" ]
