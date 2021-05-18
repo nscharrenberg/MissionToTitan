@@ -35,6 +35,7 @@ public class ODESolverTest {
     	ODEFunctionInterface f = new ODEFunction();
     	StateInterface y0 = null;
     	double[] ts = {0, 0.1, 0.2, 0.3, 0.4, 0.5};
+    	odes.getData(f, 0.5, 0.1);
     	assertThrows(NullPointerException.class, () -> { odes.solve(f, y0, ts);});
     }
     @Test
@@ -43,20 +44,20 @@ public class ODESolverTest {
     	ODEFunctionInterface f = null;
     	StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
     	double[] ts = {0, 0.1, 0.2, 0.3, 0.4, 0.5};
+    	odes.getData(f, 0.5, 0.1);
     	assertThrows(NullPointerException.class, () -> { odes.solve(f, y0, ts);});
     }
     @Test
-
     public void solveTSLengthZeroTest() {
     	ODESolver odes = new ODESolver();
     	ODEFunctionInterface f = new ODEFunction();
     	StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
     	double[] ts = {0, 0.1, 0.2, 0.3, 0.4, 0.5};
+    	odes.getData(f, 0.5, 0.1);
     	assertEquals(odes.solve(f, y0, ts)[0], null);
     }
     
     @Test
-
     public void getIndexOfPlanetY0NullTest() {
     	ODESolver odes = new ODESolver();
     	ODEFunctionInterface f = new ODEFunction();

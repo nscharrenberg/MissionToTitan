@@ -22,6 +22,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
     public ODESolver(){
         this.system = FactoryProvider.getSolarSystemRepository();
+        this.planets = new ArrayList<>();
+        this.timelineArray = new StateInterface[1][1];
     }
     //test this
     @Override

@@ -1,6 +1,5 @@
 package org.um.dke.titan.physics.ode;
 
-import org.graalvm.compiler.debug.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.MovingObject;
