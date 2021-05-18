@@ -25,6 +25,12 @@ public class ODEFunction implements ODEFunctionInterface {
 
     @Override
     public RateInterface call(double t, StateInterface y) {
+
+        if(t <= 0){
+            throw new IllegalArgumentException("The input passed is not valid");
+        }
+
+
         State state = (State) y;
         Vector3dInterface velocity = state.getVelocity();
         MovingObject object = state.getMovingObject();
@@ -56,7 +62,7 @@ public class ODEFunction implements ODEFunctionInterface {
      */
     public void resetForces(List<MovingObject> list) {
         if(list == null)  {
-            throw new RuntimeException("The list passed is null");
+            throw new NullPointerException("The list passed is null");
         }
         for (int i = 0; i < list.size(); i++)
             list.get(i).setForce(new Vector3D(0,0,0));
@@ -68,7 +74,7 @@ public class ODEFunction implements ODEFunctionInterface {
     public void addForcesToPlanets(MovingObject a, List<MovingObject> list) {
 
         if(a == null) {
-            throw new RuntimeException("Object a is null");
+            throw new NullPointerException("Object a is null");
         }
 
         for (int i=0; i<list.size(); i++)
@@ -85,20 +91,20 @@ public class ODEFunction implements ODEFunctionInterface {
     public Vector3dInterface newtonsLaw(MovingObject a, MovingObject b) {
         //exceptions
         if(a == null || b== null) {
-            throw new RuntimeException("Invalid arguments; one of teh objects passed is null");
+            throw new NullPointerException("Invalid arguments; one of teh objects passed is null");
         }
         if(a.getPosition().sub(b.getPosition()).getX() == 0 && a.getPosition().sub(b.getPosition()).getY() == 0 && a.getPosition().sub(b.getPosition()).getZ() == 0) {
-            throw new RuntimeException("Invalid arguments; the distance between the 2 objects is zero");
+            throw new IllegalArgumentException("Invalid arguments; the distance between the 2 objects is zero");
         }
         if(a.getMass() == 0 || b.getMass() == 0){
             if(a.getMass() == 0 || b.getMass() != 0){
-                throw new RuntimeException("Invalid arguments; object a has zero mass");
+                throw new IllegalArgumentException("Invalid arguments; object a has zero mass");
             }
             if(a.getMass() != 0 || b.getMass() == 0){
-                throw new RuntimeException("Invalid arguments; object b has zero mass");
+                throw new IllegalArgumentException("Invalid arguments; object b has zero mass");
             }
             if(a.getMass() == 0 && b.getMass() == 0){
-                throw new RuntimeException("Invalid arguments; objects a and b have zero mass");
+                throw new IllegalArgumentException("Invalid arguments; objects a and b have zero mass");
             }
 
         }

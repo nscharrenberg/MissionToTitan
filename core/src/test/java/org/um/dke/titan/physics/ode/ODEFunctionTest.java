@@ -49,7 +49,7 @@ public class ODEFunctionTest {
 
         timeStep = 0;
 
-        assertThrows(NullPointerException.class, () -> f.call(timeStep, state));
+        assertThrows(IllegalArgumentException.class, () -> f.call(timeStep, state));
     }
     @Test
     public void statePassedIsNull() {

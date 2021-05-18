@@ -28,6 +28,9 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         size = ts.length;
+        if(size == 0) {
+            throw new IllegalArgumentException("The time step array passed is not legal");
+        }
         addInitialStates();
         for (int i = 1; i < size; i++) {
             int j = 0;
