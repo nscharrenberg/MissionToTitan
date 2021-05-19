@@ -1,118 +1,96 @@
-//package org.um.dke.titan.physics.ode;
-//
-//public class StateTest {
+package org.um.dke.titan.physics.ode;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.um.dke.titan.domain.MovingObject;
+import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.interfaces.RateInterface;
+import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.functions.ODEFunction;
+import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
+
+import javax.swing.plaf.synth.SynthTextAreaUI;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+
+@RunWith(GdxTestRunner.class)
+public class StateTest {
+
+
 //	 @Test
-//	 @DisplayName("State addMul")
-//	 public void addMullTest() {
-//		 Vector3D posS, velS, posT, velT, posResult, velResult;
-//		 double step;
-//		 //TODO ADD CORRECT VALUES
-//		 posS = new Vector3D(3, 5, 9);
-//		 velS = new Vector3D(3, 5, 9);
-//		 posT = new Vector3D(3, 5, 9);
-//		 velT = new Vector3D(3, 5, 9);
-//		 posResult = new Vector3D(3, 5, 9);
-//		 velResult = new Vector3D(3, 5, 9);
-//		 step = 2;
-//		 State s = new State(posS, velS, null);
-//		 State t = new State(posT, velT, null);
+//	 public void addMullFunctionalityTest() {
 //
-//		 State result = (State) s.addMul(step, t);
+//		 State original_state = new State(new Vector3D(1, 1, 1), new Vector3D(2, 2,2), null);
 //
-//		 assertEquals(result, new State(posResult, velResult, null));
+//		 double step = 3;
+//		 Rate r = new Rate(new Vector3D(5, 5, 5), new Vector3D(4, 4,4));
+//		 Rate scaled = new Rate(r.getVelocity().mul(step), r.getAcceleration().mul(step));
+//
+//		 State final_state = new State();
+//
+//		 assertEquals(original_state.addMul(step, r), final_state);
 //	 }
-/**
-    private State s;
-    @BeforeAll
-    public void message(){
-        Sytem.out.println("Running the StateTest");
-    }
-    @BeforeEach
-    public void setUp() throws Exception {
-        Vector3D p = new Vector3D(3, 5, 9);
-        Vector3D v = new Vector3D(7, 7, 7);
-        s = new State(p, v, Object);
 
-    }
 
 
     @Test
-    @DisplayName("Test addMul with an null rate")
     public void testAddMulPassingNullRate() {
 
-        step = 10;
+        State original_state = new State(new Vector3D(1, 1, 1), new Vector3D(2, 2,2), null);
+        double step = 10;
         RateInterface r = null;
-        s.addMul(step, r);
 
-        //an error should be thrown whenever a null rate is passed
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            ;
-        });
+        assertThrows(NullPointerException.class, () -> original_state.addMul(step, r));
     }
     @Test
-    @DisplayName("Test addMul with a negative step size")
+    public void testAddMulPassingNullRateSecondMethod() {
+
+        State original_state = new State(new Vector3D(1, 1, 1), new Vector3D(2, 2,2), null);
+        double step = 10;
+        State s = null;
+
+        assertThrows(NullPointerException.class, () -> original_state.addMul(step, s));
+    }
+    @Test
     public void testAddMulPassingNegativeStepSize() {
-        step = -10;
-        Vector3D v = new Vector3D(7, 7, 7), Vector3D a = new Vector3D(99, 99, 99);
-        RateInterface r = new RateInterface(a, v);
-        s.addMul(step, r);
-        //an error should be thrown by the addMul method whenever a negative step size is passed
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            ;
-        });
+        State original_state = new State(new Vector3D(1, 1, 1), new Vector3D(2, 2,2), null);
+        double step = -10;
+        Vector3D v = new Vector3D(7, 7, 7);
+        Vector3D a = new Vector3D(99, 99, 99);
+        RateInterface r = new Rate(a, v);
+        assertThrows(IllegalArgumentException.class, () -> original_state.addMul(step, r));
     }
 
 
     @Test
-    @DisplayName("Test addMul with an null state")
-    public void testAddMulPassingNullRate() {
-
-        step = 10;
-        StateInterface st = null;
-        s.addMul(step, st);
-
-        //an error should be thrown whenever a null rate is passed
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            ;
-        });
-    }
-    @Test
-    @DisplayName("Test addMul with a negative step size")
-    public void testAddMulPassingNegativeStepSize() {
-        step = -10;
-        Vector3D v = new Vector3D(7, 7, 7), Vector3D p = new Vector3D(99, 99, 99);
-        StateInterface st = new State(p, v, Object);
-        s.addMul(step, st);
-        //an error should be thrown by the addMul method whenever a negative step size is passed
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            ;
-        });
+    public void testAddMulPassingNegativeStepSizeSecondMethod() {
+        State original_state = new State(new Vector3D(1, 1, 1), new Vector3D(2, 2,2), null);
+        double step = -10;
+        Vector3D v = new Vector3D(7, 7, 7);
+        Vector3D p = new Vector3D(99, 99, 99);
+        State st = new State(p, v, null);
+        assertThrows(IllegalArgumentException.class, () -> original_state.addMul(step, st));
     }
 
 
+//    @Test
+//    public void testAddPassingANonNullState() {
+//
+//        Vector3D p = new Vector3D(33, 555, 9);
+//        Vector3D v = new Vector3D(42, 81, 768);
+//
+//        StateInterface st = new State(p, v, Object);
+//
+//        assertEquals(st, s.add(st));
+//    }
     @Test
-    @DisplayName("Test addMul with a non null state as argument")
-    public void testAddPassingANonNullState() {
-
-        Vector3D p = new Vector3D(33, 555, 9);
-        Vector3D v = new Vector3D(42, 81, 768);
-
-        StateInterface st = new State(p, v, Object);
-
-        assertEquals(st, s.add(st));
-    }
-    @Test
-    @DisplayName("Test addMul with a null state as argument")
     public void testAddPassingANullState() {
 
-        StateInterface st = null;
-        int step = 3;
-        //an error should be thrown whenever a null rate is passed
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            ;
-        });
+        State original_state = new State(new Vector3D(1, 1, 1), new Vector3D(2, 2,2), null);
+        State s = null;
+        assertThrows(NullPointerException.class, () -> original_state.add(s));
     }
 
-
-*/
-//}
+}

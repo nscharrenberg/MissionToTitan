@@ -1,5 +1,6 @@
 package org.um.dke.titan.physics.ode.solvers;
 
+import com.badlogic.gdx.utils.Null;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.DataInterface;
@@ -182,6 +183,12 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
+        if(y == null) {
+            throw new NullPointerException("The state passed is null");
+        }
+        if(f == null) {
+            throw new NullPointerException("The function passed is null");
+        }
         Rate k1 = (Rate) f.call(h, y);
         Rate k2 = (Rate) f.call(0.5*h, y.addMul(0.5, k1));
         Rate k3 = (Rate) f.call(0.5*h, y.addMul(0.5, k2));

@@ -1,5 +1,6 @@
 package org.um.dke.titan.physics.ode;
 
+import com.badlogic.gdx.utils.Null;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.RateInterface;
@@ -27,6 +28,12 @@ public class State implements StateInterface {
 
     @Override
     public StateInterface addMul(double step, RateInterface rate) {
+        if(step < 0) {
+            throw new IllegalArgumentException();
+        }
+        if(rate == null) {
+            throw new NullPointerException();
+        }
         Rate r = (Rate) rate;
 
         Rate mul = new Rate(r.getAcceleration().mul(step), r.getVelocity().mul(step));
@@ -35,6 +42,9 @@ public class State implements StateInterface {
     }
 
     public StateInterface addMul(double step, StateInterface state) {
+        if(step < 0) {
+            throw new IllegalArgumentException("The step size passed is lower than zero");
+        }
         State r = (State) state;
         State mul = new State(r.getPosition().mul(step), r.getVelocity().mul(step), object);
         return new State(position.add(mul.getPosition()), velocity.add(mul.getVelocity()),object);
@@ -42,6 +52,7 @@ public class State implements StateInterface {
 
     public StateInterface add(StateInterface addedState) {
         State state = (State)addedState;
+
         return new State(position.add(state.getVelocity()), velocity.add(state.getVelocity()),object);
     }
 
