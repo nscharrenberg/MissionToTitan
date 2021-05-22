@@ -203,5 +203,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
         computeStates(f, h);
         return timelineArray;
     }
-
+    public int getCurrentPlanetIndex(){
+        return currentPlanetIndex;
+    }
 }

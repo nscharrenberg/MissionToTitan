@@ -2,6 +2,7 @@ package org.um.dke.titan.physics.ode;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.SpaceObjectEnum;
@@ -12,12 +13,13 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
 import org.um.dke.titan.physics.ode.solvers.ODEVerletSolver;
+import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-
+@RunWith(GdxTestRunner.class)
 public class VerletSolverTest {
 
     @Test
@@ -83,8 +85,8 @@ public class VerletSolverTest {
         ODEFunctionInterface f = new ODEFunction();
         double [] ts = { 0.1, 0.2, 0.3, 0.4 };
         double tf = ts.length;
-        StateInterface[] arr = v.solve(f, y0 , ts);
         StateInterface[][] data = v.getData(f, tf, 0.1);
+        StateInterface[] arr = v.solve(f, y0 , ts);
         StateInterface[] currentPlanetArray = getSingleRow(data, v.getCurrentPlanetIndex());
         assertTrue(Arrays.equals(arr, currentPlanetArray));
     }

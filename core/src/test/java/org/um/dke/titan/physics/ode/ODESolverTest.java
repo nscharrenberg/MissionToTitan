@@ -1,8 +1,5 @@
 package org.um.dke.titan.physics.ode;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-
 import org.junit.Before;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,8 +16,13 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
+import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
 public class ODESolverTest {
@@ -77,4 +79,24 @@ public class ODESolverTest {
     	double[] ts = {0, 0.1, 0.2, 0.3, 0.4, 0.5};
 
     }
+
+	@Test
+	public void testRungeSolveMethodComputationsAreCorrect(){
+		ODESolver odes = new ODESolver();
+		StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
+		ODEFunctionInterface f = new ODEFunction();
+		double [] ts = { 0.1, 0.2, 0.3, 0.4 };
+		double tf = ts.length;
+		StateInterface[][] data = odes.getData(f, tf, 0.1);
+		StateInterface[] arr = odes.solve(f, y0 , ts);
+		StateInterface[] currentPlanetArray = getSingleRow(data, odes.getCurrentPlanetIndex());
+		assertTrue(Arrays.equals(arr, currentPlanetArray));
+	}
+	public StateInterface[] getSingleRow(StateInterface[][] a, int index) {
+		StateInterface[] row = new StateInterface[a[0].length];
+		for(int i = 0; i < a[0].length; i++){
+			row[i] = a[index][i];
+		}
+		return row;
+	}
 }
