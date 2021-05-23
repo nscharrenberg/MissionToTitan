@@ -289,7 +289,8 @@ public class GameRepository implements IGameRepository {
         this.camera.zoom = this.toFollow.getZoomLevel();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
-        cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
+       // cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
+        cameraZoomLbl.setText("Current time on timeline: ");
     }
 
     @Override

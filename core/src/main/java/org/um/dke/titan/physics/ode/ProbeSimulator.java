@@ -20,6 +20,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
     private double probeMass = system.getRocketName(probeName).getMass();
     private final double probeMassDry = 78000;
+    private double fuelUsed = 0;
+
+
     private StateInterface[][] timeLineArray;
     private StateInterface[] probeStateArray;
     private final double EXHAUST_VELOCITY = 2e4;
@@ -63,7 +66,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
                     probeStateArray[i] = step(probeStateArray[i-1], h);
-                    if(i>minI && i<minI+30) {
+                    if(i>minI && i<minI+31) {
                         force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
                     }
                     else{
@@ -77,7 +80,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < probePositions.length; i++) {
             probePositions[i] = ((State)(probeStateArray[i])).getPosition();
         }
-
+        System.out.println("fuel left: " + (probeMass - fuelUsed - probeMassDry));
         return probePositions;
     }
 
@@ -162,6 +165,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private boolean calculateNewMass(double percentageOfPower) {
         if (system.getRocketName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
             system.getRocketName(probeName).setMass((float) (system.getRocketName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
+            fuelUsed += calculateMassUsed(percentageOfPower);
             return true;
         }
         else{
