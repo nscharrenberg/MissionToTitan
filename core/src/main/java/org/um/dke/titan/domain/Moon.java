@@ -6,7 +6,7 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import java.util.Queue;
 
 public class Moon extends MovingObject {
-    private Planet planet;
+    private transient Planet planet;
 
     public Moon(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Planet planet) {
         super(name, mass, radius, position, zoomLevel, velocity);
