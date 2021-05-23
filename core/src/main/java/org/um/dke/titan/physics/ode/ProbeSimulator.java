@@ -65,13 +65,18 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 1; i < timeLineArray[0].length; i++) {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
-                    probeStateArray[i] = step(probeStateArray[i-1], h);
-                    if(i>minI && i<minI+31) {
+                    probeStateArray[i] = step(probeStateArray[i - 1], h);
+                    if (i > minI + 1043053 && i < minI + 31 + 1043053) {
                         force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
+                    } else if (i > 83720 + 1043053 && i < 83740 + 1043053) {
+                        force = force.add(useEngine(6, i - 1, SpaceObjectEnum.SUN.getId()));
+                    } else if (i > 1198000 + 1043053 && i < 1198005 + 1043053){
+                        force = force.add(useEngine(4, i - 1, SpaceObjectEnum.MOON.getId()));
                     }
                     else{
                     force = new Vector3D(0, 0, 0);}
-                } else {
+                }
+            else {
                     force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
                 }
             }

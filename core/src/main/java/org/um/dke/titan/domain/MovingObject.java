@@ -106,9 +106,11 @@ public class MovingObject extends SpaceObject {
 
             if (this.timeline.size() > 0) {
                 timeline.remove();
+                //timeOnTimeLine +=  FactoryProvider.getGameRepository().getTimeToSkip();
             }
+            timeOnTimeLine++;
 
-            timeOnTimeLine +=  FactoryProvider.getGameRepository().getTimeToSkip();
+
         }
 
         this.position = object.getPosition();

@@ -210,6 +210,8 @@ public class GameRepository implements IGameRepository {
         // Pause / Resume day
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             paused = !paused;
+            cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom + " Time on timeline: " + FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()).getTimeOnTimeLine());
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
@@ -289,8 +291,7 @@ public class GameRepository implements IGameRepository {
         this.camera.zoom = this.toFollow.getZoomLevel();
 
         cameraLbl.setText(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z));
-       // cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
-        cameraZoomLbl.setText("Current time on timeline: ");
+        cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom);
     }
 
     @Override
