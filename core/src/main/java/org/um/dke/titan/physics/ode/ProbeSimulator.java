@@ -17,9 +17,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private int probeId = SpaceObjectEnum.SHIP.getId();
     private String probeName = SpaceObjectEnum.SHIP.getName();
     private Vector3dInterface force;
-    private final ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
+    private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
     private double probeMass = system.getRocketName(probeName).getMass();
     private final double probeMassDry = 78000;
+    private double fuelUsed = 0;
+
+
     private StateInterface[][] timeLineArray;
     private StateInterface[] probeStateArray;
     private final double EXHAUST_VELOCITY = 2e4;
@@ -27,7 +30,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double MASS_FLOW_RATE = 2000;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
-    private final double minI = 8600;
+    private final double minI = 8640;
+    private int dt;
 
     /**
      * TODO: Rewrite this method
@@ -49,66 +53,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, h);
-        StateInterface initialState = new State(p0, v0, system.getRocketName(probeName));
-
-        probeStateArray = new StateInterface[timeLineArray[0].length];
-        Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];
-        probeStateArray[0] = initialState;
-        force = new Vector3D(0,0,0);
-
-        int t = 0;
-
-        boolean found = true;
-
-        for (int i = 1; i < timeLineArray[0].length; i++) {
-            for (int j = 0; j < timeLineArray.length; j++) {
-                if (j == probeId) {
-
-                    State probe = (State) probeStateArray[i-1];
-                    State probeStart = (State) probeStateArray[0];
-                    State titan = ((State) timeLineArray[SpaceObjectEnum.TITAN.getId()][i-1]);
-                    double speed = probe.getVelocity().norm();
-                    double orbitalSpeed = Math.sqrt(G * titan.getMovingObject().getMass() / titan.getPosition().dist(probe.getPosition()));
-                    double dist = titan.getPosition().dist(probe.getPosition());
-
-                    if (i > 0 && i < 50000) {
-                        //force = force.add(engineForce(100, probeStart.getVelocity().mul(-1/probeStart.getVelocity().norm())));
-                        force = force.add(slowEngine(100, i -1));
-                    }
-
-                    if (speed > orbitalSpeed && i > 172800 && i < 172500 + 538) {
-                       // force = force.add(engineForce(100, probeStart.getVelocity().mul(-1/probeStart.getVelocity().norm())));
-                        System.out.println(speed);
-                    }
-
-//                    force = force.add(engineForce(20, probe.getVelocity().mul(-1/probe.getVelocity().norm())));
-//                    if (speed < 1000 && found) {
-//                        System.out.println("i = " + i + ", t = " + t);
-//                        System.out.println("speed = " + speed);
-//                        found = false;
-//                    } else{
-//                        force = force.add(engineForce(30, probe.getVelocity().mul(-1/probe.getVelocity().norm())));
-//                        t++;
-//                    }
-
-                    probeStateArray[i] = step(probeStateArray[i-1], h);
-                    force = new Vector3D(0, 0, 0);
-                } else {
-                    force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
-                }
-            }
-        }
-
-        for (int i = 0; i < probePositions.length; i++) {
-            probePositions[i] = ((State)(probeStateArray[i])).getPosition();
-        }
-        System.out.println("MASS LEFT:" + (probeMass-probeMassDry));
-        return probePositions;
-    }
-
-
-    public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h, int interval, int percentage) {
+        dt = (int) h;
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, h);
         StateInterface initialState = new State(p0, v0, system.getRocketName(probeName));
 
@@ -120,12 +65,18 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 1; i < timeLineArray[0].length; i++) {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
-                    if(i>minI-11 && i<minI)
-                        force=force.add(slowEngine(100, i-1));
-                    probeStateArray[i] = step(probeStateArray[i-1], h);
-                    System.out.println(system.getRocketName(probeName).getMass());
-                    force = new Vector3D(0, 0, 0);
-                } else {
+                    probeStateArray[i] = step(probeStateArray[i - 1], h);
+                    if (i > minI + 1043053 && i < minI + 31 + 1043053) {
+                        force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
+                    } else if (i > 83720 + 1043053 && i < 83740 + 1043053) {
+                        force = force.add(useEngine(6, i - 1, SpaceObjectEnum.SUN.getId()));
+                    } else if (i > 1198000 + 1043053 && i < 1198005 + 1043053){
+                        force = force.add(useEngine(4, i - 1, SpaceObjectEnum.MOON.getId()));
+                    }
+                    else{
+                    force = new Vector3D(0, 0, 0);}
+                }
+            else {
                     force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
                 }
             }
@@ -134,10 +85,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < probePositions.length; i++) {
             probePositions[i] = ((State)(probeStateArray[i])).getPosition();
         }
-        System.out.println("MASS LEFT:" + (probeMass-probeMassDry));
+        System.out.println("fuel left: " + (probeMass - fuelUsed - probeMassDry));
         return probePositions;
     }
-
 
     private boolean[] computeEngineInterval() {
         boolean[] engineInterval = new boolean[probeStateArray.length];
@@ -195,7 +145,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private double calculateMassUsed(double percentageOfPower){
 
-        return 20*((percentageOfPower/100)*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
+        return -1*dt*((percentageOfPower/100)*-1*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
     }
 
     private Vector3dInterface useEngine(double percentageOfPower, int index, int targetPlanetID){
@@ -210,19 +160,21 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             return new Vector3D(0,0,0);
 
         State probe = ((State) probeStateArray[index]);
-        State earth = ((State) timeLineArray[SpaceObjectEnum.EARTH.getId()][index]);
-        Vector3dInterface thrustVector = probe.getPosition().sub(earth.getPosition());
 
-        return  engineForce(percentageOfPower, thrustVector.mul(-1/thrustVector.norm()));
+        Vector3dInterface thrustVector = probe.getVelocity().mul(-1);
+
+        System.out.println(thrustVector);
+        return  engineForce(percentageOfPower, thrustVector.mul(1/thrustVector.norm()));
     }
 
     private boolean calculateNewMass(double percentageOfPower) {
         if (system.getRocketName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
             system.getRocketName(probeName).setMass((float) (system.getRocketName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
+            fuelUsed += calculateMassUsed(percentageOfPower);
             return true;
         }
         else{
-            System.out.println("no fuel");
+            System.out.println("No fuel left!!");
             return false;
         }
     }

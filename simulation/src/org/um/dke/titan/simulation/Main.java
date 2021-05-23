@@ -3,19 +3,17 @@ package org.um.dke.titan.simulation;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.interfaces.Vector3dInterface;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Main {
     static Individual[] population;
     static final int MUTATION_RATE = 10;
-    static final int POPULATION_SIZE = 150;
+    static final int POPULATION_SIZE = 90;
     static final int GENERATIONS = 50;
-    static Individual max;
+    static Individual min;
     static Random r;
-
-    static final int TIME_CLOSEST_TO_TITAN = 8660;
 
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -30,8 +28,8 @@ public class Main {
 
     public static void Simulate() {
         r = new Random();
-        max = new Individual(new Vector3D[] {new Vector3D(1,1,1), new Vector3D(-1,-1,-1), new Vector3D(1,1,1)}, new int[] {-1,-1,-1,-1,-1,-1}, new int[] {1,1,1});
-        max.fitness = Integer.MIN_VALUE;
+        min = new Individual(new Vector3D(1,-1,0.1), 1);
+        min.fitness = Double.MAX_VALUE;
 
         for (int j = 0; j < 100; j++) {
             init();
@@ -39,35 +37,33 @@ public class Main {
                 long startTime = System.currentTimeMillis();
                 generation();
 
-                if (max.getFitness() < population[0].getFitness())
-                    max = copyOf(population[0]);
+                if (min.getFitness() > population[0].getFitness())
+                    min = copyOf(population[0]);
 
-                System.out.println("| Generation " + (i + 1));
+                System.out.print("Generation " + (i + 1) + " | ");
                 print();
-                System.out.println("| Max:          [" + max.fitness + "]");
-                System.out.println("| Directions:   [" + Arrays.toString(max.directions) + "] ");
-                System.out.println("| Interval:     [" + Arrays.toString(max.interval) + "]");
-                System.out.println("| Percentages:  [" + Arrays.toString(max.percentage) + "]");
+                System.out.print("| Min: " + min);
+                System.out.print("| Min vector: [" + min.vector.mul(min.speed).getX() + "," + min.vector.mul(min.speed).getY() + "," + min.vector.mul(min.speed).getZ() + "] ");
+                System.out.print("| Speed: [" + min.speed + " m/s] ");
                 long endTime = System.currentTimeMillis();
                 System.out.println("| Compute Time: [" + ((endTime - startTime)/1000) + "s]");
-                System.out.println();
             }
         }
     }
 
     public static void init() {
         initPopulation();
-        System.out.println("| Generation start");
+        System.out.print("Generation start | ");
         population = Sort.quicksort(population);
-        if (max != null) {
-            population[10] = copyOf(max);
+        if (min != null) {
+            population[10] = copyOf(min);
         }
         print();
         System.out.println();
     }
 
     public static Individual copyOf(Individual a) {
-        Individual copy = new Individual(a.directions, a.interval, a.percentage);
+        Individual copy = new Individual(a.vector, a.speed);
         copy.fitness = a.getFitness();
         return copy;
     }
@@ -80,13 +76,14 @@ public class Main {
 
             if (a != b)
                 population[i] = breed(population[r.nextInt(population.length) / 2], population[r.nextInt(population.length) / 2]);
-            else if (a == b)
-                i--;
+            else i--;
         }
 
-        for(int i = 0; i < MUTATION_RATE; i++)
-            population[r.nextInt(population.length)].mutate();
+        population[population.length-1 ]= new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
 
+        for(int i = 0; i < MUTATION_RATE; i++) {
+            population[r.nextInt(population.length)].mutate();
+        }
         updateFitness();
         population = Sort.quicksort(population);
     }
@@ -104,18 +101,14 @@ public class Main {
      * returns a new child from 2 parents a and b
      */
     public static Individual breed(Individual a, Individual b) {
-        return new Individual(a.crossVectors(b), a.crossIntervals(b), a.crossPercentages(b));
+        return new Individual(new Vector3D((a.vector.getX() + b.vector.getX())/2, (a.vector.getY() + b.vector.getY())/2, (a.vector.getZ() + b.vector.getZ())/2), (a.speed+b.speed)/2);
     }
 
     private static void initPopulation() {
         population = new Individual[POPULATION_SIZE];
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
-
-            Vector3D[] directions = {randomUnitVector(), randomUnitVector(), randomUnitVector()};
-            int[] percentages = {r.nextInt(30),r.nextInt(30), r.nextInt(30)};
-
-            population[i] = new Individual(directions, randomInterval(), percentages);
+            population[i] = new Individual(randomUnitVector(), 40000 + r.nextInt(20000));
         }
         updateFitness();
     }
@@ -123,33 +116,32 @@ public class Main {
     /**
      * creates a random unit vector
      */
-    public static Vector3D randomUnitVector() {
-        Vector3D vector = new Vector3D(-1 + r.nextDouble()*2, -1 + r.nextDouble()*2, -1 + r.nextDouble() * 2);
+    public static Vector3dInterface randomUnitVector() {
+        Vector3dInterface vector = new Vector3D(r.nextDouble(), r.nextDouble()*-1, randomDouble()/10);
         double norm = vector.norm();
-        return (Vector3D) vector.mul(1/norm);
+        return vector.mul(1/norm);
     }
 
-    public static int[] randomInterval() {
-        int[] interval = new int[6];
-
-        interval[0] = 8500 + r.nextInt(50);
-
-        for (int i = 1; i < interval.length; i++) {
-            interval[i] = interval[i-1] + r.nextInt(50);
-        }
-
-        return interval;
+    /**
+     * returns a random double between -1 and 1
+     * @return
+     */
+    public static double randomDouble() {
+        double random = r.nextDouble();
+        if (r.nextBoolean())
+            return random * -1;
+        else
+            return random;
     }
 
     /**
      * prints out top 3 individuals
      */
     private static void print() {
-        System.out.print("| Top 3:        ");
+        System.out.print("Top 3: ");
         for (int i = 0; i < 3; i++) {
-            System.out.print("[" + population[i].fitness + "] ");
+            System.out.print("[" + population[i] + "] ");
         }
-        System.out.println();
     }
 
     private static void updateFitness() {

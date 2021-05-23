@@ -93,6 +93,8 @@ public class MovingObject extends SpaceObject {
         this.velocity = velocity;
     }
 
+    private int timeOnTimeLine = 0;
+
     public void next() {
         if (this.timeline.size() <= 0) {
             return;
@@ -101,11 +103,20 @@ public class MovingObject extends SpaceObject {
         MovingObject object = this.timeline.remove();
 
         for (int i = 0; i < FactoryProvider.getGameRepository().getTimeToSkip(); i++) {
+
             if (this.timeline.size() > 0) {
                 timeline.remove();
+                //timeOnTimeLine +=  FactoryProvider.getGameRepository().getTimeToSkip();
             }
+            timeOnTimeLine++;
+
+
         }
 
         this.position = object.getPosition();
+    }
+
+    public int getTimeOnTimeLine() {
+        return timeOnTimeLine;
     }
 }

@@ -211,6 +211,8 @@ public class GameRepository implements IGameRepository {
         // Pause / Resume day
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             paused = !paused;
+            cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom + " Time on timeline: " + FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()).getTimeOnTimeLine());
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) {
