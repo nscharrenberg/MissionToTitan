@@ -1,44 +1,50 @@
 package org.um.dke.titan.simulation;
 
+import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Individual {
-    Vector3dInterface vector;
-    public double fitness;
-    int speed;
 
-    public Individual(Vector3dInterface vector, int speed) {
-        this.vector = vector;
-        this.speed = speed;
+    int interval;
+    int percentage;
+    int fitness;
+
+    public Individual(int interval, int percentage) {
+        this.interval = interval;
+        this.percentage = percentage;
     }
 
     public void mutate() {
         Random r = new Random();
-        int rand = r.nextInt(100);
 
-        if (rand > 75)
-            vector.setX(vector.getX() * r.nextDouble());
-        else if (rand > 50)
-            vector.setY(vector.getY() *r.nextDouble());
-        else if (rand > 25)
-            vector.setZ(vector.getZ() *r.nextDouble());
-        else if (rand >= 0) {
-            this.speed = 40000 + r.nextInt(20000);
-        }
-        vector = vector.mul(1/vector.norm());
     }
 
     public void determineFitness() {
-        fitness = Simulation.run(vector, speed);
+        fitness = Simulation.run(interval, percentage);
     }
 
-    public double getFitness() {
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
+    public int getFitness() {
         return fitness;
     }
 
-    public String toString() {
-        return "" + (int)(getFitness());
-    }
 }

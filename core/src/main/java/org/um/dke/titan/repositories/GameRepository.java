@@ -131,6 +131,7 @@ public class GameRepository implements IGameRepository {
         }
 
         if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
+            game.getScreen().dispose();
             game.setScreen(new LoadingScreen());
         }
     }

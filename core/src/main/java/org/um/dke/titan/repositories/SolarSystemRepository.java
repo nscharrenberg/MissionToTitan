@@ -70,8 +70,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        double totalTime = 365 * 60 * 24 * 60;
-        double dt = 20;
+        double totalTime = 7 * 60 * 24 * 60;
+        double dt = 1;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
 
@@ -101,22 +101,9 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
                 minI = i;
             }
         }
-        System.out.println(min);
+        System.out.println("min = " + min);
         System.out.println("minI = " + minI);
 
-        State saturn = (State) timeLineArray[SpaceObjectEnum.SATURN.getId()][1051693];
-        State probe = (State) timeLineArray[SpaceObjectEnum.SHIP.getId()][1051693];
-        State earth = (State) timeLineArray[SpaceObjectEnum.EARTH.getId()][0];
-
-        System.out.println(saturn.getPosition().sub(probe.getPosition()));
-
-        Json json = new Json();
-
-        System.out.println("-------------------");
-        System.out.println(json.prettyPrint(probeArray[1043053]));
-
-        System.out.println("-------------------");
-        System.out.println(json.prettyPrint(timeLineArray[SpaceObjectEnum.SHIP.getId()][1043053]));
 
         for (int i = 0; i < length; i++) {
             Queue<MovingObject> tmp = new LinkedList<>();

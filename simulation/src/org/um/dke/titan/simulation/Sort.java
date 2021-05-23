@@ -3,6 +3,13 @@ package org.um.dke.titan.simulation;
 public class Sort {
     public static Individual[] quicksort(Individual[] array) {
         quicksort(array, 0, array.length - 1);
+
+        for (int i = 0; i < array.length / 2; i++) {
+            Individual temp = array[i];
+            array[i] = array[array.length - 1 - i];
+            array[array.length - 1 - i] = temp;
+        }
+
         return array;
     }
 
