@@ -135,4 +135,8 @@ public class SpaceObject {
     public void setLabel(Label label) {
         this.label = label;
     }
+
+    public void setMass(float mass) {
+        this.mass = mass;
+    }
 }

@@ -10,7 +10,7 @@ import java.util.Random;
 public class Main {
     static Individual[] population;
     static final int MUTATION_RATE = 10;
-    static final int POPULATION_SIZE = 50;
+    static final int POPULATION_SIZE = 90;
     static final int GENERATIONS = 50;
     static Individual min;
     static Random r;
@@ -76,8 +76,7 @@ public class Main {
 
             if (a != b)
                 population[i] = breed(population[r.nextInt(population.length) / 2], population[r.nextInt(population.length) / 2]);
-            else if (a == b)
-                i--;
+            else i--;
         }
 
         population[population.length-1 ]= new Individual(randomUnitVector(), 40000 + r.nextInt(20000));

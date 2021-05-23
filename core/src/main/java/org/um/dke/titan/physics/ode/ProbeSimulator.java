@@ -10,6 +10,8 @@ import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
+import java.util.Vector;
+
 public class ProbeSimulator implements ProbeSimulatorInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
     private int probeId = SpaceObjectEnum.SHIP.getId();
@@ -17,6 +19,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private Vector3dInterface force;
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
     private double probeMass = system.getRocketName(probeName).getMass();
+    private final double probeMassDry = 78000;
     private StateInterface[][] timeLineArray;
     private StateInterface[] probeStateArray;
     private final double EXHAUST_VELOCITY = 2e4;
@@ -24,6 +27,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double MASS_FLOW_RATE = 2000;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
+    private final double minI = 8640;
+    private int dt;
 
     /**
      * TODO: Rewrite this method
@@ -45,6 +50,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
+        dt = (int) h;
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, h);
         StateInterface initialState = new State(p0, v0, system.getRocketName(probeName));
 
@@ -52,14 +58,16 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];
         probeStateArray[0] = initialState;
         force = new Vector3D(0,0,0);
-        System.out.println("MASS USED FOR THRUST: " + calculateMassUsed(100));
+
         for (int i = 1; i < timeLineArray[0].length; i++) {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
-                    force = force.add(engineForce(100, findThrustVectorTitan(i)));
-
                     probeStateArray[i] = step(probeStateArray[i-1], h);
-                    force = new Vector3D(0, 0, 0);
+                    if(i>minI && i<minI+30) {
+                        force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
+                    }
+                    else{
+                    force = new Vector3D(0, 0, 0);}
                 } else {
                     force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
                 }
@@ -69,6 +77,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < probePositions.length; i++) {
             probePositions[i] = ((State)(probeStateArray[i])).getPosition();
         }
+
         return probePositions;
     }
 
@@ -110,34 +119,55 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     /**
      *  returns the unit vector of the desired thrust angle
      */
-    private Vector3dInterface findThrustVector(int index){
-        State probe = ((State) probeStateArray[index]);
-        State titan = (State) timeLineArray[SpaceObjectEnum.TITAN.getId()][index];
+    private Vector3dInterface findThrustVector(int index, int planetID){
+        State probe = (State) probeStateArray[index];
+        State state = (State) timeLineArray[planetID][index];
 
-        Vector3dInterface thrustVector = titan.getPosition().sub(probe.getPosition());
-        thrustVector = thrustVector.sub(probe.getVelocity());
+        Vector3dInterface thrustVector = state.getPosition().sub(probe.getPosition());
         return thrustVector.mul(1/thrustVector.norm());
     }
 
-    private Vector3dInterface findThrustVectorEarth(int index){
-        State probe = ((State) probeStateArray[index]);
-        State earth = (State) timeLineArray[SpaceObjectEnum.EARTH.getId()][index];
-
-        Vector3dInterface thrustVector = earth.getPosition().sub(probe.getPosition());
-        thrustVector = thrustVector.sub(probe.getVelocity());
-        return thrustVector.mul(1/thrustVector.norm());
-    }
 
     /**
      *  returns the force vector of the engine of the probe
      */
-    private Vector3dInterface engineForce(int percentageOfPower, Vector3dInterface thrustVector) {
+    private Vector3dInterface engineForce(double percentageOfPower, Vector3dInterface thrustVector) {
         return thrustVector.mul(MAXIMUM_THRUST*(percentageOfPower/100));
     }
 
-    private double calculateMassUsed(int percentageOfPower){
+    private double calculateMassUsed(double percentageOfPower){
 
-        return -1*((percentageOfPower/100)*-1*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
+        return -1*dt*((percentageOfPower/100)*-1*MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY;
+    }
+
+    private Vector3dInterface useEngine(double percentageOfPower, int index, int targetPlanetID){
+        if(!calculateNewMass(percentageOfPower))
+            return new Vector3D(0,0,0);
+        Vector3dInterface thrustVector = findThrustVector(index, targetPlanetID);
+        return engineForce(percentageOfPower, thrustVector);
+    }
+
+    private Vector3dInterface slowEngine(double percentageOfPower, int index){
+        if(!calculateNewMass(percentageOfPower))
+            return new Vector3D(0,0,0);
+
+        State probe = ((State) probeStateArray[index]);
+
+        Vector3dInterface thrustVector = probe.getVelocity().mul(-1);
+
+        System.out.println(thrustVector);
+        return  engineForce(percentageOfPower, thrustVector.mul(1/thrustVector.norm()));
+    }
+
+    private boolean calculateNewMass(double percentageOfPower) {
+        if (system.getRocketName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
+            system.getRocketName(probeName).setMass((float) (system.getRocketName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
+            return true;
+        }
+        else{
+            System.out.println("No fuel left!!");
+            return false;
+        }
     }
 
 }
