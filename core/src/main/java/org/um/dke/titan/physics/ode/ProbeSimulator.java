@@ -69,16 +69,23 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
                     if (i > minI + 1043053 && i < minI + 1043084) {
                         force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
                         System.out.printf("Fuel Left: %s at %s - 1%n", (probeMass - fuelUsed - probeMassDry), i);
-                    } else if (i > 1126773 && i < 1126793) {
-                        force = force.add(useEngine(6, i - 1, SpaceObjectEnum.SUN.getId()));
-                        System.out.printf("Fuel Left: %s at %s - 2%n", (probeMass - fuelUsed - probeMassDry), i);
-                    } else if (i > 2241053 && i < 2241058){
-                        force = force.add(useEngine(4, i - 1, SpaceObjectEnum.MOON.getId()));
-                        System.out.printf("Fuel Left: %s at %s - 3%n", (probeMass - fuelUsed - probeMassDry), i);
-                    } else if(i > 2064730 && i < 2064750){
-                        force = force.add(useEngine(1, i - 1, SpaceObjectEnum.SATURN.getId()).mul(-1));
-                        System.out.printf("Fuel Left: %s at %s  - 4%n", (probeMass - fuelUsed - probeMassDry), i);
                     }
+                    else if (i > 1151090 && i < 1151110) {
+                        force = force.add(useEngine(2, i - 1, SpaceObjectEnum.SUN.getId()));
+                        System.out.printf("Fuel Left: %s at %s - 2%n", (probeMass - fuelUsed - probeMassDry), i);
+                    }
+//                    else if (i > 1126773 && i < 1126793) {
+//                        force = force.add(useEngine(2, i - 1, SpaceObjectEnum.SUN.getId()));
+//                        System.out.printf("Fuel Left: %s at %s - 2%n", (probeMass - fuelUsed - probeMassDry), i);
+//                    }
+//                    else if (i > 2241053 && i < 2241058){
+//                        force = force.add(useEngine(4, i - 1, SpaceObjectEnum.MOON.getId()));
+//                        System.out.printf("Fuel Left: %s at %s - 3%n", (probeMass - fuelUsed - probeMassDry), i);
+//                    }
+//                    else if(i > 2064730 && i < 2064750){
+//                        force = force.add(useEngine(1, i - 1, SpaceObjectEnum.SATURN.getId()).mul(-1));
+//                        System.out.printf("Fuel Left: %s at %s  - 4%n", (probeMass - fuelUsed - probeMassDry), i);
+//                    }
                     else{
                     force = new Vector3D(0, 0, 0);}
                 }
