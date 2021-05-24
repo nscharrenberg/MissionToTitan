@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
+import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -26,16 +27,15 @@ public class Main {
     }
 
     public static void run() {
-
-        System.out.println("running");
-
+        FactoryProvider.getGameRepository().load();
+        StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
         HashMap<Integer, Vector3dInterface> data = null;
         try { data = FileImporter.importHorizon(); } catch (ParseException e) { e.printStackTrace(); }
 
-        FactoryProvider.getGameRepository().load();
+        System.out.println("******************************** ERROR CALCULATOR********************************\n\n\n\n\n\n");
 
-        ErrorCalc calc = new ErrorCalc(data,FactoryProvider.getSolarSystemRepository().getTimeLineArray());
-        System.out.println(calc.averageError(SpaceObjectEnum.EARTH.getId()));
+        ErrorCalc calc = new ErrorCalc(data, timeLineArray);
+        System.out.println("average: " + calc.averageError(SpaceObjectEnum.TITAN.getId()));
     }
 
 }

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FileImporter {
     public static String planetsFileName = "data_20200401";
-    public static String horizonFileNAme = "horizonData";
+    public static String horizonFileNAme = "horizonData_Titan";
 
     public static void load() {
         JsonReader jsonReader = new JsonReader();

@@ -20,16 +20,15 @@ public class ErrorCalc {
 
     public double averageError(int planetId) {
         double total = totalErrorSum(planetId);
-        return total/ timeLineArray[0].length;
+        return total/ map.size();
     }
 
     private double totalErrorSum(int planetId) {
         double total = 0;
 
         for (Map.Entry<Integer, Vector3dInterface> entry : map.entrySet()) {
-            int key = entry.getKey();
-            Vector3D value = (Vector3D) entry.getValue();
-            System.out.println(value);
+            int key = entry.getKey()/(6*60);
+            Vector3D value = (Vector3D) entry.getValue().mul(1000);
 
             State planet = (State) timeLineArray[planetId][key];
             total += relativeVecError(value, (Vector3D) planet.getPosition());
