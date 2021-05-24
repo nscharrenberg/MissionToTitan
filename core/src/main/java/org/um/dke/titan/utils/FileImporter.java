@@ -83,7 +83,7 @@ public class FileImporter {
 
     public static HashMap<Integer, Vector3dInterface> importHorizon() throws ParseException {
         JsonReader jsonReader = new JsonReader();
-        JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("experimental/%s.json", planetsFileName)));
+        JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("experimental/%s.json", horizonFileNAme)));
 
         int dtVal = base.get("stepSizeValue").asInt();
         String dtType = base.get(" stepSizeType").asString();
