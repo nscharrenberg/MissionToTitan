@@ -33,11 +33,16 @@ public interface ISolarSystemRepository {
 
     void preprocessing();
 
-    public StateInterface[][] getTimeLineArray(double totalTime, double dt);
+    StateInterface[][] getTimeLineArray(double totalTime, double dt);
 
-    public StateInterface[][] getTimeLineArray();
+    void setTimeLineArray(StateInterface[][] timeLineArray);
+
+    StateInterface[][] getTimeLineArray();
 
     void computeTimeLineArray(double totalTime, double dt);
 
     void init();
+
+    boolean isImportSolarSystem();
+    void setImportSolarSystem(boolean importSolarSystem);
 }

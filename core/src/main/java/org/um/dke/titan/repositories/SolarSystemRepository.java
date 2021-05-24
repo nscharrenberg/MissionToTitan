@@ -20,6 +20,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     private Map<String, Planet> planets;
     private Map<String, Rocket> rockets;
     private StateInterface[][] timeLineArray;
+    private boolean importSolarSystem = true;
 
 
     public SolarSystemRepository() {
@@ -159,12 +160,23 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         this.rockets.put(name, object);
     }
 
+    @Override
     public StateInterface[][] getTimeLineArray() {
         return timeLineArray;
     }
 
+    @Override
     public void setTimeLineArray(StateInterface[][] timeLineArray) {
         this.timeLineArray = timeLineArray;
     }
 
+    @Override
+    public boolean isImportSolarSystem() {
+        return importSolarSystem;
+    }
+
+    @Override
+    public void setImportSolarSystem(boolean importSolarSystem) {
+        this.importSolarSystem = importSolarSystem;
+    }
 }
