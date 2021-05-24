@@ -1,4 +1,4 @@
-package org.um.dke.titan.simulation;
+package org.um.dke.titan.experimental;
 
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.factory.FactoryProvider;

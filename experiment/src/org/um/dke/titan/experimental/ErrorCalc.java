@@ -1,6 +1,5 @@
-package org.um.dke.titan.experiment;
+package org.um.dke.titan.experimental;
 
-import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
@@ -10,15 +9,15 @@ import java.util.HashMap;
 
 public class ErrorCalc {
 
-    private static HashMap<Integer, Vector3D> data;
-    private static StateInterface[][] timeLineArray;
+    private HashMap<Integer, Vector3D> data;
+    private StateInterface[][] timeLineArray;
 
-    public static void main(String[] args) {
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
-        System.out.println("average error: " + averageError());
+    public ErrorCalc(HashMap<Integer, Vector3D> data, StateInterface[][] timeLineArray) {
+        this.data = data;
+        this.timeLineArray = timeLineArray;
     }
 
-    public static double averageError() {
+    public double averageError(HashMap<Integer, Vector3D> data, StateInterface[][] timeLineArray) {
         int planetSize = timeLineArray.length - 1;
 
         double total = 0;
@@ -30,12 +29,12 @@ public class ErrorCalc {
         return total/(planetSize - 1);
     }
 
-    private static double averageError(int planetId) {
+    private double averageError(int planetId) {
         double total = totalErrorSum(planetId);
         return total/ timeLineArray[0].length;
     }
 
-    private static double totalErrorSum(int planetId) {
+    private double totalErrorSum(int planetId) {
         double total = 0;
 
         for (int i = 0; i < timeLineArray[0].length; i++) {
@@ -45,7 +44,7 @@ public class ErrorCalc {
         return total;
     }
 
-    private static double relativeVecError(Vector3D p, Vector3D star) {
+    private double relativeVecError(Vector3D p, Vector3D star) {
         double x = relativeError(p.getX(), star.getX());
         double y = relativeError(p.getY(), star.getY());
         double z = relativeError(p.getZ(), star.getZ());
@@ -53,11 +52,11 @@ public class ErrorCalc {
         return (x+y+z)/3;
     }
 
-    private static double relativeError(double p, double star) {
+    private double relativeError(double p, double star) {
         return Math.abs(absoluteError(p, star)/p);
     }
 
-    private static double absoluteError(double p, double star) {
+    private double absoluteError(double p, double star) {
         return Math.abs(p - star);
     }
 
