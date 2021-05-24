@@ -27,6 +27,8 @@ public class Main {
 
     private static void run() {
 
+        System.out.println("running");
+
         HashMap<Integer, Vector3dInterface> data = null;
         try { data = FileImporter.importHorizon(); } catch (ParseException e) { e.printStackTrace(); }
 

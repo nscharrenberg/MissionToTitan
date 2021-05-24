@@ -35,9 +35,6 @@ public class StaticScreen extends ScreenAdapter {
         texture = new Texture(Gdx.files.internal("splash.jpg"));
         createFonts();
         FactoryProvider.getSolarSystemRepository().initWithGdx();
-
-        System.out.println("Starting Generation:");
-        Main.Simulate();
     }
 
     private void createFonts() {
