@@ -15,11 +15,22 @@ public class ErrorCalc {
 
     public static void main(String[] args) {
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
-
-        System.out.println(averageError(SpaceObjectEnum.EARTH.getId()));
+        System.out.println("average error: " + averageError());
     }
 
-    public static double averageError(int planetId) {
+    public static double averageError() {
+        int planetSize = timeLineArray.length - 1;
+
+        double total = 0;
+
+        for (int i = 0; i < planetSize - 1; i++) {
+            total += averageError(i);
+        }
+
+        return total/(planetSize - 1);
+    }
+
+    private static double averageError(int planetId) {
         double total = totalErrorSum(planetId);
         return total/ timeLineArray[0].length;
     }
@@ -31,7 +42,6 @@ public class ErrorCalc {
             State planet = (State) timeLineArray[planetId][i];
             total += relativeVecError(data.get(i), (Vector3D) planet.getPosition() );
         }
-
         return total;
     }
 
