@@ -70,8 +70,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
                         force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
                         System.out.printf("Fuel Left: %s at %s - 1%n", (probeMass - fuelUsed - probeMassDry), i);
                     }
-                    else if (i > 1151090 && i < 1151110) {
-                        force = force.add(useEngine(2, i - 1, SpaceObjectEnum.SUN.getId()));
+                    else if (i > 1151090 && i < 1151120) {
+                        force = force.add(useEngine(3, i - 1, SpaceObjectEnum.SUN.getId()));
                         System.out.printf("Fuel Left: %s at %s - 2%n", (probeMass - fuelUsed - probeMassDry), i);
                     }
 //                    else if (i > 1126773 && i < 1126793) {
