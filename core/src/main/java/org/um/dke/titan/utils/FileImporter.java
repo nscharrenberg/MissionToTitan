@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FileImporter {
     public static String planetsFileName = "data_20200401";
-    public static String horizonFileNAme = "horizonData_Titan";
+    public static String horizonFileNAme = "horizonData";
 
     public static void load() {
         JsonReader jsonReader = new JsonReader();
@@ -86,14 +86,14 @@ public class FileImporter {
         JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("experimental/%s.json", horizonFileNAme)));
 
         int dtVal = base.get("stepSizeValue").asInt();
-        String dtType = base.get("stepSizeType").asString();
+        String dtType = base.get(" stepSizeType").asString();
         int dtInSeconds = convertToSeconds(dtVal, dtType);
 
         JsonValue data = base.get("data");
 
         HashMap<Integer, Vector3dInterface> timeline = new HashMap<>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
         Date startDate = sdf.parse("2020-04-01 00:00");
 
         for (JsonValue row : data) {
