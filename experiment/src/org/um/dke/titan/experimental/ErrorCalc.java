@@ -1,18 +1,18 @@
 package org.um.dke.titan.experimental;
 
 import org.um.dke.titan.domain.Vector3D;
-import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.State;
 
 import java.util.HashMap;
 
 public class ErrorCalc {
 
-    private HashMap<Integer, Vector3D> data;
+    private HashMap<Integer, Vector3dInterface> data;
     private StateInterface[][] timeLineArray;
 
-    public ErrorCalc(HashMap<Integer, Vector3D> data, StateInterface[][] timeLineArray) {
+    public ErrorCalc(HashMap<Integer, Vector3dInterface> data, StateInterface[][] timeLineArray) {
         this.data = data;
         this.timeLineArray = timeLineArray;
     }
@@ -39,7 +39,7 @@ public class ErrorCalc {
 
         for (int i = 0; i < timeLineArray[0].length; i++) {
             State planet = (State) timeLineArray[planetId][i];
-            total += relativeVecError(data.get(i), (Vector3D) planet.getPosition() );
+            total += relativeVecError((Vector3D) data.get(i), (Vector3D) planet.getPosition() );
         }
         return total;
     }
