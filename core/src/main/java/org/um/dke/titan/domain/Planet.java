@@ -24,7 +24,7 @@ public class Planet extends MovingObject {
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<MovingObject> timeline, Map<String, Moon> moons) {
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<Vector3dInterface> timeline, Map<String, Moon> moons) {
         super(name, mass, radius, position, zoomLevel, velocity, timeline);
         this.moons = moons;
     }
@@ -39,7 +39,7 @@ public class Planet extends MovingObject {
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Queue<MovingObject> timeline, Map<String, Moon> moons) {
+    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Queue<Vector3dInterface> timeline, Map<String, Moon> moons) {
         super(name, mass, radius, position, zoomLevel, velocity, timeline);
         this.moons = moons;
     }

@@ -39,7 +39,7 @@ public class GameRepository implements IGameRepository {
     private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel;
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
-    private boolean paused = true;
+    private boolean paused = false;
 
     @Override
     public void load() {

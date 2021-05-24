@@ -70,7 +70,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        double totalTime = 511 * 60 * 24 * 60;
+        double totalTime = 550 * 60 * 24 * 60;
         double dt = 20;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
@@ -84,21 +84,15 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
 
         int length = tmp2.length;
 
-
-
-
         //TODO: remove this method/print
         double min = Double.MAX_VALUE;
         int minI = 0;
         for (int i = 0; i < timeLineArray[0].length; i++) {
-            State titan = (State) timeLineArray[SpaceObjectEnum.TITAN.getId()][i];
+            State titan = (State) timeLineArray[SpaceObjectEnum.EARTH.getId()][i];
             Vector3dInterface probe = probeArray[i];
-            if(probe.equals(new Vector3D(7.909915359530085E11, -1.2509398179267585E12, -1.0093915704679705E10))){
-                System.out.println("i: " + i);
-            }
-            double dist = probe.dist(titan.getPosition()) - 2574000;
+            double dist = probe.dist(titan.getPosition()) - 6371000;
 
-            if (min > dist && dist > 0) {
+            if (i > 1000000 && min > dist && dist > 0) {
                 min = dist;
                 minI = i;
             }
@@ -106,13 +100,6 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         }
         System.out.println(min);
         System.out.println("minI = " + minI);
-
-
-
-
-
-
-
 
         for (int i = 0; i < length; i++) {
             Queue<MovingObject> tmp = new LinkedList<>();
@@ -122,13 +109,13 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
                 MovingObject sio = state.getMovingObject();
                 String name = sio.getName();
                 if (sio instanceof Planet) {
-                    FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(new Planet(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity()));
+                    FactoryProvider.getSolarSystemRepository().getPlanetByName(name).add(state.getPosition());
                 } else if (sio instanceof Moon) {
                     Planet planet = ((Moon) sio).getPlanet();
                     String planetName = planet.getName();
-                    FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(new Moon(sio.getName(), sio.getMass(), sio.getRadius(), state.getPosition(), sio.getZoomLevel(), state.getVelocity(), planet));
+                    FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(state.getPosition());
                 } else if (sio instanceof Rocket) {
-                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(new Rocket(sio.getName(), sio.getMass(), sio.getRadius(), probeArray[i], sio.getZoomLevel(), new Vector3D(0,0,0)));
+                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(probeArray[i]);
                 }
             }
         }
