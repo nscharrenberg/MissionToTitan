@@ -59,12 +59,12 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
 
     @Override
     public void initWithGdx() {
-        FileImporter.load("data_20200401");
+        FileImporter.load();
     }
 
     @Override
     public void init() {
-        FileImporter.load("data_20200401");
+        FileImporter.load();
     }
 
     @Override

@@ -3,8 +3,6 @@ package org.um.dke.titan.simulation;
 import com.badlogic.gdx.assets.AssetManager;
 import org.um.dke.titan.factory.FactoryProvider;
 
-import static org.um.dke.titan.simulation.Main.Simulate;
-
 public class Game extends com.badlogic.gdx.Game {
     private final AssetManager assetManager = new AssetManager();
 
