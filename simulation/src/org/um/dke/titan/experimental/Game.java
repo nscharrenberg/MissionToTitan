@@ -1,4 +1,4 @@
-package org.um.dke.titan.simulation;
+package org.um.dke.titan.experimental;
 
 import com.badlogic.gdx.assets.AssetManager;
 import org.um.dke.titan.factory.FactoryProvider;
