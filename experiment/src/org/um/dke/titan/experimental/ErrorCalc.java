@@ -6,30 +6,19 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.State;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ErrorCalc {
 
-    private HashMap<Integer, Vector3dInterface> data;
+    private HashMap<Integer, Vector3dInterface> map;
     private StateInterface[][] timeLineArray;
 
-    public ErrorCalc(HashMap<Integer, Vector3dInterface> data, StateInterface[][] timeLineArray) {
-        this.data = data;
+    public ErrorCalc(HashMap<Integer, Vector3dInterface> map, StateInterface[][] timeLineArray) {
+        this.map = map;
         this.timeLineArray = timeLineArray;
     }
 
-    public double averageError(HashMap<Integer, Vector3D> data, StateInterface[][] timeLineArray) {
-        int planetSize = timeLineArray.length - 1;
-
-        double total = 0;
-
-        for (int i = 0; i < planetSize - 1; i++) {
-            total += averageError(i);
-        }
-
-        return total/(planetSize - 1);
-    }
-
-    private double averageError(int planetId) {
+    public double averageError(int planetId) {
         double total = totalErrorSum(planetId);
         return total/ timeLineArray[0].length;
     }
@@ -37,10 +26,15 @@ public class ErrorCalc {
     private double totalErrorSum(int planetId) {
         double total = 0;
 
-        for (int i = 0; i < timeLineArray[0].length; i++) {
-            State planet = (State) timeLineArray[planetId][i];
-            total += relativeVecError((Vector3D) data.get(i), (Vector3D) planet.getPosition() );
+        for (Map.Entry<Integer, Vector3dInterface> entry : map.entrySet()) {
+            int key = entry.getKey();
+            Vector3D value = (Vector3D) entry.getValue();
+            System.out.println(value);
+
+            State planet = (State) timeLineArray[planetId][key];
+            total += relativeVecError(value, (Vector3D) planet.getPosition());
         }
+
         return total;
     }
 

@@ -70,8 +70,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        double totalTime = 950 * 60 * 24 * 60;
-        double dt = 20;
+        double totalTime = 360 * 60 * 24 * 60;
+        double dt = 6 * 60;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
 

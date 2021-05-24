@@ -2,6 +2,7 @@ package org.um.dke.titan.experimental;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
@@ -22,17 +23,19 @@ public class Main {
         config.height = 720;
         config.foregroundFPS = 120;
         new LwjglApplication(new Game(false), config);
-        run();
     }
 
-    private static void run() {
+    public static void run() {
 
         System.out.println("running");
 
         HashMap<Integer, Vector3dInterface> data = null;
         try { data = FileImporter.importHorizon(); } catch (ParseException e) { e.printStackTrace(); }
 
+        FactoryProvider.getGameRepository().load();
+
         ErrorCalc calc = new ErrorCalc(data,FactoryProvider.getSolarSystemRepository().getTimeLineArray());
+        System.out.println(calc.averageError(SpaceObjectEnum.EARTH.getId()));
     }
 
 }
