@@ -156,6 +156,7 @@ public class Vector3D implements Vector3dInterface {
         return Objects.hash(x, y, z);
     }
 
+    @Override
     public Vector3D clone() {
         return new Vector3D(x, y, z);
     }

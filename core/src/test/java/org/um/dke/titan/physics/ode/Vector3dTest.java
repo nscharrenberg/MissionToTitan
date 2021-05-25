@@ -108,4 +108,13 @@ public class Vector3dTest {
         String stringV = "(-1.1,2.1,-3.1)";
         assertEquals(stringV, v.toString());
     }
+
+    @Test
+    public void testEquals() {
+        Vector3dInterface v = new Vector3D(-1.1, 2.1, -3.1);
+        Vector3dInterface v2 = new Vector3D(-1.1, 2.1, -3.1);
+
+        assertEquals(v, v2);
+        assertTrue(v.equals(v2));
+    }
 }
