@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.2.0"
     }
 }
 
@@ -42,7 +42,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
@@ -57,6 +56,7 @@ project(":desktop") {
 project(":core") {
     apply plugin: "java-library"
     apply plugin: "jacoco"
+    apply plugin: "org.sonarqube"
 
     dependencies {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
@@ -73,19 +73,30 @@ project(":core") {
         finalizedBy jacocoTestReport
     }
 
+    sonarqube {
+        properties {
+            property 'sonar.projectKey', 'MissionToTitan'
+            property 'sonar.host.url', 'http://localhost:9000'
+            property 'sonar.projectVersion', project.version
+            property 'sonar.language', 'java'
+            property 'sonar.core.codeCoveragePlugin', 'jacoco'
+            property 'sonar.jacoco.reportPaths', "${buildDir}/jacoco/test.exec"
+            property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        }
+    }
+    tasks['sonarqube'].dependsOn test
+
     jacoco {
         toolVersion = "0.8.6"
     }
 
     jacocoTestReport {
         reports {
-            xml.enabled false
+            xml.enabled true
             csv.enabled false
             html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
         }
     }
-
-
 
     jacocoTestCoverageVerification {
         violationRules {
