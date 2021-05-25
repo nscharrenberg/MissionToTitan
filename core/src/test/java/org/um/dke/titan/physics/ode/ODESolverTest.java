@@ -66,9 +66,13 @@ public class ODESolverTest {
     	odes.getData(f, 0.5, 0.1);
     	State expected = new State(new Vector3D(4.5, 4.5, 4.5), new Vector3D(3.0, 3.0, 3.0), new Planet(SpaceObjectEnum.EARTH.getName(), 3, 3, new Vector3D(3,3,3), 3, new Vector3D(3,3,3)));
     	State actual = (State) odes.solve(f, y0, ts)[0];
-    	assertEquals(expected.getPosition(), actual.getPosition());
-    	assertEquals(expected.getVelocity(), actual.getVelocity());
-    	
+    	assertEquals(expected.getPosition().getX(), actual.getPosition().getX(), 1e7);
+		assertEquals(expected.getPosition().getY(), actual.getPosition().getY(), 1e7);
+		assertEquals(expected.getPosition().getZ(), actual.getPosition().getZ(), 1e7);
+
+		assertEquals(expected.getVelocity().getX(), actual.getVelocity().getX(), 1e7);
+		assertEquals(expected.getVelocity().getY(), actual.getVelocity().getY(), 1e7);
+		assertEquals(expected.getVelocity().getZ(), actual.getVelocity().getZ(), 1e7);
     }
     
     @Test

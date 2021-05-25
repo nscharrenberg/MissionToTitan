@@ -1,9 +1,11 @@
 package org.um.dke.titan.physics.ode;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
+import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
@@ -31,6 +33,10 @@ public class ODERungeSolverTest {
     private StateInterface[][] timelineArray;
     private int currentPlanetIndex;
 
+    @Before
+    public void before() {
+        FactoryProvider.getSolarSystemRepository().getPlanets().put(SpaceObjectEnum.EARTH.getName(), new Planet(SpaceObjectEnum.EARTH.getName(), 3, 3, new Vector3D(3,3,3), 3, new Vector3D(3,3,3)));
+    }
 
 
     @Test
@@ -98,7 +104,7 @@ public class ODERungeSolverTest {
         StateInterface[][] data = r.getData(f, tf, 0.1);
         StateInterface[] arr = r.solve(f, y0 , ts);
         StateInterface[] currentPlanetArray = getSingleRow(data, r.getCurrentPlanetIndex());
-        assertTrue(Arrays.equals(arr, currentPlanetArray));
+        assertArrayEquals(arr, currentPlanetArray);
     }
     public StateInterface[] getSingleRow(StateInterface[][] a, int index) {
         StateInterface[] row = new StateInterface[a[0].length];

@@ -115,9 +115,6 @@ public class ODEFunctionTest {
         //what happens is that the list is not adding elements; the implementation is empty
         list.add(mars); list.add(jupi);list.add(earth);
 
-
-        System.out.println(list.get(1).getForce());
-
         assertEquals(list.get(0).getForce(), l.get(0).getForce());
         assertEquals(list.get(1).getForce(), l.get(1).getForce());
         assertEquals(list.get(2).getForce(), l.get(2).getForce());

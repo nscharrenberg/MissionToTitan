@@ -25,6 +25,14 @@ public class ODESolver implements ODESolverInterface, DataInterface {
     //test this
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
+        if (f == null) {
+            throw new NullPointerException("Function must be provided");
+        }
+
+        if (y0 == null) {
+            throw new NullPointerException("StateInterface must be provided");
+        }
+
         size = ts.length;
         addInitialStates();
         for (int i = 1; i < size; i++) {
