@@ -18,9 +18,9 @@ public class SpaceObject {
     protected float mass;
     protected float radius;
     protected Vector3dInterface position;
-    protected transient Texture texture;
-    protected transient float zoomLevel;
-    protected transient Label label;
+    protected Texture texture;
+    protected float zoomLevel;
+    protected Label label;
 
     public SpaceObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
         this.name = name;

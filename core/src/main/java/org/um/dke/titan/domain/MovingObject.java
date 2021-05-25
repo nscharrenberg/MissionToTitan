@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MovingObject extends SpaceObject {
-    protected transient Queue<Vector3dInterface> timeline;
-    protected transient Vector3dInterface force;
-    protected transient Vector3dInterface acceleration;
+    protected Queue<Vector3dInterface> timeline;
+    protected Vector3dInterface force;
+    protected Vector3dInterface acceleration;
     protected Vector3dInterface velocity;
 
     public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity) {
