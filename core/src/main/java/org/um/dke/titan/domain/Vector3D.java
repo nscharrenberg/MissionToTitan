@@ -10,6 +10,9 @@ public class Vector3D implements Vector3dInterface {
     protected double y;
     protected double z;
 
+    public Vector3D() {
+    }
+
     public Vector3D(Vector3 position) {
         this.x = position.x;
         this.y = position.y;
@@ -131,11 +134,11 @@ public class Vector3D implements Vector3dInterface {
 
     @Override
     public String toString() {
-        return "Vector3D{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
+        return "(" +
+                + x +
+                "," + y +
+                "," + z +
+                ')';
     }
 
     @Override

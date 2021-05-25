@@ -1,11 +1,6 @@
 package org.um.dke.titan.physics.ode;
 
 import org.junit.Before;
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.MovingObject;
@@ -16,7 +11,6 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
-import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
 
@@ -39,8 +33,8 @@ public class ODESolverTest {
     	double[] ts = null;
     	assertThrows(NullPointerException.class, () -> { odes.solve(f, y0, ts);});
     }
-    @Test
 
+    @Test
     public void solvey0NullTest() {
     	ODESolver odes = new ODESolver();
     	ODEFunctionInterface f = new ODEFunction();
