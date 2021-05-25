@@ -1,7 +1,5 @@
 package org.um.dke.titan.repositories;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector3;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
@@ -11,7 +9,6 @@ import org.um.dke.titan.physics.ode.ProbeSimulator;
 import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
-import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.util.*;
@@ -71,7 +68,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         double totalTime = 360 * 60 * 24 * 60;
-        double dt = 6 * 60;
+        double dt = 60;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
 

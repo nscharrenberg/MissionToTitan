@@ -29,13 +29,44 @@ public class Main {
     public static void run() {
         FactoryProvider.getGameRepository().load();
         StateInterface[][] timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
-        HashMap<Integer, Vector3dInterface> data = null;
-        try { data = FileImporter.importHorizon(); } catch (ParseException e) { e.printStackTrace(); }
+        HashMap<Integer, Vector3dInterface> earth = null;
+        HashMap<Integer, Vector3dInterface> moon = null;
+        HashMap<Integer, Vector3dInterface> sun = null;
+        HashMap<Integer, Vector3dInterface> titan = null;
+        HashMap<Integer, Vector3dInterface> saturn = null;
+        HashMap<Integer, Vector3dInterface> jupiter = null;
+
+        try {
+            earth = FileImporter.importHorizon("HorizonData_Earth");
+            moon = FileImporter.importHorizon("HorizonData_Moon");
+            sun = FileImporter.importHorizon("HorizonData_Sun");
+            titan = FileImporter.importHorizon("HorizonData_Titan");
+            saturn = FileImporter.importHorizon("HorizonData_Saturn");
+            jupiter = FileImporter.importHorizon("HorizonData_Jupiter");
+
+        } catch (ParseException e) { e.printStackTrace(); }
 
         System.out.println("******************************** ERROR CALCULATOR********************************\n\n\n\n\n\n");
 
-        ErrorCalc calc = new ErrorCalc(data, timeLineArray);
-        System.out.println("average: " + calc.averageError(SpaceObjectEnum.TITAN.getId()));
+        ErrorCalc calcEarth = new ErrorCalc(earth, timeLineArray);
+        ErrorCalc calcMoon = new ErrorCalc(moon, timeLineArray);
+        ErrorCalc calcSun = new ErrorCalc(sun, timeLineArray);
+        ErrorCalc calcTitan = new ErrorCalc(titan, timeLineArray);
+        ErrorCalc calcSaturn = new ErrorCalc(saturn, timeLineArray);
+        ErrorCalc calcJupiter = new ErrorCalc(jupiter, timeLineArray);
+
+        double average =
+                calcEarth.averageError(SpaceObjectEnum.EARTH.getId()) +
+                calcSun.averageError(SpaceObjectEnum.SUN.getId()) +
+                calcTitan.averageError(SpaceObjectEnum.TITAN.getId()) +
+                calcSaturn.averageError(SpaceObjectEnum.SATURN.getId()) +
+                calcJupiter.averageError(SpaceObjectEnum.JUPITER.getId());
+        average = average/5;
+
+        System.out.println("moon error: " + calcMoon.averageError(SpaceObjectEnum.MOON.getId()));
+
+        System.out.println("average error: " + average);
+
     }
 
 }
