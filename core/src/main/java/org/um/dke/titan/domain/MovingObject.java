@@ -25,18 +25,6 @@ public class MovingObject extends SpaceObject {
         this.velocity = velocity;
     }
 
-    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
-        super(name, mass, radius, position, zoomLevel);
-        this.timeline = new LinkedList<>();
-        this.velocity = new Vector3D(velocity);
-    }
-
-    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity ,Queue<Vector3dInterface> timeline) {
-        super(name, mass, radius, position, zoomLevel);
-        this.timeline = timeline;
-        this.velocity = new Vector3D(velocity);
-    }
-
     public void add(Vector3dInterface object) {
         this.timeline.offer(object);
     }

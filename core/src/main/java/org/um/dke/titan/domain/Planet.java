@@ -29,21 +29,6 @@ public class Planet extends MovingObject {
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
-        super(name, mass, radius, position, zoomLevel, velocity);
-        this.moons = new HashMap<>();
-    }
-
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel, velocity);
-        this.moons = moons;
-    }
-
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Queue<Vector3dInterface> timeline, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel, velocity, timeline);
-        this.moons = moons;
-    }
-
     public Moon getMoonByName(String name) {
         return this.moons.get(name);
     }
