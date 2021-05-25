@@ -62,5 +62,8 @@ public class SpaceObjectTest {
         assertEquals(zoom, so.getZoomLevel(), 1e7);
         assertEquals(position, so.getPosition());
         assertEquals(radius, so.getRadius(), 1e7);
+        assertEquals(position.getX(), so.getX(), 1e7);
+        assertEquals(position.getY(), so.getY(), 1e7);
+        assertEquals(position.getZ(), so.getZ(), 1e7);
     }
 }

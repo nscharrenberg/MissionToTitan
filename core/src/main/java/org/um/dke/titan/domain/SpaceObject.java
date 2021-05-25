@@ -77,10 +77,6 @@ public class SpaceObject {
         return position;
     }
 
-    public void setPosition(Vector3 position) {
-        this.position = new Vector3D(position);
-    }
-
     public void setPosition(Vector3dInterface position) {
         this.position = position;
     }
