@@ -40,4 +40,8 @@ public interface ISolarSystemRepository {
     void computeTimeLineArray(double totalTime, double dt);
 
     void init();
+
+    void computeTimeLineArrayR(double tf, double dt);
+
+    void computeTimeLineArrayV(double tf, double dt);
 }

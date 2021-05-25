@@ -8,7 +8,10 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.ProbeSimulator;
 import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
+import org.um.dke.titan.physics.ode.functions.ODEVerletFunction;
 import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
+import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.physics.ode.solvers.ODEVerletSolver;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.util.*;
@@ -125,12 +128,23 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         } else if (timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
             computeTimeLineArray(totalTime, dt);
         }
-
         return timeLineArray;
     }
 
     @Override
     public void computeTimeLineArray(double totalTime, double dt) {
+        ODESolver odes = new ODESolver();
+        ODEFunctionInterface odef = new ODEFunction();
+        timeLineArray =  odes.getData(odef, totalTime, dt);
+    }
+
+    public void computeTimeLineArrayV(double totalTime, double dt) {
+        ODEVerletSolver odes = new ODEVerletSolver();
+        ODEFunctionInterface odef = new ODEVerletFunction();
+        timeLineArray =  odes.getData(odef, totalTime, dt);
+    }
+
+    public void computeTimeLineArrayR(double totalTime, double dt) {
         ODERungeSolver odes = new ODERungeSolver();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);
