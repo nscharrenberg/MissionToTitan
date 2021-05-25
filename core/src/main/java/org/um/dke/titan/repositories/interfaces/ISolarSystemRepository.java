@@ -33,7 +33,9 @@ public interface ISolarSystemRepository {
 
     void preprocessing();
 
-    StateInterface[][] getTimeLineArray(double totalTime, double dt);
+    public StateInterface[][] getTimeLineArray(double totalTime, double dt);
+
+    public StateInterface[][] getTimeLineArray();
 
     void computeTimeLineArray(double totalTime, double dt);
 

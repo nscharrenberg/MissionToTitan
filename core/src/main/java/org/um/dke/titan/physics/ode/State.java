@@ -11,7 +11,7 @@ public class State implements StateInterface {
     private Vector3dInterface position;
     private Vector3dInterface velocity;
     private Vector3dInterface acceleration;
-    private MovingObject object;
+    private transient MovingObject object;
 
     public State (Vector3dInterface position, Vector3dInterface velocity, MovingObject object) {
         this.position = position;

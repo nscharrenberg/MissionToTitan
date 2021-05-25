@@ -23,7 +23,7 @@ public class FileImporter {
                 zoomLevel = planet.get("zoomLevel").asFloat();
             }
 
-            Planet p = new Planet(found.getName(), planet.get("mass").asFloat(), planet.get("radius").asFloat(), new Vector3(planet.get("x").asFloat(),planet.get("y").asFloat(),planet.get("z").asFloat()), zoomLevel, new Vector3(planet.get("vx").asFloat(),planet.get("vy").asFloat(),planet.get("vz").asFloat()));
+            Planet p = new Planet(found.getName(), planet.get("mass").asFloat(), planet.get("radius").asFloat(), new Vector3D(planet.get("x").asDouble(),planet.get("y").asDouble(),planet.get("z").asDouble()), zoomLevel, new Vector3D(planet.get("vx").asDouble(),planet.get("vy").asDouble(),planet.get("vz").asDouble()));
 
             if(FactoryProvider.getGameRepository().isGdx()) {
                 p.setTexture(found.getTexturePath());
@@ -41,7 +41,7 @@ public class FileImporter {
                         zoomLevelMoon = moon.get("zoomLevel").asFloat();
                     }
 
-                    Moon m = new Moon(foundMoon.getName(), moon.get("mass").asFloat(), moon.get("radius").asFloat(), new Vector3(moon.get("x").asFloat(),moon.get("y").asFloat(),moon.get("z").asFloat()), zoomLevelMoon, new Vector3(moon.get("vx").asFloat(),moon.get("vy").asFloat(),moon.get("vz").asFloat()), p);
+                    Moon m = new Moon(foundMoon.getName(), moon.get("mass").asFloat(), moon.get("radius").asFloat(), new Vector3D(moon.get("x").asDouble(),moon.get("y").asDouble(),moon.get("z").asDouble()), zoomLevelMoon, new Vector3D(moon.get("vx").asDouble(),moon.get("vy").asDouble(),moon.get("vz").asDouble()), p);
                     if(FactoryProvider.getGameRepository().isGdx()) {
                         m.setTexture(foundMoon.getTexturePath());
                     }
@@ -59,7 +59,7 @@ public class FileImporter {
                 zoomLevel = rocket.get("zoomLevel").asFloat();
             }
 
-            Rocket r = new Rocket(found.getName(), rocket.get("mass").asFloat(), rocket.get("radius").asFloat(), new Vector3(rocket.get("x").asFloat(),rocket.get("y").asFloat(),rocket.get("z").asFloat()), zoomLevel, new Vector3(rocket.get("vx").asFloat(),rocket.get("vy").asFloat(),rocket.get("vz").asFloat()));
+            Rocket r = new Rocket(found.getName(), rocket.get("mass").asFloat(), rocket.get("radius").asFloat(), new Vector3D(rocket.get("x").asDouble(),rocket.get("y").asDouble(),rocket.get("z").asDouble()), zoomLevel, new Vector3D(rocket.get("vx").asDouble(),rocket.get("vy").asDouble(),rocket.get("vz").asDouble()));
             if(FactoryProvider.getGameRepository().isGdx()) {
                 r.setTexture(found.getTexturePath());
             }
