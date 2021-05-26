@@ -47,8 +47,6 @@ public class ODEFunction implements ODEFunctionInterface {
         for (Planet planet : system.getPlanets().values()) {
             list.add(planet);
             list.addAll(planet.getMoons().values());
-            System.out.println("test running here");
-
         }
 
         list.addAll(system.getRockets().values());
@@ -93,9 +91,10 @@ public class ODEFunction implements ODEFunctionInterface {
         if(a == null || b== null) {
             throw new NullPointerException("Invalid arguments; one of teh objects passed is null");
         }
-        if(a.getPosition().sub(b.getPosition()).getX() == 0 && a.getPosition().sub(b.getPosition()).getY() == 0 && a.getPosition().sub(b.getPosition()).getZ() == 0) {
-            throw new IllegalArgumentException("Invalid arguments; the distance between the 2 objects is zero");
-        }
+//        TODO: Refactor this code for phase 3, as at the start earth and the probe will trigger this exception.
+//        if(a.getPosition().sub(b.getPosition()).getX() == 0 && a.getPosition().sub(b.getPosition()).getY() == 0 && a.getPosition().sub(b.getPosition()).getZ() == 0) {
+//            throw new IllegalArgumentException("Invalid arguments; the distance between the 2 objects is zero");
+//        }
         if(a.getMass() == 0 || b.getMass() == 0){
             if(a.getMass() == 0 || b.getMass() != 0){
                 throw new IllegalArgumentException("Invalid arguments; object a has zero mass");
