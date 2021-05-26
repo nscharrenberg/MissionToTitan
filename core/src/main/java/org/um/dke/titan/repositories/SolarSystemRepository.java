@@ -70,8 +70,8 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        double totalTime = 360 * 60 * 24 * 60;
-        double dt = 60;
+        double totalTime = 850 * 60 * 24 * 60;
+        double dt = 20;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
 
@@ -124,9 +124,9 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public StateInterface[][] getTimeLineArray(double totalTime, double dt) {
         if (timeLineArray == null) {
-            computeTimeLineArray(totalTime, dt);
+            computeTimeLineArrayR(totalTime, dt);
         } else if (timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
-            computeTimeLineArray(totalTime, dt);
+            computeTimeLineArrayR(totalTime, dt);
         }
         return timeLineArray;
     }

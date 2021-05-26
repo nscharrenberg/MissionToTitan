@@ -32,4 +32,12 @@ public class Rate implements RateInterface {
     public Vector3dInterface getVelocity() {
         return velocity;
     }
+
+    @Override
+    public String toString() {
+        return "Rate{" +
+                "acceleration=" + acceleration +
+                ", velocity=" + velocity +
+                '}';
+    }
 }

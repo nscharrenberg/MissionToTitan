@@ -77,8 +77,14 @@ public class State implements StateInterface {
         return object;
     }
 
+    @Override
     public String toString() {
-        return "(p: "  + position + ", v: " + velocity + ", o: " + object.getName() + ")";
+        return "State{" +
+                "position=" + position +
+                ", velocity=" + velocity +
+                ", acceleration=" + acceleration +
+                ", object=" + object +
+                '}';
     }
 
     public State clone() {
