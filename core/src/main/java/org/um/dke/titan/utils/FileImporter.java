@@ -6,11 +6,24 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
+import org.um.dke.titan.interfaces.Vector3dInterface;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class FileImporter {
-    public static void load(String name) {
+    public static String planetsFileName = "data_20200401";
+    public static String horizonFileNAme = "horizonData_Sun";
+
+    public static void load() {
         JsonReader jsonReader = new JsonReader();
-        JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("data/%s.json", name)));
+        JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("data/%s.json", planetsFileName)));
 
         JsonValue planets = base.get("planets");
         JsonValue rockets = base.get("rockets");
@@ -65,6 +78,55 @@ public class FileImporter {
             }
 
             FactoryProvider.getSolarSystemRepository().addRocket(found.getName(), r);
+        }
+    }
+
+    public static HashMap<Integer, Vector3dInterface> importHorizon(String filename) throws ParseException {
+        JsonReader jsonReader = new JsonReader();
+        JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("experimental/%s.json", filename)));
+
+        int dtVal = base.get("stepSizeValue").asInt();
+        String dtType = base.get("stepSizeType").asString();
+        int dtInSeconds = convertToSeconds(dtVal, dtType);
+
+        JsonValue data = base.get("data");
+
+        HashMap<Integer, Vector3dInterface> timeline = new HashMap<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+        Date startDate = sdf.parse("2020-04-01 00:00");
+
+        for (JsonValue row : data) {
+            String time = row.get("time").asString();
+            double x = row.get("x").asDouble();
+            double y = row.get("y").asDouble();
+            double z = row.get("z").asDouble();
+
+            Date currentDate = sdf.parse(time);
+            long diffInMillies = Math.abs(currentDate.getTime() - startDate.getTime());
+            int timeInSeconds = (int)TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+            timeline.put(timeInSeconds, new Vector3D(x, y, z));
+        }
+
+        return timeline;
+    }
+
+    private static int convertToSeconds(int value, String type) {
+        switch (type) {
+            case "minute":
+                return value * 60;
+            case "hour": {
+                return value * 60 * 60;
+            }
+            case "day": {
+                return value * 60 * 60 * 24;
+            }
+            case "week": {
+                return value * 60 * 60 * 24 * 7;
+            }
+            default:
+                return value;
         }
     }
 }

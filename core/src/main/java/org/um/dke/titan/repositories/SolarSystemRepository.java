@@ -1,7 +1,5 @@
 package org.um.dke.titan.repositories;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector3;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
@@ -10,8 +8,10 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.ProbeSimulator;
 import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
+import org.um.dke.titan.physics.ode.functions.ODEVerletFunction;
 import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.physics.ode.solvers.ODEVerletSolver;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.util.*;
@@ -59,18 +59,18 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
 
     @Override
     public void initWithGdx() {
-        FileImporter.load("data_20200401");
+        FileImporter.load();
     }
 
     @Override
     public void init() {
-        FileImporter.load("data_20200401");
+        FileImporter.load();
     }
 
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        double totalTime = 950 * 60 * 24 * 60;
+        double totalTime = 850 * 60 * 24 * 60;
         double dt = 20;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
@@ -124,16 +124,27 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public StateInterface[][] getTimeLineArray(double totalTime, double dt) {
         if (timeLineArray == null) {
-            computeTimeLineArray(totalTime, dt);
+            computeTimeLineArrayR(totalTime, dt);
         } else if (timeLineArray[0].length != (int)(Math.round(totalTime/dt))+1) {
-            computeTimeLineArray(totalTime, dt);
+            computeTimeLineArrayR(totalTime, dt);
         }
-
         return timeLineArray;
     }
 
     @Override
     public void computeTimeLineArray(double totalTime, double dt) {
+        ODESolver odes = new ODESolver();
+        ODEFunctionInterface odef = new ODEFunction();
+        timeLineArray =  odes.getData(odef, totalTime, dt);
+    }
+
+    public void computeTimeLineArrayV(double totalTime, double dt) {
+        ODEVerletSolver odes = new ODEVerletSolver();
+        ODEFunctionInterface odef = new ODEVerletFunction();
+        timeLineArray =  odes.getData(odef, totalTime, dt);
+    }
+
+    public void computeTimeLineArrayR(double totalTime, double dt) {
         ODERungeSolver odes = new ODERungeSolver();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);

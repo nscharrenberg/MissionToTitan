@@ -9,7 +9,10 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
+import sun.jvm.hotspot.gc.shared.Space;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
@@ -30,8 +33,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double MASS_FLOW_RATE = 2000;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
-    private final double minI = 8640;
+    private final double minI = 1051697;
     private int dt;
+    //private List<Vector3dInterface> engineArray = initializeEngineArray();
 
     /**
      * TODO: Rewrite this method
@@ -66,33 +70,20 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
                     probeStateArray[i] = step(probeStateArray[i - 1], h);
-                    if (i > minI + 1043053 && i < minI + 1043084) {
-                        force = force.add(useEngine(3, i - 1, SpaceObjectEnum.EARTH.getId()));
-                        System.out.printf("Fuel Left: %s at %s - 1%n", (probeMass - fuelUsed - probeMassDry), i);
+
+                    Vector3dInterface potentialThrust = engine(i);
+                    if(potentialThrust!=null){
+                        force = potentialThrust;
                     }
-                    else if (i > 1151090 && i < 1151120) {
-                        force = force.add(useEngine(3, i - 1, SpaceObjectEnum.SUN.getId()));
-                        System.out.printf("Fuel Left: %s at %s - 2%n", (probeMass - fuelUsed - probeMassDry), i);
+                    else {
+                        force = new Vector3D(0, 0, 0);
                     }
-//                    else if (i > 1126773 && i < 1126793) {
-//                        force = force.add(useEngine(2, i - 1, SpaceObjectEnum.SUN.getId()));
-//                        System.out.printf("Fuel Left: %s at %s - 2%n", (probeMass - fuelUsed - probeMassDry), i);
-//                    }
-//                    else if (i > 2241053 && i < 2241058){
-//                        force = force.add(useEngine(4, i - 1, SpaceObjectEnum.MOON.getId()));
-//                        System.out.printf("Fuel Left: %s at %s - 3%n", (probeMass - fuelUsed - probeMassDry), i);
-//                    }
-//                    else if(i > 2064730 && i < 2064750){
-//                        force = force.add(useEngine(1, i - 1, SpaceObjectEnum.SATURN.getId()).mul(-1));
-//                        System.out.printf("Fuel Left: %s at %s  - 4%n", (probeMass - fuelUsed - probeMassDry), i);
-//                    }
-                    else{
-                    force = new Vector3D(0, 0, 0);}
                 }
-            else {
+                else {
                     force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
                 }
             }
+
         }
 
         for (int i = 0; i < probePositions.length; i++) {
@@ -148,7 +139,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return thrustVector.mul(1/thrustVector.norm());
     }
 
-
     /**
      *  returns the force vector of the engine of the probe
      */
@@ -157,7 +147,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
     private double calculateMassUsed(double percentageOfPower){
+
         return dt*(percentageOfPower/100)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
+
     }
 
     private Vector3dInterface useEngine(double percentageOfPower, int index, int targetPlanetID){
@@ -167,16 +159,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return engineForce(percentageOfPower, thrustVector);
     }
 
-    private Vector3dInterface slowEngine(double percentageOfPower, int index){
+    private Vector3dInterface useEngine(double percentageOfPower, int index, Vector3D v, StateInterface probe){
         if(!calculateNewMass(percentageOfPower))
             return new Vector3D(0,0,0);
-
-        State probe = ((State) probeStateArray[index]);
-
-        Vector3dInterface thrustVector = probe.getVelocity().mul(-1);
-
-        System.out.println(thrustVector);
-        return  engineForce(percentageOfPower, thrustVector.mul(1/thrustVector.norm()));
+        v = (Vector3D) v.sub(((State)(probe)).getPosition());
+        Vector3dInterface thrustVector = v.mul(1/v.norm());
+        return engineForce(percentageOfPower, thrustVector);
     }
 
     private boolean calculateNewMass(double percentageOfPower) {
@@ -189,6 +177,28 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             System.out.println("No fuel left!!");
             return false;
         }
+    }
+
+    private Vector3dInterface engine(int i){
+        if(i>minI && i<minI+31){
+            force = force.add(useEngine(3.7, i-1, SpaceObjectEnum.EARTH.getId()));
+        }
+        else if(i>1120550 && i<1120561){
+            force = force.add(useEngine(9.2, i-1, new Vector3D(-1.306472101663588e+12,
+                    -2.860995816266412e+10,
+                    153013631859.6080), probeStateArray[i-1]));
+        }
+        else if(i==1120562){
+            force = force.add(useEngine(0.5, i-1, new Vector3D(-1.471922101663588e+12,
+                    -2.860995816266412e+10,
+                    8.278183193596080e+06), probeStateArray[i-1]));
+        }
+        else if(i==3631390){
+            force = force.add(useEngine(0.069, i-1, SpaceObjectEnum.EARTH.getId()));
+        }
+        else
+            return null;
+        return force;
     }
 
 }
