@@ -1,4 +1,4 @@
-package org.um.dke.titan.simulation;
+package org.um.dke.titan.experimental;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -28,7 +28,7 @@ public class Main {
 
     public static void Simulate() {
         r = new Random();
-        min = new Individual(new Vector3D(1,1,1), 1);
+        min = new Individual(new Vector3D(1,-1,0.1), 1);
         min.fitness = Double.MAX_VALUE;
 
         for (int j = 0; j < 100; j++) {
@@ -76,8 +76,7 @@ public class Main {
 
             if (a != b)
                 population[i] = breed(population[r.nextInt(population.length) / 2], population[r.nextInt(population.length) / 2]);
-            else if (a == b)
-                i--;
+            else i--;
         }
 
         population[population.length-1 ]= new Individual(randomUnitVector(), 40000 + r.nextInt(20000));

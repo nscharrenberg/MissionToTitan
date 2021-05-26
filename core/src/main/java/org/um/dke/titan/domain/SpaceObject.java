@@ -30,14 +30,6 @@ public class SpaceObject {
         this.zoomLevel = zoomLevel;
     }
 
-    public SpaceObject(String name, float mass, float radius, Vector3 position, float zoomLevel) {
-        this.name = name;
-        this.mass = mass;
-        this.position = new Vector3D(position);
-        this.radius = radius;
-        this.zoomLevel = zoomLevel;
-    }
-
     public float getDiameter() {
         return this.radius * 2;
     }
@@ -75,10 +67,6 @@ public class SpaceObject {
 
     public Vector3dInterface getPosition() {
         return position;
-    }
-
-    public void setPosition(Vector3 position) {
-        this.position = new Vector3D(position);
     }
 
     public void setPosition(Vector3dInterface position) {
@@ -134,5 +122,9 @@ public class SpaceObject {
 
     public void setLabel(Label label) {
         this.label = label;
+    }
+
+    public void setMass(float mass) {
+        this.mass = mass;
     }
 }

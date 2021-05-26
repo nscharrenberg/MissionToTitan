@@ -1,5 +1,6 @@
 package org.um.dke.titan.physics.ode.solvers;
 
+import com.badlogic.gdx.utils.Null;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.DataInterface;
@@ -8,6 +9,7 @@ import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.Rate;
 import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
@@ -27,6 +29,9 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         size = ts.length;
+        if(size == 0) {
+            throw new IllegalArgumentException("The time step array passed is not legal");
+        }
         addInitialStates();
         for (int i = 1; i < size; i++) {
             int j = 0;
@@ -164,11 +169,11 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
             }
 
             for (Rocket rocket : system.getRockets().values()) {
-                // inserting step into the array
+                //inserting step into the array
                 timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
-                // updating the MovingObject's (Planet) state
+                //updating the MovingObject's (Planet) state
                 system.getRocketName(rocket.getName()).setPosition(state.getPosition());
                 system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
@@ -178,6 +183,12 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
+        if(y == null) {
+            throw new NullPointerException("The state passed is null");
+        }
+        if(f == null) {
+            throw new NullPointerException("The function passed is null");
+        }
         Rate k1 = (Rate) f.call(h, y);
         Rate k2 = (Rate) f.call(0.5*h, y.addMul(0.5, k1));
         Rate k3 = (Rate) f.call(0.5*h, y.addMul(0.5, k2));
@@ -191,5 +202,8 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
         addInitialStates();
         computeStates(f, h);
         return timelineArray;
+    }
+    public int getCurrentPlanetIndex(){
+        return currentPlanetIndex;
     }
 }

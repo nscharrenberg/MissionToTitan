@@ -24,6 +24,9 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
     @Override
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         size = ts.length;
+        if(size == 0) {
+            throw new IllegalArgumentException();
+        }
         addInitialStates();
         for (int i = 1; i < size; i++) {
             int j = 0;
@@ -174,7 +177,15 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
     }
 
     @Override
+    /** t>0, t < 0; t = 0
+     *  h >0; h < 0; h = 0
+     *  y = null
+     *
+     */
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
+        if(y == null) {
+            throw new NullPointerException();
+        }
         Rate rate = (Rate)f.call(h, y);
         State state = (State)y;
         Vector3dInterface newPosition = state.getPosition().add(state.getVelocity().mul(h)).add(state.getAcceleration().mul(h*h/2));
@@ -189,5 +200,9 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
         addInitialStates();
         computeStates(f, h);
         return timelineArray;
+    }
+
+    public int getCurrentPlanetIndex(){
+        return currentPlanetIndex;
     }
 }

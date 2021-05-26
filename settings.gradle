@@ -1,1 +1,1 @@
-include 'desktop', 'core', 'simulation'
+include 'desktop', 'core', 'simulation', 'chart', 'simulation2', 'experiment'
