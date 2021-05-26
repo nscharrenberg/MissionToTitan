@@ -38,8 +38,8 @@ public class SpaceObjectTest {
 
     @Test
     public void setAndGetRadius() {
-        double radius = 1e3;
-        SpaceObject so = new SpaceObject(SpaceObjectEnum.EARTH.getName(), (float)1e7, (float)radius, new Vector3D(1, 2, 3), (float)1e2);
+        float radius = (float) 1e3;
+        SpaceObject so = new SpaceObject(SpaceObjectEnum.EARTH.getName(), (float)1e7, radius, new Vector3D(1, 2, 3), (float)1e2);
         double newRad = 1e4;
 
         so.setRadius((float) newRad);
