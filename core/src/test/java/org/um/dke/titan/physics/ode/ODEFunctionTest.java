@@ -469,15 +469,15 @@ public class ODEFunctionTest {
         assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
 
     }
-    @Test
-    public void twoNonNullObjectsWithDistanceEqualToZero() {
-
-        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
-        MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
-
-        f = new ODEFunction();
-        assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
-    }
+//    @Test
+//    public void twoNonNullObjectsWithDistanceEqualToZero() {
+//
+//        MovingObject j = new MovingObject("Jupiter", 100, 7, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+//        MovingObject m = new MovingObject("Mars", 10, 6, new Vector3D(3, 3, 3),1, new Vector3D(1, 1, 1));
+//
+//        f = new ODEFunction();
+//        assertThrows(IllegalArgumentException.class, () -> f.newtonsLaw(m, j));
+//    }
 
 }
 
