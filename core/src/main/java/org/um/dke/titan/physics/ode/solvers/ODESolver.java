@@ -38,7 +38,7 @@ public class ODESolver implements ODESolverInterface {
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
-        return y.addMul(h,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
+        return y.addMul(t,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
     }
 
 
@@ -50,7 +50,7 @@ public class ODESolver implements ODESolverInterface {
 
     private void computeTimeLineArray(ODEFunctionInterface f, double h) {
         for (int i = 1; i < timeLineArray.length; i++) {
-            timeLineArray[i] = step(f, h*i-h, timeLineArray[i-1], h);
+            timeLineArray[i] = step(f, h*i, timeLineArray[i-1], h);
         }
     }
 

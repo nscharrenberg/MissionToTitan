@@ -2,6 +2,7 @@ package org.um.dke.titan.physicsold.ode.test;
 
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.physics.ode.functions.mathfunctions.Rate;
 
 public class ODETestSolverR4 extends ODETestSolver{
 

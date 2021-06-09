@@ -1,4 +1,4 @@
-package org.um.dke.titan.physicsold.ode.test;
+package org.um.dke.titan.physics.ode.functions.mathfunctions;
 
 
 import org.um.dke.titan.interfaces.ODEFunctionInterface;

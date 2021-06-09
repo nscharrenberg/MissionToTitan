@@ -23,6 +23,7 @@ public class ODEFunction implements ODEFunctionInterface {
         SystemState systemState = (SystemState) y;
 
 
+        resetForces(systemState.getPlanets());
 
         for (Map.Entry<String, PlanetState> entry : systemState.getPlanets().entrySet()) {
             applyForces(systemState, entry.getValue(), entry.getKey());

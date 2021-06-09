@@ -1,6 +1,11 @@
-package org.um.dke.titan.physicsold.ode.test;
+package org.um.dke.titan.physics.ode.functions.mathfunctions;
 
 import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.physics.ode.functions.mathfunctions.ODETestFunction;
+import org.um.dke.titan.physics.ode.functions.mathfunctions.State;
+import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.physicsold.ode.test.ODETestSolver;
+import org.um.dke.titan.physicsold.ode.test.ODETestSolverR4;
 
 import java.text.DecimalFormat;
 
@@ -8,7 +13,7 @@ public class MainTest {
 
     public static void main(String[] args) {
         ODETestFunction f = new ODETestFunction();
-        ODETestSolver solver = new ODETestSolver();
+        ODESolver solver = new ODESolver();
         ODETestSolver rkSolver = new ODETestSolverR4();
 
         double h = 0.1;
