@@ -1,20 +1,25 @@
 package org.um.dke.titan.repositories;
 
 import org.um.dke.titan.domain.Moon;
+import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Rocket;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.planetfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 public class SolarSystemRepositoryNew implements ISolarSystemRepository {
 
@@ -62,11 +67,14 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
 
     @Override
     public void preprocessing() {
-        double tf = 60*60*25*365;
+        double tf = 60 * 60 * 25 * 365;
         double dt = 100;
         getTimeLineArray(new ODESolver(), tf, dt);
 
+    }
 
+    public StateInterface[] getTimeLineArray() {
+        return getTimeLineArray();
     }
 
     @Override
