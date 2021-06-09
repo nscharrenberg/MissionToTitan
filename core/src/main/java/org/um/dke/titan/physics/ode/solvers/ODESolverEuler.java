@@ -1,4 +1,4 @@
 package org.um.dke.titan.physics.ode.solvers;
 
-public class ODESolverEuler {
+public class ODESolverEuler extends ODESolver {
 }
