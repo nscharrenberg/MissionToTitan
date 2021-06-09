@@ -49,8 +49,8 @@ public class ODESolver implements ODESolverInterface, DataInterface {
 
                 if (planet instanceof Rocket) {
                     // updating the MovingObject's (Planet) state
-                    system.getRocketName(planet.getName()).setPosition(state.getPosition());
-                    system.getRocketName(planet.getName()).setVelocity(state.getVelocity());
+                    system.getRocketByName(planet.getName()).setPosition(state.getPosition());
+                    system.getRocketByName(planet.getName()).setVelocity(state.getVelocity());
 
                     j++;
                 } else {

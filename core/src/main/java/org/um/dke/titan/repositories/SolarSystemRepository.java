@@ -12,11 +12,12 @@ import org.um.dke.titan.physicsold.ode.functions.ODEVerletFunction;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolverR4;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolver;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolverVerlet;
+import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.util.*;
 
-public class SolarSystemRepository implements org.um.dke.titan.repositories.interfaces.ISolarSystemRepository {
+public class SolarSystemRepository{
     private Map<String, Planet> planets;
     private Map<String, Rocket> rockets;
     private StateInterface[][] timeLineArray;
@@ -27,47 +28,38 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         this.rockets = new HashMap<>();
     }
 
-    @Override
     public void addPlanet(String name, Planet planet) {
         this.planets.put(name, planet);
     }
 
-    @Override
     public void removePlanet(String name) {
         this.planets.remove(name);
     }
 
-    @Override
     public Map<String, Planet> getPlanets() {
         return planets;
     }
 
-    @Override
     public void setPlanets(Map<String, Planet> planets) {
         this.planets = planets;
     }
 
-    @Override
     public Planet getPlanetByName(String name) {
         return this.planets.get(name);
     }
 
-    @Override
     public Moon getMoonByName(String planetName, String moonName) {
         return this.planets.get(planetName).getMoons().get(moonName);
     }
 
-    @Override
     public void initWithGdx() {
         FileImporter.load();
     }
 
-    @Override
     public void init() {
         FileImporter.load();
     }
 
-    @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
         double totalTime = 365 * 60 * 24 * 60;
@@ -117,13 +109,12 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
                     String planetName = planet.getName();
                     FactoryProvider.getSolarSystemRepository().getMoonByName(planetName, name).add(state.getPosition());
                 } else if (sio instanceof Rocket) {
-                    FactoryProvider.getSolarSystemRepository().getRocketName(name).add(probeArray[i]);
+                    FactoryProvider.getSolarSystemRepository().getRocketByName(name).add(probeArray[i]);
                 }
             }
         }
     }
 
-    @Override
     public StateInterface[][] getTimeLineArray(double totalTime, double dt) {
         if (timeLineArray == null) {
             computeTimeLineArrayR(totalTime, dt);
@@ -133,7 +124,6 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         return timeLineArray;
     }
 
-    @Override
     public void computeTimeLineArray(double totalTime, double dt) {
         ODESolver odes = new ODESolver();
         ODEFunctionInterface odef = new ODEFunction();
@@ -152,22 +142,18 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         timeLineArray =  odes.getData(odef, totalTime, dt);
     }
 
-    @Override
     public Map<String, Rocket> getRockets() {
         return rockets;
     }
 
-    @Override
     public void setRockets(Map<String, Rocket> rockets) {
         this.rockets = rockets;
     }
 
-    @Override
-    public Rocket getRocketName(String name) {
+    public Rocket getRocketByName(String name) {
         return this.rockets.get(name);
     }
 
-    @Override
     public void addRocket(String name, Rocket object) {
         this.rockets.put(name, object);
     }

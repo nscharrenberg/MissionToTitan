@@ -58,8 +58,8 @@ public class Main {
 
     public static void euler() {
         init();
-        FactoryProvider.getSolarSystemRepository().computeTimeLineArray(tf, dt);
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
+        //FactoryProvider.getSolarSystemRepository().computeTimeLineArray(tf, dt);
+        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
         List<Double> list = getAverage();
 
@@ -83,8 +83,8 @@ public class Main {
 
     public static void runge() {
         init();
-        FactoryProvider.getSolarSystemRepository().computeTimeLineArrayR(tf, dt);
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
+        //FactoryProvider.getSolarSystemRepository().computeTimeLineArrayR(tf, dt);
+        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
         List<Double> list = getAverage();
 
@@ -108,8 +108,8 @@ public class Main {
 
     public static void verlet() {
         init();
-        FactoryProvider.getSolarSystemRepository().computeTimeLineArrayV(tf, dt);
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
+        //FactoryProvider.getSolarSystemRepository().computeTimeLineArrayV(tf, dt);
+        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
         List<Double> list = getAverage();
 

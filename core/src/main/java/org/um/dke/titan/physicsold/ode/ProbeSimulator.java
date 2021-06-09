@@ -16,7 +16,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private String probeName = SpaceObjectEnum.SHIP.getName();
     private Vector3dInterface force;
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
-    private double probeMass = system.getRocketName(probeName).getMass();
+    private double probeMass = system.getRocketByName(probeName).getMass();
     private final double probeMassDry = 78000;
     private double fuelUsed = 0;
 
@@ -39,7 +39,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         ODESolver solver = new ODESolver();
 
         ODEFunction f = new ODEFunction();
-        StateInterface state = new State(p0, v0, system.getRocketName(probeName));
+        StateInterface state = new State(p0, v0, system.getRocketByName(probeName));
         StateInterface[] stateArray = solver.solve(f, state, ts);
         Vector3dInterface[] probePositions = new Vector3dInterface[stateArray.length];
 
@@ -52,8 +52,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
         dt = (int) h;
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, h);
-        StateInterface initialState = new State(p0, v0, system.getRocketName(probeName));
+        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, h);
+        StateInterface initialState = new State(p0, v0, system.getRocketByName(probeName));
 
         probeStateArray = new StateInterface[timeLineArray[0].length];
         Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];
@@ -162,8 +162,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
     private boolean calculateNewMass(double percentageOfPower) {
-        if (system.getRocketName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
-            system.getRocketName(probeName).setMass((float) (system.getRocketName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
+        if (system.getRocketByName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
+            system.getRocketByName(probeName).setMass((float) (system.getRocketByName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
             fuelUsed += calculateMassUsed(percentageOfPower);
             return true;
         }

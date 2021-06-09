@@ -47,7 +47,7 @@ public class Simulation {
     }
 
     public static void simulate(Vector3dInterface unit, int velocity) {
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, dt);
+        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, dt);
 
         Vector3dInterface earthVelocity = ((State)(timeLineArray[SpaceObjectEnum.EARTH.getId()][0])).getVelocity();
 

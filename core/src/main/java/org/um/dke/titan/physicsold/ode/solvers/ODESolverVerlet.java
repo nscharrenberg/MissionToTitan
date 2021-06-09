@@ -42,8 +42,8 @@ public class ODESolverVerlet implements ODESolverInterface, DataInterface {
 
                 if (planet instanceof Rocket) {
                     // updating the MovingObject's (Planet) state
-                    system.getRocketName(planet.getName()).setPosition(state.getPosition());
-                    system.getRocketName(planet.getName()).setVelocity(state.getVelocity());
+                    system.getRocketByName(planet.getName()).setPosition(state.getPosition());
+                    system.getRocketByName(planet.getName()).setVelocity(state.getVelocity());
 
                     j++;
                 } else {
@@ -169,8 +169,8 @@ public class ODESolverVerlet implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getRocketName(rocket.getName()).setPosition(state.getPosition());
-                system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
+                system.getRocketByName(rocket.getName()).setPosition(state.getPosition());
+                system.getRocketByName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
             }
         }

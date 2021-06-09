@@ -43,7 +43,7 @@ public class GameRepository implements IGameRepository {
 
     @Override
     public void load() {
-        FactoryProvider.getSolarSystemRepository().initWithGdx();
+        FactoryProvider.getSolarSystemRepository().init();
         FactoryProvider.getSolarSystemRepository().preprocessing();
     }
 
@@ -84,7 +84,7 @@ public class GameRepository implements IGameRepository {
         stage.addActor(speedLabel);
 
         // Start from Earth
-        focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()));
+        focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
     }
 
     @Override
@@ -210,7 +210,7 @@ public class GameRepository implements IGameRepository {
         // Pause / Resume day
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             paused = !paused;
-            cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom + " Time on timeline: " + FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()).getTimeOnTimeLine());
+            cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom + " Time on timeline: " + FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()).getTimeOnTimeLine());
 
         }
 
@@ -250,9 +250,9 @@ public class GameRepository implements IGameRepository {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
             found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.SATURN.getName(), SpaceObjectEnum.TITAN.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
-            found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName());
+            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
-            found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP_2.getName());
+            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP_2.getName());
         }
 
         if (found != null) {
