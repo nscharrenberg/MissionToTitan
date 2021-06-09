@@ -48,7 +48,7 @@ public class ODESolver implements ODESolverInterface {
 
     private void computeTimeLineArray(ODEFunctionInterface f, double h) {
         for (int i = 1; i < timeLineArray.length; i++) {
-            timeLineArray[i] = step(f, h*i-h, timeLineArray[i-1], h);
+            timeLineArray[i] = step(f, h*i, timeLineArray[i-1], h);
         }
     }
 
