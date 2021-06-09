@@ -3,16 +3,16 @@ package org.um.dke.titan.domain;
 import java.util.Arrays;
 
 public enum SpaceObjectEnum {
-    SUN("Sun", "planets/Sun.png", 5),
+    SUN("Sun", "planets/Sun.png", -1),
     MERCURY("Mercury", "planets/Mercury.png", -1),
     VENUS("Venus", "planets/Venus.png", -1),
-    EARTH("Earth", "planets/Earth.png", 0),
+    EARTH("Earth", "planets/Earth.png", -1),
     MOON("Moon", "planets/Moon.png", 1),
     MARS("Mars", "planets/Mars.png", -1),
-    JUPITER("Jupiter", "planets/Jupiter.png", 2),
-    SATURN("Saturn", "planets/Saturn.png", 3),
-    TITAN("Titan", "planets/Titan.png", 4),
-    SHIP("Probe", "planets/Probe.png", 6),
+    JUPITER("Jupiter", "planets/Jupiter.png", -1),
+    SATURN("Saturn", "planets/Saturn.png", 0),
+    TITAN("Titan", "planets/Titan.png", -1),
+    SHIP("Probe", "planets/Probe.png", 1),
     SHIP_2("OtherProbe", "planets/Probe.png", -1);
 
     private final int id;

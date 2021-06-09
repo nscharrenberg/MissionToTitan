@@ -9,7 +9,7 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
-import sun.jvm.hotspot.gc.shared.Space;
+//import sun.jvm.hotspot.gc.shared.Space;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,14 +70,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             for (int j = 0; j < timeLineArray.length; j++) {
                 if (j == probeId) {
                     probeStateArray[i] = step(probeStateArray[i - 1], h);
-
-                    Vector3dInterface potentialThrust = engine(i);
-                    if(potentialThrust!=null){
-                        force = potentialThrust;
-                    }
-                    else {
+                    //Vector3dInterface potentialThrust = engine(i);
+//                    if(potentialThrust!=null){
+//                        force = potentialThrust;
+//
+//                    }
+                    //else {
                         force = new Vector3D(0, 0, 0);
-                    }
+                    //}
                 }
                 else {
                     force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
@@ -89,7 +89,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < probePositions.length; i++) {
             probePositions[i] = ((State)(probeStateArray[i])).getPosition();
         }
-        System.out.println("fuel left: " + (probeMass - fuelUsed - probeMassDry));
+        //System.out.println("fuel left: " + (probeMass - fuelUsed - probeMassDry));
         return probePositions;
     }
 
