@@ -20,7 +20,12 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
 
     private Map<String, Planet> planets;
     private Map<String, Rocket> rockets;
+
     private StateInterface[] timeLineArray;
+    private ODESolverInterface solver;
+    private double dt;
+    private double tf;
+    double[] ts;
 
 
     public void preprocessing() {
@@ -71,11 +76,16 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
     private void runSolver(ODESolverInterface solver, double tf, double dt) {
         SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, tf, dt);
+        this.solver = solver;
+        this.tf = tf;
+        this.dt = dt;
     }
 
     private void runSolver(ODESolverInterface solver, double ts[]) {
         SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, ts);
+        this.solver = solver;
+        this.ts = ts;
     }
 
     private void deployRockets(double tf, double dt) {
@@ -100,6 +110,17 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
             states.put(planet.getName(), new PlanetState(planet.getPosition(), planet.getVelocity()));
         }
         return new SystemState(states);
+    }
+
+    public void refresh() {
+        planets = FileImporter.load();
+
+
+        if (ts == null) {
+            runSolver(solver, tf, dt);
+        } else if (tf == 0 && dt == 0) {
+            runSolver(solver, ts);
+        }
     }
 
 

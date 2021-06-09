@@ -161,6 +161,7 @@ public class GameRepository implements IGameRepository {
             timeToSkip = DEFAULT_SKIP_SPEED;
             time = 0;
 
+            FactoryProvider.getSolarSystemRepository().refresh();
             game.setScreen(new LoadingScreen());
         }
     }

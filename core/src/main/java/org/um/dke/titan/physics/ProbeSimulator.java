@@ -44,6 +44,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double minI = 1051697;
 
 
+    // --------------------- Trajectories  ---------------------
+
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double[] ts) {
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(), ts);
@@ -79,6 +81,13 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return probePositions;
     }
 
+
+
+
+
+    // --------------------- ODE Handling  ---------------------
+
+
     private PlanetRate call(double t, PlanetState y) {
         Vector3dInterface rateAcceleration = force.mul(1 / probeMass); // a = F/m
         Vector3dInterface rateVelocity = y.getVelocity().add(rateAcceleration.mul(t));
@@ -102,6 +111,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private PlanetState getNextProbeState(int i, double h) {
         force = new Vector3D(0,0,0);
+
 
         for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
 
@@ -128,6 +138,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
 
+
+
+
+    // --------------------- Engine Handling  ---------------------
+
+
     private boolean[] computeEngineInterval() {
         boolean[] engineInterval = new boolean[probeStateArray.length];
 
@@ -141,7 +157,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     /**
      *  returns the unit vector of the desired thrust angle
-     *  TODO: change this
+     *  TODO: fix this
      */
     private Vector3dInterface findThrustVector(int index, int planetID){
 //        State probe = (State) probeStateArray[index];
@@ -193,7 +209,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
     /**
-     * TODO: change this
+     * TODO: fix this
      */
     private Vector3dInterface engine(int i){
 //        if(i>minI && i<minI+31){

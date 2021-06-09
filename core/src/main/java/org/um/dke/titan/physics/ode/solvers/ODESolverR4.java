@@ -5,6 +5,7 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.planetfunction.SystemRate;
 
 public class ODESolverR4 extends ODESolver{
+
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
         if(y == null) {
