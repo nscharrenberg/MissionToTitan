@@ -35,9 +35,9 @@ public class State implements StateInterface {
             throw new NullPointerException();
         }
         Rate r = (Rate) rate;
-
         Rate mul = new Rate(r.getAcceleration().mul(step), r.getVelocity().mul(step));
         State state = new State(position.add(mul.getVelocity()), velocity.add(mul.getAcceleration()),object);
+
         return state;
     }
 

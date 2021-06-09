@@ -85,62 +85,11 @@ public class ODESolver implements ODESolverInterface, DataInterface {
             throw new NullPointerException();
         size = (int)Math.round(tf/h)+1;
         addInitialStates();
-        for (int i = 1; i < size; i++) {
-            int j = 0;
-            for(MovingObject planet : planets)
-            {
-                // inserting step into the array
-                timelineArray[j][i] = step(f, tf, timelineArray[j][i - 1], h);
-                State state = (State) timelineArray[j][i];
-
-                if (planet instanceof Rocket) {
-                    // updating the MovingObject's (Planet) state
-                    system.getRocketName(planet.getName()).setPosition(state.getPosition());
-                    system.getRocketName(planet.getName()).setVelocity(state.getVelocity());
-
-                    j++;
-                } else {
-                    // updating the MovingObject's (Planet) state
-                    system.getPlanetByName(planet.getName()).setPosition(state.getPosition());
-                    system.getPlanetByName(planet.getName()).setVelocity(state.getVelocity());
-                    j++;
-
-                    if (planet instanceof Planet) {
-                        Planet p = (Planet) planet;
-
-                        for (Moon moon : p.getMoons().values()) {
-                            // inserting step into the array
-                            timelineArray[j][i] = step(f, tf, timelineArray[j][i - 1], h);
-                            State stateMoon = (State) timelineArray[j][i];
-
-                            system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
-                            system.getMoonByName(planet.getName(), moon.getName()).setVelocity(stateMoon.getVelocity());
-                            j++;
-                        }
-                    }
-                }
-            }
-        }
-
+        computeStates(f, h);
         return timelineArray[currentPlanetIndex];
     }
 
-    /**
-     * determines and initializes variables needed for calculating new states.
-     */
-//    //test it if necessary
-//    protected void init(StateInterface y0) {
-//        for (Planet planet : system.getPlanets().values()) {
-//            planets.add(planet);
-//            planets.addAll(planet.getMoons().values());
-//        }
-//
-//        planets.addAll(system.getRockets().values());
-//
-//        timelineArray = new StateInterface[planets.size()][size];
-//        currentPlanetIndex = getIndexOfPlanet((State)y0);
-//    }
-    //test it if necessary
+
     protected void init(double tf, double h) {
 
         this.planets = new ArrayList<>();
@@ -156,13 +105,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
         timelineArray = new StateInterface[planets.size()][size];
     }
 
-    //test it
-//    protected int getIndexOfPlanet(State y0) {
-//        for (int i = 0; i <planets.size(); i++)
-//            if (planets.get(i).getName().equals(y0.getMovingObject().getName()))
-//                return i;
-//        return timelineArray.length-1; // if it's not a planet, it returns the last index, which is the index of the probe
-//    }
 
     /**
      * setting t[0] in the allStates array

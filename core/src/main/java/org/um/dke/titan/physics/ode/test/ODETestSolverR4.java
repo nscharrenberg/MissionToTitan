@@ -12,7 +12,6 @@ public class ODETestSolverR4 extends ODETestSolver{
         Rate k2 = call(f, t + 0.5*h, y.addMul(0.5, k1)).mul(h);
         Rate k3 = call(f, t + 0.5*h, y.addMul(0.5, k2)).mul(h);
         Rate k4 = call(f, t+h, y.addMul(1, k3)).mul(h);
-
         return y.addMul(1/6.0, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
     }
 

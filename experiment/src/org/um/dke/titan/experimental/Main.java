@@ -36,7 +36,7 @@ public class Main {
     static StateInterface[][] timeLineArray;
 
     static double tf = 365 * 24 * 60*60;
-    static double dt = 6 * 60 ;
+    static double dt = 30;
 
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -65,7 +65,15 @@ public class Main {
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
         List<Double> list = getAverage();
-        System.out.println("euler | + average error :" );
+
+        double total = 0;
+
+        for (int i = 0; i < list.size(); i++)
+            total += list.get(i);
+
+        double average = total/list.size();
+
+        System.out.println("euler | + average error : " + average );
         System.out.println("earth: " + list.get(0));
         System.out.println("sun: " + list.get(1));
         System.out.println("titan: " + list.get(2));
@@ -82,7 +90,15 @@ public class Main {
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
         List<Double> list = getAverage();
-        System.out.println("runge | + average error :" );
+
+        double total = 0;
+
+        for (int i = 0; i < list.size(); i++)
+            total += list.get(i);
+
+        double average = total/list.size();
+
+        System.out.println("runge | + average error : " + average );
         System.out.println("earth: " + list.get(0));
         System.out.println("sun: " + list.get(1));
         System.out.println("titan: " + list.get(2));
@@ -99,7 +115,15 @@ public class Main {
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
         List<Double> list = getAverage();
-        System.out.println("verlet | + average error :" );
+
+        double total = 0;
+
+        for (int i = 0; i < list.size(); i++)
+            total += list.get(i);
+
+        double average = total/list.size();
+
+        System.out.println("verlet | + average error : " + average );
         System.out.println("earth: " + list.get(0));
         System.out.println("sun: " + list.get(1));
         System.out.println("titan: " + list.get(2));

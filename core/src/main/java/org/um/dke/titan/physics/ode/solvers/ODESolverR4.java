@@ -26,11 +26,11 @@ public class ODESolverR4 extends ODESolver {
             throw new NullPointerException("The function passed is null");
         }
         Rate k1 = call(f, h, y).mul(h);
-        Rate k2 = call(f, 0.5*h, y.addMul(0.5, k1)).mul(h);
-        Rate k3 = call(f, 0.5*h, y.addMul(0.5, k2)).mul(h);
-        Rate k4 = call(f, 2*h, y.addMul(1, k3)).mul(h);
+        Rate k2 = call(f, h/2.0, y.addMul(0.5, k1)).mul(h);
+        Rate k3 = call(f, h/2.0, y.addMul(0.5, k2)).mul(h);
+        Rate k4 = call(f, 2.0*h, y.addMul(1.0, k3)).mul(h);
 
-        return y.addMul(1/6.0, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
+        return y.addMul(1/6.0, k1.addMull(2.0,k2).addMull(2.0, k3).addMull(1.0, k4));
     }
 
     private Rate call(ODEFunctionInterface f, double t, StateInterface y) {
