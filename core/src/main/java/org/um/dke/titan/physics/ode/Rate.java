@@ -33,6 +33,10 @@ public class Rate implements RateInterface {
         return velocity;
     }
 
+    public Rate mul(double scalar) {
+        return new Rate(acceleration.mul(scalar), velocity.mul(scalar));
+    }
+
     @Override
     public String toString() {
         return "Rate{" +

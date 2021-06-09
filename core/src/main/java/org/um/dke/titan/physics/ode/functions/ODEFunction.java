@@ -37,7 +37,7 @@ public class ODEFunction implements ODEFunctionInterface {
 
         applyForces(object);
         Vector3dInterface rateAcceleration = object.getForce().mul(1/object.getMass()); // a = F/m
-        Vector3dInterface rateVelocity = velocity.add(rateAcceleration.mul(t)); //v + rateacc * t
+        Vector3dInterface rateVelocity = velocity.add(rateAcceleration.mul(t)); //v + rateacc * h
         return new Rate(rateAcceleration, rateVelocity);
     }
 

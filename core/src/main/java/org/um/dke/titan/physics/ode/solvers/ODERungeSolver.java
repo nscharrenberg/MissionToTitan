@@ -33,6 +33,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
             throw new IllegalArgumentException("The time step array passed is not legal");
         }
         addInitialStates();
+        System.out.println("RUNING THE WRONG SOLVER");
         for (int i = 1; i < size; i++) {
             int j = 0;
             for(MovingObject planet : planets)
@@ -146,7 +147,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
             for(MovingObject planet : system.getPlanets().values())
             {
                 // inserting step into the array
-                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                timelineArray[j][i] = step(f, h*i-h, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
@@ -158,7 +159,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
                     Planet p = (Planet) planet;
                     for (Moon moon : p.getMoons().values()) {
                         // inserting step into the array
-                        timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                        timelineArray[j][i] = step(f, h*i-h, timelineArray[j][i - 1], h);
                         State stateMoon = (State) timelineArray[j][i];
 
                         system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
@@ -170,7 +171,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
 
             for (Rocket rocket : system.getRockets().values()) {
                 //inserting step into the array
-                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
+                timelineArray[j][i] = step(f, h*i-h, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
                 //updating the MovingObject's (Planet) state
@@ -189,11 +190,18 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
         if(f == null) {
             throw new NullPointerException("The function passed is null");
         }
-        Rate k1 = (Rate) f.call(h, y);
-        Rate k2 = (Rate) f.call(0.5*h, y.addMul(0.5, k1));
-        Rate k3 = (Rate) f.call(0.5*h, y.addMul(0.5, k2));
-        Rate k4 = (Rate) f.call(h, y.addMul(1, k3));
-        return y.addMul(h/6d, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
+        Rate k1 = call(f, h, y).mul(h);
+        Rate k2 = call(f, 0.5*h, y.addMul(0.5, k1)).mul(h);
+        Rate k3 = call(f, 0.5*h, y.addMul(0.5, k2)).mul(h);
+        Rate k4 = call(f, 2*h, y.addMul(1, k3)).mul(h);
+
+        return y.addMul(1/6.0, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
+    }
+
+
+    private Rate call(ODEFunctionInterface f, double t, StateInterface y) {
+        Rate rate = (Rate) f.call(t,y);
+        return rate;
     }
 
     @Override

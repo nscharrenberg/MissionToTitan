@@ -7,10 +7,13 @@ import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 public class Main {
@@ -22,6 +25,7 @@ public class Main {
     static HashMap<Integer, Vector3dInterface> saturn = null;
     static HashMap<Integer, Vector3dInterface> jupiter = null;
 
+
     static ErrorCalc calcEarth;
     static ErrorCalc calcMoon;
     static ErrorCalc calcSun;
@@ -32,7 +36,7 @@ public class Main {
     static StateInterface[][] timeLineArray;
 
     static double tf = 365 * 24 * 60*60;
-    static double dt = 20;
+    static double dt = 6 * 60 ;
 
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -49,13 +53,10 @@ public class Main {
         System.out.println("******************************** ERROR CALCULATOR********************************\n\n\n\n\n\n");
         importData();
 
-        while(true) {
-            System.out.println("dt: " + dt);
-           // euler();
-            runge();
-            verlet();
-            dt+=10;
-        }
+        System.out.println("dt: " + dt);
+        euler();
+        runge();
+        verlet();
     }
 
     public static void euler() {
@@ -63,16 +64,16 @@ public class Main {
         FactoryProvider.getSolarSystemRepository().computeTimeLineArray(tf, dt);
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
-        calcEarth = new ErrorCalc(earth, timeLineArray);
-        calcMoon = new ErrorCalc(moon, timeLineArray);
-        calcSun = new ErrorCalc(sun, timeLineArray);
-        calcTitan = new ErrorCalc(titan, timeLineArray);
-        calcSaturn = new ErrorCalc(saturn, timeLineArray);
-        calcJupiter = new ErrorCalc(jupiter, timeLineArray);
+        List<Double> list = getAverage();
+        System.out.println("euler | + average error :" );
+        System.out.println("earth: " + list.get(0));
+        System.out.println("sun: " + list.get(1));
+        System.out.println("titan: " + list.get(2));
+        System.out.println("saturn: " + list.get(3));
+        System.out.println("jupiter: " + list.get(4));
+        System.out.println("moon: " + list.get(5));
+        System.out.println();
 
-        double average = getAverage();
-
-        System.out.println("euler | + average error :" + average + " | moon error: " + calcMoon.averageError(SpaceObjectEnum.MOON.getId()));
     }
 
     public static void runge() {
@@ -80,16 +81,15 @@ public class Main {
         FactoryProvider.getSolarSystemRepository().computeTimeLineArrayR(tf, dt);
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
-        calcEarth = new ErrorCalc(earth, timeLineArray);
-        calcMoon = new ErrorCalc(moon, timeLineArray);
-        calcSun = new ErrorCalc(sun, timeLineArray);
-        calcTitan = new ErrorCalc(titan, timeLineArray);
-        calcSaturn = new ErrorCalc(saturn, timeLineArray);
-        calcJupiter = new ErrorCalc(jupiter, timeLineArray);
-
-        double average = getAverage();
-
-        System.out.println("runge | + average error :" + average + " | moon error: " + calcMoon.averageError(SpaceObjectEnum.MOON.getId()));
+        List<Double> list = getAverage();
+        System.out.println("runge | + average error :" );
+        System.out.println("earth: " + list.get(0));
+        System.out.println("sun: " + list.get(1));
+        System.out.println("titan: " + list.get(2));
+        System.out.println("saturn: " + list.get(3));
+        System.out.println("jupiter: " + list.get(4));
+        System.out.println("moon: " + list.get(5));
+        System.out.println();
 
     }
 
@@ -98,16 +98,15 @@ public class Main {
         FactoryProvider.getSolarSystemRepository().computeTimeLineArrayV(tf, dt);
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
 
-        calcEarth = new ErrorCalc(earth, timeLineArray);
-        calcMoon = new ErrorCalc(moon, timeLineArray);
-        calcSun = new ErrorCalc(sun, timeLineArray);
-        calcTitan = new ErrorCalc(titan, timeLineArray);
-        calcSaturn = new ErrorCalc(saturn, timeLineArray);
-        calcJupiter = new ErrorCalc(jupiter, timeLineArray);
-
-        double average = getAverage();
-
-        System.out.println("verlet | + average error :" + average + " | moon error: " + calcMoon.averageError(SpaceObjectEnum.MOON.getId()));
+        List<Double> list = getAverage();
+        System.out.println("verlet | + average error :" );
+        System.out.println("earth: " + list.get(0));
+        System.out.println("sun: " + list.get(1));
+        System.out.println("titan: " + list.get(2));
+        System.out.println("saturn: " + list.get(3));
+        System.out.println("jupiter: " + list.get(4));
+        System.out.println("moon: " + list.get(5));
+        System.out.println();
     }
 
     public static void importData() {
@@ -125,7 +124,7 @@ public class Main {
         FactoryProvider.getSolarSystemRepository().init();
     }
 
-    public static double getAverage() {
+    public static List<Double> getAverage() {
         calcEarth = new ErrorCalc(earth, timeLineArray);
         calcMoon = new ErrorCalc(moon, timeLineArray);
         calcSun = new ErrorCalc(sun, timeLineArray);
@@ -133,13 +132,15 @@ public class Main {
         calcSaturn = new ErrorCalc(saturn, timeLineArray);
         calcJupiter = new ErrorCalc(jupiter, timeLineArray);
 
-        double average =
-                calcEarth.averageError(SpaceObjectEnum.EARTH.getId()) +
-                        calcSun.averageError(SpaceObjectEnum.SUN.getId()) +
-                        calcTitan.averageError(SpaceObjectEnum.TITAN.getId()) +
-                        calcSaturn.averageError(SpaceObjectEnum.SATURN.getId()) +
-                        calcJupiter.averageError(SpaceObjectEnum.JUPITER.getId());
-        return average/5;
+        List<Double> list = new ArrayList<>();
+
+        list.add(calcEarth.averageError(SpaceObjectEnum.EARTH.getId()));
+        list.add(calcSun.averageError(SpaceObjectEnum.SUN.getId()));
+        list.add(calcTitan.averageError(SpaceObjectEnum.TITAN.getId()));
+        list.add(calcSaturn.averageError(SpaceObjectEnum.SATURN.getId()));
+        list.add(calcJupiter.averageError(SpaceObjectEnum.JUPITER.getId()));
+        list.add(calcMoon.averageError(SpaceObjectEnum.MOON.getId()));
+        return list;
     }
 
 }

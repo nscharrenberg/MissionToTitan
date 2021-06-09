@@ -35,7 +35,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double PRESSURE = 100000;
     private final double minI = 1051697;
     private int dt;
-    //private List<Vector3dInterface> engineArray = initializeEngineArray();
 
     /**
      * TODO: Rewrite this method

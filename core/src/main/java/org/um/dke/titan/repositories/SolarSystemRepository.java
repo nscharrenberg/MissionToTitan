@@ -70,7 +70,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     @Override
     public void preprocessing() {
         Map<String, List<MovingObject>> timeline = new HashMap<>();
-        double totalTime = 850 * 60 * 24 * 60;
+        double totalTime = 365 * 60 * 24 * 60;
         double dt = 20;
 
         timeLineArray = getTimeLineArray(totalTime, dt);
@@ -88,7 +88,7 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
         double min = Double.MAX_VALUE;
         int minI = 0;
         for (int i = 0; i < timeLineArray[0].length; i++) {
-            State titan = (State) timeLineArray[SpaceObjectEnum.EARTH.getId()][i];
+            State titan = (State) timeLineArray[SpaceObjectEnum.TITAN.getId()][i];
             Vector3dInterface probe = probeArray[i];
             double dist = probe.dist(titan.getPosition()) - 6371000;
 
