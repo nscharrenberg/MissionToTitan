@@ -3,18 +3,15 @@ package org.um.dke.titan.experimental;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.um.dke.titan.domain.SpaceObjectEnum;
-import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 public class Main {
 

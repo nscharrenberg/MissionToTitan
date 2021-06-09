@@ -29,6 +29,15 @@ public class Planet extends MovingObject {
         this.moons = moons;
     }
 
+    public Planet(String name, float mass, float radius) {
+        super(name, mass, radius, new Vector3D(-1,-1,-1), 1l,new Vector3D(-1,-1,-1));
+    }
+
+    public Planet(String name, float mass, float radius, Map<String, Moon> moons) {
+        super(name, mass, radius, new Vector3D(-1,-1,-1), 1, new Vector3D(-1,-1,-1));
+        this.moons = moons;
+    }
+
     public Moon getMoonByName(String name) {
         return this.moons.get(name);
     }

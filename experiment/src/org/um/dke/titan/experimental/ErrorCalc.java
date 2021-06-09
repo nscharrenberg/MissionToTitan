@@ -3,7 +3,7 @@ package org.um.dke.titan.experimental;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physicsold.ode.State;
 
 import java.util.HashMap;
 import java.util.Map;
