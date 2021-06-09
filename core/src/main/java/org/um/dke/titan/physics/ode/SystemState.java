@@ -7,11 +7,11 @@ import org.um.dke.titan.utils.EmptyPlanetProvider;
 
 import java.util.Map;
 
-public class State implements StateInterface {
+public class SystemState implements StateInterface {
 
     private Map<String, Planet> planets;
 
-    public State() {
+    public SystemState() {
         this.planets = EmptyPlanetProvider.get();
     }
 
