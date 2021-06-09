@@ -64,7 +64,12 @@ public class ODEFunction implements ODEFunctionInterface {
         }
 
         for (Map.Entry<String, PlanetState> entry : universe.getPlanets().entrySet()) {
+
+            if (entry.getKey().equals(name))
+                break;
+
             Vector3dInterface force = newton(state, entry.getValue(), name, entry.getKey());
+
             state.setForce(state.getForce().add(force));
             universe.getPlanet(entry.getKey()).setForce(universe.getPlanet(entry.getKey()).getForce().add(force.mul(-1)));
         }
@@ -103,6 +108,11 @@ public class ODEFunction implements ODEFunctionInterface {
 
         MovingObject planetA = FactoryProvider.getSolarSystemRepository().getPlanetByName(aName);
         MovingObject planetB = FactoryProvider.getSolarSystemRepository().getPlanetByName(bName);
+
+
+        if(a.getPosition().sub(b.getPosition()).getX() == 0 && a.getPosition().sub(b.getPosition()).getY() == 0 && a.getPosition().sub(b.getPosition()).getZ() == 0) {
+            throw new IllegalArgumentException("Invalid arguments; the distance between the 2 objects is zero");
+        }
 
         if (planetA == null || planetB == null) {
             throw new NullPointerException("One of the objects could not be found");

@@ -38,7 +38,7 @@ public class ODESolver implements ODESolverInterface {
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
-        return y.addMul(t,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
+        return y.addMul(h,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
     }
 
 
