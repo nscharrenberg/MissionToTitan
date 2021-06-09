@@ -27,7 +27,6 @@ public class GameRepository implements IGameRepository {
 
     private SpriteBatch batch;
     private SpaceObject toFollow;
-
     private boolean isFocussing;
 
     private Stage stage;
@@ -40,6 +39,7 @@ public class GameRepository implements IGameRepository {
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
     private boolean paused = false;
+    private int time = 0;
 
     @Override
     public void load() {
@@ -106,29 +106,34 @@ public class GameRepository implements IGameRepository {
 
         int whoIsDone = 0;
 
-        for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
-            object.render(batch, camera);
+        // Old Code
+//        for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
+//            object.render(batch, camera);
+//
+//            if (!paused) {
+//                object.next();
+//
+//                if(object.getTimeline().size() <= 0) {
+//                    whoIsDone++;
+//                }
+//            }
+//        }
+//
+//        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
+//            object.render(batch, camera);
+//
+//            if(!paused) {
+//                object.next();
+//
+//                if(object.getTimeline().size() <= 0) {
+//                    whoIsDone++;
+//                }
+//            }
+//        }
 
-            if (!paused) {
-                object.next();
+        FactoryProvider.getSolarSystemRepository().getTimeLineArray()[i];
 
-                if(object.getTimeline().size() <= 0) {
-                    whoIsDone++;
-                }
-            }
-        }
-
-        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
-            object.render(batch, camera);
-
-            if(!paused) {
-                object.next();
-
-                if(object.getTimeline().size() <= 0) {
-                    whoIsDone++;
-                }
-            }
-        }
+        time++;
 
         if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
             game.setScreen(new LoadingScreen());

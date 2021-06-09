@@ -29,7 +29,5 @@ public interface ISolarSystemRepository {
 
     void preprocessing();
 
-    public StateInterface[] getTimeLineArray(ODESolverInterface solver, double tf, double dt);
-
-
+    StateInterface[] getTimeLineArray(ODESolverInterface solver, double tf, double dt);
 }

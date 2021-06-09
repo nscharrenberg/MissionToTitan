@@ -12,7 +12,7 @@ import java.util.Map;
 public class EmptyMapProvider {
 
     public static Map<String, PlanetState> getStateMap() {
-        Map<String, PlanetState> map = new HashMap();
+        Map<String, PlanetState> map = new HashMap<>();
 
 //        map.put("Sun", new Planet("Sun", 1.988500e30f, 696340e3f));
 //        map.put("Mercury", new Planet("Mercury", 3.302e23f, 2439.7f));

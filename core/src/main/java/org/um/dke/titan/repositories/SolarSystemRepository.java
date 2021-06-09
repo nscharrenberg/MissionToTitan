@@ -96,8 +96,6 @@ public class SolarSystemRepository{
         System.out.println("minI = " + minI);
 
         for (int i = 0; i < length; i++) {
-            Queue<MovingObject> tmp = new LinkedList<>();
-
             for (int j = 0; j < timeLineArray.length; j++) {
                 State state = (State) timeLineArray[j][i];
                 MovingObject sio = state.getMovingObject();
