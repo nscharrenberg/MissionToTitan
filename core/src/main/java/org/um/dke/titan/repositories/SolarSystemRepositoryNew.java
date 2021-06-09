@@ -74,7 +74,7 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
     }
 
     public StateInterface[] getTimeLineArray() {
-        return getTimeLineArray();
+        return timeLineArray;
     }
 
     @Override

@@ -14,8 +14,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
+import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
+
+import java.util.Map;
 
 public class GameRepository implements IGameRepository {
     private static int DEFAULT_SKIP_SPEED = 250;
@@ -131,9 +136,24 @@ public class GameRepository implements IGameRepository {
 //            }
 //        }
 
-        FactoryProvider.getSolarSystemRepository().getTimeLineArray()[i];
+        SystemState currentState = (SystemState) FactoryProvider.getSolarSystemRepository().getTimeLineArray()[time];
 
-        time++;
+        for (Map.Entry<String, PlanetState> entry : currentState.getPlanets().entrySet()) {
+            MovingObject found = FactoryProvider.getSolarSystemRepository().getPlanetByName(entry.getKey());
+
+            if (found == null) {
+                found = FactoryProvider.getSolarSystemRepository().getRocketByName(entry.getKey());
+            }
+
+            if (found == null) {
+                throw new NullPointerException("Unable to find space object");
+            }
+
+            found.render(batch, camera);
+            found.setPosition(entry.getValue().getPosition());
+        }
+
+        time+=(1+FactoryProvider.getGameRepository().getTimeToSkip());
 
         if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
             game.setScreen(new LoadingScreen());
