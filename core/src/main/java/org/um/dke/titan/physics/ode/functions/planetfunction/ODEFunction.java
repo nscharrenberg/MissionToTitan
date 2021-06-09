@@ -16,7 +16,7 @@ public class ODEFunction implements ODEFunctionInterface {
 
     @Override
     public RateInterface call(double t, StateInterface y) {
-        if (t <= 0) {
+        if (t < 0) {
             throw new IllegalArgumentException("The time should be higher than 0");
         }
 
@@ -27,8 +27,6 @@ public class ODEFunction implements ODEFunctionInterface {
         for (Map.Entry<String, PlanetState> entry : systemState.getPlanets().entrySet()) {
             applyForces(systemState, entry.getValue(), entry.getKey());
         }
-
-
 
         Map<String, PlanetRate> rates = new HashMap<>();
 

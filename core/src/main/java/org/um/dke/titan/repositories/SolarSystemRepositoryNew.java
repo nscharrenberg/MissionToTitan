@@ -11,6 +11,7 @@ import org.um.dke.titan.physics.ode.functions.planetfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.physics.ode.solvers.ODESolverR4;
 import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
@@ -69,7 +70,7 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
     public void preprocessing() {
         double tf = 60 * 60 * 25 * 365;
         double dt = 100;
-        getTimeLineArray(new ODESolver(), tf, dt);
+        getTimeLineArray(new ODESolverR4(), tf, dt);
 
     }
 

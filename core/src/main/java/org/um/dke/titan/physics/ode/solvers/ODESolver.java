@@ -41,8 +41,6 @@ public class ODESolver implements ODESolverInterface {
         return y.addMul(h,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
     }
 
-
-
     private void init(StateInterface y0) {
         timeLineArray = new StateInterface[size];
         timeLineArray[0] = y0;
