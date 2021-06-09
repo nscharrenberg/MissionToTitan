@@ -153,9 +153,14 @@ public class GameRepository implements IGameRepository {
             found.setPosition(entry.getValue().getPosition());
         }
 
-        time+=(1+FactoryProvider.getGameRepository().getTimeToSkip());
+        if (time >= 0) {
+            time+=(1+FactoryProvider.getGameRepository().getTimeToSkip());
+        }
 
-        if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
+        if (time > FactoryProvider.getSolarSystemRepository().getTimeLineArray().length-1 || time < 0) {
+            timeToSkip = DEFAULT_SKIP_SPEED;
+            time = 0;
+
             game.setScreen(new LoadingScreen());
         }
     }
@@ -245,10 +250,6 @@ public class GameRepository implements IGameRepository {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.O)) {
-            if ((timeToSkip - DEFAULT_SKIP_SPEED_INCREMENT) <= 0) {
-                timeToSkip = 0;
-            }
-
             timeToSkip = timeToSkip - DEFAULT_SKIP_SPEED_INCREMENT;
             speedLabel.setText("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip);
         }
