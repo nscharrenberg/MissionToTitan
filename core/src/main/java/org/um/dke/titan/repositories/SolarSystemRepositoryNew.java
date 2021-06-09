@@ -28,6 +28,12 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
     double[] ts;
 
 
+    /**
+     * TODO: add function have multiple rockets be added at once.
+     * right now, it wont work with more than 1 rocket.
+     */
+
+
     public void preprocessing() {
         double tf = 60 * 60 * 25 * 365;
         double dt = 100;
