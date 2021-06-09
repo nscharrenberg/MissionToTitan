@@ -5,14 +5,13 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physicsold.ode.ProbeSimulator;
+import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.physicsold.ode.functions.ODEFunction;
 import org.um.dke.titan.physicsold.ode.functions.ODEVerletFunction;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolverR4;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolver;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolverVerlet;
-import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.util.*;

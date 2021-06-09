@@ -1,6 +1,5 @@
-package org.um.dke.titan.physicsold.ode;
+package org.um.dke.titan.physics;
 
-import com.badlogic.gdx.math.Plane;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
@@ -11,6 +10,7 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetRate;
 import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
+import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.physicsold.ode.functions.ODEFunction;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolver;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
@@ -19,85 +19,64 @@ import java.util.Map;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
-    private int probeId = SpaceObjectEnum.SHIP.getId();
-    private String probeName = SpaceObjectEnum.SHIP.getName();
-    private Vector3dInterface force;
-    private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
-    private double probeMass = system.getRocketByName(probeName).getMass();
-    private final double probeMassDry = 78000;
-    private double fuelUsed = 0;
-
 
     private StateInterface[] timeLineArray;
     private PlanetState[] probeStateArray;
+    private double h;
+    private int size;
+
+    private String probeName = SpaceObjectEnum.SHIP.getName();
+    private Vector3dInterface force;
+    private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
+
+    private double probeMass = system.getRocketByName(probeName).getMass();
+    private final double probeMassDry = 78000;
     private final double EXHAUST_VELOCITY = 2e4;
     private final double MAXIMUM_THRUST = 3e7;
-    private final double MASS_FLOW_RATE = 2000;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
-    private final double minI = 1051697;
-    private int dt;
 
     /**
-     * TODO: Rewrite this method
+     * TODO: Clean these fields up
      */
+    private double fuelUsed = 0;
+    private final double MASS_FLOW_RATE = 2000;
+    private final double minI = 1051697;
+
+
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double[] ts) {
-        ODESolver solver = new ODESolver();
+        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(), ts);
+        init(p0, v0);
 
-        ODEFunction f = new ODEFunction();
-        StateInterface state = new State(p0, v0, system.getRocketByName(probeName));
-        StateInterface[] stateArray = solver.solve(f, state, ts);
-        Vector3dInterface[] probePositions = new Vector3dInterface[stateArray.length];
-
-        for(int i = 0; i < probePositions.length; i++) {
-            probePositions[i] = ((State)stateArray[i]).getPosition();
+        for (int i = 1; i < size; i++) {
+            h = ts[i] - ts[i-1];
+            probeStateArray[i] = getNextProbeState(i, h);
         }
+
+        // converting from probe state to probe position array
+        Vector3dInterface[] probePositions = new Vector3D[size];
+        for (int i = 0; i < size; i++)
+            probePositions[i] = probeStateArray[i].getPosition();
+
         return probePositions;
     }
 
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
-        dt = (int) h;
+        this.h = h;
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(),tf, h);
+        init(p0, v0);
 
-        probeStateArray = new PlanetState[timeLineArray.length];
-        Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];
-        probeStateArray[0] = new PlanetState(p0, v0);
-        force = new Vector3D(0,0,0);
-
-        for (int i = 1; i < timeLineArray.length; i++) {
-            for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i]).getPlanets().entrySet()) {
-
-                String planetName = entry.getKey();
-                Planet planet = system.getPlanetByName(planetName);
-                double planetMass = planet.getMass();
-
-                PlanetState planetState = ((SystemState) timeLineArray[i]).getPlanet(planetName);
-                PlanetState probeState = probeStateArray[i-1];
-
-                force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
-            }
-            probeStateArray[i] = step(probeStateArray[i - 1], h);
-        }
+        for (int i = 1; i < size; i++)
+            probeStateArray[i] = getNextProbeState(i, h);
 
         // converting from probe state to probe position array
-        for (int i = 0; i < probePositions.length; i++) {
+        Vector3dInterface[] probePositions = new Vector3D[size];
+        for (int i = 0; i < size; i++)
             probePositions[i] = probeStateArray[i].getPosition();
-        }
-        System.out.println("fuel left: " + (probeMass - fuelUsed - probeMassDry));
+
         return probePositions;
-    }
-
-    private boolean[] computeEngineInterval() {
-        boolean[] engineInterval = new boolean[probeStateArray.length];
-
-        for (int i = 0; i < probeStateArray.length; i++) {
-            if(i%2==0){
-                engineInterval[i] = true;}
-        }
-
-        return engineInterval;
     }
 
     private PlanetRate call(double t, PlanetState y) {
@@ -107,11 +86,35 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
     private PlanetState step(PlanetState y, double h) {
-        PlanetRate k1 = call(h, y);
-        PlanetRate k2 = call(0.5*h, y.addMul(0.5, k1));
-        PlanetRate k3 = call(0.5*h, y.addMul(0.5, k2));
-        PlanetRate k4 = call(h, y.addMul(1, k3));
-        return y.addMul(h/6d, k1.addMul(2, k2).addMul(2, k3).addMul(1, k4));
+        PlanetRate k1 = call(h, y).mul(h);
+        PlanetRate k2 = call(0.5*h, y.addMul(0.5, k1)).mul(h);
+        PlanetRate k3 = call(0.5*h, y.addMul(0.5, k2)).mul(h);
+        PlanetRate k4 = call(h, y.addMul(1, k3)).mul(h);
+        return y.addMul(1/6d, k1.addMul(2, k2).addMul(2, k3).addMul(1, k4));
+    }
+
+    private void init(Vector3dInterface p0, Vector3dInterface v0) {
+        size = timeLineArray.length;
+        probeStateArray = new PlanetState[size];
+        probeStateArray[0] = new PlanetState(p0, v0);
+        force = new Vector3D(0,0,0);
+    }
+
+    private PlanetState getNextProbeState(int i, double h) {
+        force = new Vector3D(0,0,0);
+
+        for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
+
+            String planetName = entry.getKey();
+            Planet planet = system.getPlanetByName(planetName);
+            double planetMass = planet.getMass();
+
+            PlanetState planetState = entry.getValue();
+            PlanetState probeState = probeStateArray[i-1];
+
+            force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
+        }
+        return step(probeStateArray[i - 1], h);
     }
 
     /**
@@ -122,6 +125,18 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         double gravConst = G * massA * massB; // G * Mi * Mj
         double modr3 = Math.pow(r.norm(),3); // ||xi - xj||^3
         return r.mul(gravConst/modr3); // full formula together
+    }
+
+
+    private boolean[] computeEngineInterval() {
+        boolean[] engineInterval = new boolean[probeStateArray.length];
+
+        for (int i = 0; i < probeStateArray.length; i++) {
+            if(i%2==0){
+                engineInterval[i] = true;}
+        }
+
+        return engineInterval;
     }
 
     /**
@@ -146,7 +161,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private double calculateMassUsed(double percentageOfPower){
 
-        return dt*(percentageOfPower/100)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
+        return h *(percentageOfPower/100)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
 
     }
 

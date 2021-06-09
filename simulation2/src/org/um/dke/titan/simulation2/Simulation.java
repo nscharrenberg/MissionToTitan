@@ -1,10 +1,9 @@
 package org.um.dke.titan.simulation2;
 
 import org.um.dke.titan.domain.SpaceObjectEnum;
-import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physicsold.ode.ProbeSimulator;
+import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physicsold.ode.State;
 
 import java.util.HashMap;

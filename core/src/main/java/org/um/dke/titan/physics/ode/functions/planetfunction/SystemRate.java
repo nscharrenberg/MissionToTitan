@@ -1,7 +1,6 @@
 package org.um.dke.titan.physics.ode.functions.planetfunction;
 
 import org.um.dke.titan.interfaces.RateInterface;
-import org.um.dke.titan.physicsold.ode.Rate;
 import org.um.dke.titan.utils.EmptyMapProvider;
 
 import java.util.Map;

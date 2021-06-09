@@ -31,5 +31,7 @@ public interface ISolarSystemRepository {
 
     StateInterface[] getTimeLineArray(ODESolverInterface solver, double tf, double dt);
 
+    StateInterface[] getTimeLineArray(ODESolverInterface solver, double[] ts);
+
     StateInterface[] getTimeLineArray();
 }
