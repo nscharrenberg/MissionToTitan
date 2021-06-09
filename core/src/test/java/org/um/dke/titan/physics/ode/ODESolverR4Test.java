@@ -11,21 +11,17 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
-import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
-import org.um.dke.titan.physics.ode.solvers.ODESolver;
-import org.um.dke.titan.physics.ode.solvers.ODEVerletSolver;
+import org.um.dke.titan.physics.ode.solvers.ODESolverR4;
 import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
-import org.um.dke.titan.repositories.SolarSystemRepository;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
-public class ODERungeSolverTest {
+public class ODESolverR4Test {
 
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
     private List<MovingObject> planets = new ArrayList<MovingObject>();
@@ -42,7 +38,7 @@ public class ODERungeSolverTest {
     @Test
     public void testRungeSolvermethodsolveNullFunction(){
 
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         ODEFunctionInterface f = null;
         StateInterface y0 = new State(new Vector3D(1, 1,1 ), new Vector3D(1, 1, 1), new MovingObject("test", 100, 10, new Vector3D(1, 1, 1), 1, new Vector3D(1,1,1)));
         double[] ts = new double[100];
@@ -52,7 +48,7 @@ public class ODERungeSolverTest {
     @Test
     public void testRungeSolvermethodsolveNullState(){
 
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         ODEFunctionInterface f = new ODEFunction();
         StateInterface y0 = null;
         double[] ts = new double[100];
@@ -61,7 +57,7 @@ public class ODERungeSolverTest {
     @Test
     public void testRungeSolvermethodsolveNullTimeStepArray(){
 
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         ODEFunctionInterface f = new ODEFunction();
         StateInterface y0 = new State(new Vector3D(1, 1,1 ), new Vector3D(1, 1, 1), new MovingObject("test", 100, 10,  new Vector3D(1, 1, 1), 1, new Vector3D(1,1,1)));
         double[] ts = null;
@@ -70,7 +66,7 @@ public class ODERungeSolverTest {
 
     @Test
     public void testRungeSolvermethodsolveTSLengthZeroTest() {
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         ODEFunctionInterface f = new ODEFunction();
         StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
         double[] ts = new double[0];
@@ -79,7 +75,7 @@ public class ODERungeSolverTest {
 
     @Test
     public void testStepMethodPassingNullFunction(){
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
         ODEFunctionInterface f = null;
         double t = 0; double h = 0;
@@ -87,7 +83,7 @@ public class ODERungeSolverTest {
     }
     @Test
     public void testStepMethodPassingNullState(){
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         StateInterface y0 = null;
         ODEFunctionInterface f = new ODEFunction();
         double t = 0; double h = 0;
@@ -96,7 +92,7 @@ public class ODERungeSolverTest {
 
     @Test
     public void testRungeSolveMethodComputationsAreCorrect(){
-        ODERungeSolver r = new ODERungeSolver();
+        ODESolverR4 r = new ODESolverR4();
         StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
         ODEFunctionInterface f = new ODEFunction();
         double [] ts = { 0.1, 0.2, 0.3, 0.4 };

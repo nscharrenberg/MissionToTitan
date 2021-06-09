@@ -208,17 +208,6 @@ public class ODESolver implements ODESolverInterface, DataInterface {
                     }
                 }
             }
-
-            for (Rocket rocket : system.getRockets().values()) {
-                // inserting step into the array
-                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
-                State state = (State) timelineArray[j][i];
-
-                // updating the MovingObject's (Planet) state
-                system.getRocketName(rocket.getName()).setPosition(state.getPosition());
-                system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
-                j++;
-            }
         }
     }
 

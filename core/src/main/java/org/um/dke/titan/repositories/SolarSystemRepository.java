@@ -9,9 +9,9 @@ import org.um.dke.titan.physics.ode.ProbeSimulator;
 import org.um.dke.titan.physics.ode.State;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.ODEVerletFunction;
-import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
+import org.um.dke.titan.physics.ode.solvers.ODESolverR4;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
-import org.um.dke.titan.physics.ode.solvers.ODEVerletSolver;
+import org.um.dke.titan.physics.ode.solvers.ODESolverVerlet;
 import org.um.dke.titan.utils.FileImporter;
 
 import java.util.*;
@@ -139,13 +139,13 @@ public class SolarSystemRepository implements org.um.dke.titan.repositories.inte
     }
 
     public void computeTimeLineArrayV(double totalTime, double dt) {
-        ODEVerletSolver odes = new ODEVerletSolver();
+        ODESolverVerlet odes = new ODESolverVerlet();
         ODEFunctionInterface odef = new ODEVerletFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);
     }
 
     public void computeTimeLineArrayR(double totalTime, double dt) {
-        ODERungeSolver odes = new ODERungeSolver();
+        ODESolverR4 odes = new ODESolverR4();
         ODEFunctionInterface odef = new ODEFunction();
         timeLineArray =  odes.getData(odef, totalTime, dt);
     }

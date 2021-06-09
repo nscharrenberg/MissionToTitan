@@ -1,18 +1,13 @@
 package org.um.dke.titan.physics.ode;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.MovingObject;
-import org.um.dke.titan.domain.Planet;
-import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
-import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.physics.ode.functions.ODEFunction;
-import org.um.dke.titan.physics.ode.solvers.ODERungeSolver;
-import org.um.dke.titan.physics.ode.solvers.ODEVerletSolver;
+import org.um.dke.titan.physics.ode.solvers.ODESolverVerlet;
 import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
 
 import java.util.Arrays;
@@ -25,7 +20,7 @@ public class VerletSolverTest {
     @Test
     public void testVerletSolvermethodsolveNullFunction(){
 
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         ODEFunctionInterface f = null;
         StateInterface y0 = new State(new Vector3D(1, 1,1 ), new Vector3D(1, 1, 1), new MovingObject("test", 100, 10, new Vector3D(1, 1, 1), 1, new Vector3D(1,1,1)));
         double[] ts = new double[100];
@@ -35,7 +30,7 @@ public class VerletSolverTest {
     @Test
     public void testVerletSolvermethodsolveNullState(){
 
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         ODEFunctionInterface f = new ODEFunction();
         StateInterface y0 = null;
         double[] ts = new double[100];
@@ -44,7 +39,7 @@ public class VerletSolverTest {
     @Test
     public void testVerletSolvermethodsolveNullTimeStepArray(){
 
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         ODEFunctionInterface f = new ODEFunction();
         StateInterface y0 = new State(new Vector3D(1, 1,1 ), new Vector3D(1, 1, 1), new MovingObject("test", 100, 10,  new Vector3D(1, 1, 1), 1, new Vector3D(1,1,1)));
         double[] ts = null;
@@ -53,7 +48,7 @@ public class VerletSolverTest {
 
     @Test
     public void testVerletSolvermethodsolveTSLengthZeroTest() {
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         ODEFunctionInterface f = new ODEFunction();
         StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
         double[] ts = new double[0];
@@ -62,7 +57,7 @@ public class VerletSolverTest {
 
     @Test
     public void testVerletStepMethodPassingNullFunction(){
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
         ODEFunctionInterface f = null;
         double t = 0; double h = 0;
@@ -70,7 +65,7 @@ public class VerletSolverTest {
     }
     @Test
     public void testVerletStepMethodPassingNullState(){
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         StateInterface y0 = null;
         ODEFunctionInterface f = new ODEFunction();
         double t = 0; double h = 0;
@@ -80,7 +75,7 @@ public class VerletSolverTest {
     /**possible approach to test the solve method in al of the three solvers**/
     @Test
     public void testVerletSolveMethodComputationsAreCorrect(){
-        ODEVerletSolver v = new ODEVerletSolver();
+        ODESolverVerlet v = new ODESolverVerlet();
         StateInterface y0 = new State(new Vector3D(1, 2, 3), new Vector3D(1, 2, 3), new MovingObject("test", 5000, 100, new Vector3D(1, 2, 3), 1, new Vector3D(3,2,1)));
         ODEFunctionInterface f = new ODEFunction();
         double [] ts = { 0.1, 0.2, 0.3, 0.4 };

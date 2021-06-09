@@ -30,7 +30,6 @@ public class ODEFunction implements ODEFunctionInterface {
             throw new IllegalArgumentException("The input passed is not valid");
         }
 
-
         State state = (State) y;
         Vector3dInterface velocity = state.getVelocity();
         MovingObject object = state.getMovingObject();

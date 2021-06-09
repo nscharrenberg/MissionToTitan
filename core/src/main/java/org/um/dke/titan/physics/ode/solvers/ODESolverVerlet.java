@@ -1,28 +1,23 @@
 package org.um.dke.titan.physics.ode.solvers;
 
-import com.badlogic.gdx.utils.Null;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
-import org.um.dke.titan.interfaces.DataInterface;
-import org.um.dke.titan.interfaces.ODEFunctionInterface;
-import org.um.dke.titan.interfaces.ODESolverInterface;
-import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.interfaces.*;
 import org.um.dke.titan.physics.ode.Rate;
 import org.um.dke.titan.physics.ode.State;
-import org.um.dke.titan.physics.ode.functions.ODEFunction;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ODERungeSolver implements ODESolverInterface, DataInterface {
+public class ODESolverVerlet implements ODESolverInterface, DataInterface {
     protected ISolarSystemRepository system; // repository for all planets.
     protected List<MovingObject> planets;
     protected StateInterface[][] timelineArray; // 2d array containing all states of all planets.
     protected int currentPlanetIndex;
     protected int size;
 
-    public ODERungeSolver(){
+    public ODESolverVerlet(){
         this.system = FactoryProvider.getSolarSystemRepository();
     }
 
@@ -30,10 +25,9 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         size = ts.length;
         if(size == 0) {
-            throw new IllegalArgumentException("The time step array passed is not legal");
+            throw new IllegalArgumentException();
         }
         addInitialStates();
-        System.out.println("RUNING THE WRONG SOLVER");
         for (int i = 1; i < size; i++) {
             int j = 0;
             for(MovingObject planet : planets)
@@ -147,7 +141,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
             for(MovingObject planet : system.getPlanets().values())
             {
                 // inserting step into the array
-                timelineArray[j][i] = step(f, h*i-h, timelineArray[j][i - 1], h);
+                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
@@ -159,7 +153,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
                     Planet p = (Planet) planet;
                     for (Moon moon : p.getMoons().values()) {
                         // inserting step into the array
-                        timelineArray[j][i] = step(f, h*i-h, timelineArray[j][i - 1], h);
+                        timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                         State stateMoon = (State) timelineArray[j][i];
 
                         system.getMoonByName(planet.getName(), moon.getName()).setPosition(stateMoon.getPosition());
@@ -170,11 +164,11 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
             }
 
             for (Rocket rocket : system.getRockets().values()) {
-                //inserting step into the array
-                timelineArray[j][i] = step(f, h*i-h, timelineArray[j][i - 1], h);
+                // inserting step into the array
+                timelineArray[j][i] = step(f, h*i, timelineArray[j][i - 1], h);
                 State state = (State) timelineArray[j][i];
 
-                //updating the MovingObject's (Planet) state
+                // updating the MovingObject's (Planet) state
                 system.getRocketName(rocket.getName()).setPosition(state.getPosition());
                 system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
@@ -183,25 +177,21 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
     }
 
     @Override
+    /** t>0, t < 0; t = 0
+     *  h >0; h < 0; h = 0
+     *  y = null
+     *
+     */
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
         if(y == null) {
-            throw new NullPointerException("The state passed is null");
+            throw new NullPointerException();
         }
-        if(f == null) {
-            throw new NullPointerException("The function passed is null");
-        }
-        Rate k1 = call(f, h, y).mul(h);
-        Rate k2 = call(f, 0.5*h, y.addMul(0.5, k1)).mul(h);
-        Rate k3 = call(f, 0.5*h, y.addMul(0.5, k2)).mul(h);
-        Rate k4 = call(f, 2*h, y.addMul(1, k3)).mul(h);
-
-        return y.addMul(1/6.0, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
-    }
-
-
-    private Rate call(ODEFunctionInterface f, double t, StateInterface y) {
-        Rate rate = (Rate) f.call(t,y);
-        return rate;
+        Rate rate = (Rate)f.call(h, y);
+        State state = (State)y;
+        Vector3dInterface newPosition = state.getPosition().add(state.getVelocity().mul(h)).add(state.getAcceleration().mul(h*h/2));
+        Vector3dInterface newVelocity = rate.getVelocity();
+        Vector3dInterface newAcceleration = rate.getAcceleration();
+        return new State(newPosition, newVelocity, newAcceleration, state.getMovingObject());
     }
 
     @Override
@@ -211,6 +201,7 @@ public class ODERungeSolver implements ODESolverInterface, DataInterface {
         computeStates(f, h);
         return timelineArray;
     }
+
     public int getCurrentPlanetIndex(){
         return currentPlanetIndex;
     }
