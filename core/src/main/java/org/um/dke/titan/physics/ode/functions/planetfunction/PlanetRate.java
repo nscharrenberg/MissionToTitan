@@ -15,6 +15,12 @@ public class PlanetRate {
 
     public PlanetRate() { }
 
+
+    public PlanetRate addMul(double step, PlanetRate rate) {
+        return new PlanetRate(acceleration.add(rate.getAcceleration().mul(step)), velocity.add(rate.getVelocity().mul(step)));
+    }
+
+
     public Vector3dInterface getVelocity() {
         return velocity;
     }

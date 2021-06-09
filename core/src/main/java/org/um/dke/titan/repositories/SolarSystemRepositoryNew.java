@@ -7,10 +7,12 @@ import org.um.dke.titan.domain.Rocket;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.planetfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.physics.ode.solvers.ODESolver;
+import org.um.dke.titan.physicsold.ode.ProbeSimulator;
 import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
@@ -70,6 +72,18 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
         double tf = 60 * 60 * 25 * 365;
         double dt = 100;
         getTimeLineArray(new ODESolver(), tf, dt);
+
+        for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
+            ProbeSimulator probeSimulator = new ProbeSimulator();
+            Vector3dInterface[] probeArray = probeSimulator.trajectory(entry.getValue().getPosition(), entry.getValue().getVelocity(), tf, dt);
+
+            for (int i = 0; i < timeLineArray.length; i++) {
+                PlanetState state = new PlanetState();
+                state.setPosition(probeArray[i]);
+                ((SystemState)timeLineArray[i]).setPlanet(entry.getKey(), state);
+            }
+
+        }
 
     }
 

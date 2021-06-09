@@ -1,14 +1,21 @@
 package org.um.dke.titan.physicsold.ode;
 
+import com.badlogic.gdx.math.Plane;
+import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.SpaceObjectEnum;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ProbeSimulatorInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetRate;
+import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.physicsold.ode.functions.ODEFunction;
 import org.um.dke.titan.physicsold.ode.solvers.ODESolver;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
+
+import java.util.Map;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
     private static final double G = 6.67408e-11; // Gravitational Constant
@@ -21,8 +28,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private double fuelUsed = 0;
 
 
-    private StateInterface[][] timeLineArray;
-    private StateInterface[] probeStateArray;
+    private StateInterface[] timeLineArray;
+    private PlanetState[] probeStateArray;
     private final double EXHAUST_VELOCITY = 2e4;
     private final double MAXIMUM_THRUST = 3e7;
     private final double MASS_FLOW_RATE = 2000;
@@ -52,36 +59,31 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
         dt = (int) h;
-        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, h);
-        StateInterface initialState = new State(p0, v0, system.getRocketByName(probeName));
+        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(),tf, h);
 
-        probeStateArray = new StateInterface[timeLineArray[0].length];
+        probeStateArray = new PlanetState[timeLineArray.length];
         Vector3dInterface[] probePositions = new Vector3D[probeStateArray.length];
-        probeStateArray[0] = initialState;
+        probeStateArray[0] = new PlanetState(p0, v0);
         force = new Vector3D(0,0,0);
 
-        for (int i = 1; i < timeLineArray[0].length; i++) {
-            for (int j = 0; j < timeLineArray.length; j++) {
-                if (j == probeId) {
-                    probeStateArray[i] = step(probeStateArray[i - 1], h);
+        for (int i = 1; i < timeLineArray.length; i++) {
+            for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i]).getPlanets().entrySet()) {
 
-                    Vector3dInterface potentialThrust = engine(i);
-                    if(potentialThrust!=null){
-                        force = potentialThrust;
-                    }
-                    else {
-                        force = new Vector3D(0, 0, 0);
-                    }
-                }
-                else {
-                    force = force.add(newtonsLaw((State)probeStateArray[i-1], (State)timeLineArray[j][i]));
-                }
+                String planetName = entry.getKey();
+                Planet planet = system.getPlanetByName(planetName);
+                double planetMass = planet.getMass();
+
+                PlanetState planetState = ((SystemState) timeLineArray[i]).getPlanet(planetName);
+                PlanetState probeState = probeStateArray[i-1];
+
+                force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
             }
-
+            probeStateArray[i] = step(probeStateArray[i - 1], h);
         }
 
+        // converting from probe state to probe position array
         for (int i = 0; i < probePositions.length; i++) {
-            probePositions[i] = ((State)(probeStateArray[i])).getPosition();
+            probePositions[i] = probeStateArray[i].getPosition();
         }
         System.out.println("fuel left: " + (probeMass - fuelUsed - probeMassDry));
         return probePositions;
@@ -98,39 +100,41 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return engineInterval;
     }
 
-    private Rate call(double t, StateInterface y) {
+    private PlanetRate call(double t, PlanetState y) {
         Vector3dInterface rateAcceleration = force.mul(1 / probeMass); // a = F/m
-        Vector3dInterface rateVelocity = ((State)y).getVelocity().add(rateAcceleration.mul(t));
-        return new Rate(rateAcceleration, rateVelocity);
+        Vector3dInterface rateVelocity = y.getVelocity().add(rateAcceleration.mul(t));
+        return new PlanetRate(rateVelocity, rateAcceleration);
     }
 
-    private StateInterface step(StateInterface y, double h) {
-        Rate k1 = call(h, y);
-        Rate k2 = call(0.5*h, y.addMul(0.5, k1));
-        Rate k3 = call(0.5*h, y.addMul(0.5, k2));
-        Rate k4 = call(h, y.addMul(1, k3));
-        return y.addMul(h/6d, k1.addMull(2, k2).addMull(2, k3).addMull(1, k4));
+    private PlanetState step(PlanetState y, double h) {
+        PlanetRate k1 = call(h, y);
+        PlanetRate k2 = call(0.5*h, y.addMul(0.5, k1));
+        PlanetRate k3 = call(0.5*h, y.addMul(0.5, k2));
+        PlanetRate k4 = call(h, y.addMul(1, k3));
+        return y.addMul(h/6d, k1.addMul(2, k2).addMul(2, k3).addMul(1, k4));
     }
 
     /**
      * calculates the Gravitational force of 2 states.
      */
-    private Vector3dInterface newtonsLaw(State a, State b) {
+    private Vector3dInterface newtonsLaw(PlanetState a, PlanetState b, double massA, double massB) {
         Vector3D r = (Vector3D) b.getPosition().sub(a.getPosition()); // xi - xj
-        double gravConst = G * a.getMovingObject().getMass() * b.getMovingObject().getMass(); // G * Mi * Mj
+        double gravConst = G * massA * massB; // G * Mi * Mj
         double modr3 = Math.pow(r.norm(),3); // ||xi - xj||^3
         return r.mul(gravConst/modr3); // full formula together
     }
 
     /**
      *  returns the unit vector of the desired thrust angle
+     *  TODO: change this
      */
     private Vector3dInterface findThrustVector(int index, int planetID){
-        State probe = (State) probeStateArray[index];
-        State state = (State) timeLineArray[planetID][index];
-
-        Vector3dInterface thrustVector = state.getPosition().sub(probe.getPosition());
-        return thrustVector.mul(1/thrustVector.norm());
+//        State probe = (State) probeStateArray[index];
+//        State state = (State) timeLineArray[planetID][index];
+//
+//        Vector3dInterface thrustVector = state.getPosition().sub(probe.getPosition());
+//        return thrustVector.mul(1/thrustVector.norm());
+        return new Vector3D(0,0,0);
     }
 
     /**
@@ -173,26 +177,30 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         }
     }
 
+    /**
+     * TODO: change this
+     */
     private Vector3dInterface engine(int i){
-        if(i>minI && i<minI+31){
-            force = force.add(useEngine(3.7, i-1, SpaceObjectEnum.EARTH.getId()));
-        }
-        else if(i>1120550 && i<1120561){
-            force = force.add(useEngine(9.2, i-1, new Vector3D(-1.306472101663588e+12,
-                    -2.860995816266412e+10,
-                    153013631859.6080), probeStateArray[i-1]));
-        }
-        else if(i==1120562){
-            force = force.add(useEngine(0.5, i-1, new Vector3D(-1.471922101663588e+12,
-                    -2.860995816266412e+10,
-                    8.278183193596080e+06), probeStateArray[i-1]));
-        }
-        else if(i==3631390){
-            force = force.add(useEngine(0.069, i-1, SpaceObjectEnum.EARTH.getId()));
-        }
-        else
-            return null;
-        return force;
+//        if(i>minI && i<minI+31){
+//            force = force.add(useEngine(3.7, i-1, SpaceObjectEnum.EARTH.getId()));
+//        }
+//        else if(i>1120550 && i<1120561){
+//            force = force.add(useEngine(9.2, i-1, new Vector3D(-1.306472101663588e+12,
+//                    -2.860995816266412e+10,
+//                    153013631859.6080), probeStateArray[i-1]));
+//        }
+//        else if(i==1120562){
+//            force = force.add(useEngine(0.5, i-1, new Vector3D(-1.471922101663588e+12,
+//                    -2.860995816266412e+10,
+//                    8.278183193596080e+06), probeStateArray[i-1]));
+//        }
+//        else if(i==3631390){
+//            force = force.add(useEngine(0.069, i-1, SpaceObjectEnum.EARTH.getId()));
+//        }
+//        else
+//            return null;
+//        return force;
+        return new Vector3D(-1,-1,-1);
     }
 
 }

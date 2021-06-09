@@ -19,6 +19,17 @@ public class PlanetState {
         force = new Vector3D(0,0,0);
     }
 
+    public PlanetState addMul(double step, PlanetRate rate) {
+        if(step < 0) {
+            throw new IllegalArgumentException();
+        }
+        if(rate == null) {
+            throw new NullPointerException();
+        }
+        PlanetRate mul = new PlanetRate(rate.getVelocity().mul(step), rate.getAcceleration().mul(step));
+        PlanetState state = new PlanetState(position.add(mul.getVelocity()), velocity.add(mul.getAcceleration()));
+        return state;
+    }
 
 
     public Vector3dInterface getPosition() {
