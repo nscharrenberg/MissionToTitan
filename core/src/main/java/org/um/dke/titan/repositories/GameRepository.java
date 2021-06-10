@@ -14,9 +14,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
-import org.um.dke.titan.interfaces.StateInterface;
-import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
 

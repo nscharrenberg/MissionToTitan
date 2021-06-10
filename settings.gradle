@@ -1,1 +1,3 @@
 include 'desktop', 'core', 'simulation', 'chart', 'simulation2', 'experiment'
+include 'error'
+

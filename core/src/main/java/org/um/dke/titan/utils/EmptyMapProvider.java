@@ -1,7 +1,7 @@
 package org.um.dke.titan.utils;
 
-import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetRate;
-import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 
 import java.util.HashMap;
 import java.util.Map;
