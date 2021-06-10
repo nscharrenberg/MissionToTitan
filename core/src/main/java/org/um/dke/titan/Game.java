@@ -3,6 +3,7 @@ package org.um.dke.titan;
 import com.badlogic.gdx.assets.AssetManager;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.screens.LoadingScreen;
+import org.um.dke.titan.utils.Matrix;
 
 public class Game extends com.badlogic.gdx.Game {
 	private final AssetManager assetManager = new AssetManager();
