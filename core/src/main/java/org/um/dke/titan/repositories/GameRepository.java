@@ -94,6 +94,8 @@ public class GameRepository implements IGameRepository {
 
     @Override
     public void render() {
+
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -101,11 +103,16 @@ public class GameRepository implements IGameRepository {
 
         inputListener(Gdx.graphics.getDeltaTime());
 
+
         if(toFollow != null && !isFocussing) {
             follow();
         }
 
         batch.setProjectionMatrix(camera.combined);
+
+        if (isPaused()) {
+            return;
+        }
 
         // TODO: Add Starry Night Background Image
 
@@ -151,6 +158,7 @@ public class GameRepository implements IGameRepository {
 
             found.render(batch, camera);
             found.setPosition(entry.getValue().getPosition());
+
         }
 
         if (time >= 0) {
