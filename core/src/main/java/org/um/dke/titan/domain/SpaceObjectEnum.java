@@ -15,7 +15,8 @@ public enum SpaceObjectEnum {
     SUN("Sun", "planets/Sun.png", 9),
     MERCURY("Mercury", "planets/Mercury.png", 10),
     SHIP("Probe", "planets/Probe.png", 11),
-    SHIP_2("OtherProbe", "planets/Probe.png", -1);
+    LANDER("Lander", "planets/Probe.png", 12);
+
 
     private final int id;
     private final String name;
