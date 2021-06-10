@@ -14,8 +14,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
+import org.um.dke.titan.interfaces.StateInterface;
+import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
+
+import java.util.Map;
 
 public class GameRepository implements IGameRepository {
     private static int DEFAULT_SKIP_SPEED = 250;
@@ -27,7 +32,6 @@ public class GameRepository implements IGameRepository {
 
     private SpriteBatch batch;
     private SpaceObject toFollow;
-
     private boolean isFocussing;
 
     private Stage stage;
@@ -40,10 +44,11 @@ public class GameRepository implements IGameRepository {
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
     private boolean paused = false;
+    private int time = 0;
 
     @Override
     public void load() {
-        FactoryProvider.getSolarSystemRepository().initWithGdx();
+        FactoryProvider.getSolarSystemRepository().init();
         FactoryProvider.getSolarSystemRepository().preprocessing();
     }
 
@@ -84,11 +89,13 @@ public class GameRepository implements IGameRepository {
         stage.addActor(speedLabel);
 
         // Start from Earth
-        focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()));
+        focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
     }
 
     @Override
     public void render() {
+
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -96,41 +103,48 @@ public class GameRepository implements IGameRepository {
 
         inputListener(Gdx.graphics.getDeltaTime());
 
+
         if(toFollow != null && !isFocussing) {
             follow();
         }
 
         batch.setProjectionMatrix(camera.combined);
 
+        if (isPaused()) {
+            return;
+        }
+
         // TODO: Add Starry Night Background Image
 
         int whoIsDone = 0;
 
-        for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
-            object.render(batch, camera);
+        SystemState currentState = (SystemState) FactoryProvider.getSolarSystemRepository().getTimeLineArray()[time];
 
-            if (!paused) {
-                object.next();
+        for (Map.Entry<String, PlanetState> entry : currentState.getPlanets().entrySet()) {
+            MovingObject found = FactoryProvider.getSolarSystemRepository().getPlanetByName(entry.getKey());
 
-                if(object.getTimeline().size() <= 0) {
-                    whoIsDone++;
-                }
+            if (found == null) {
+                found = FactoryProvider.getSolarSystemRepository().getRocketByName(entry.getKey());
             }
+
+            if (found == null) {
+                throw new NullPointerException("Unable to find space object");
+            }
+
+            found.render(batch, camera);
+            found.setPosition(entry.getValue().getPosition());
+
         }
 
-        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
-            object.render(batch, camera);
-
-            if(!paused) {
-                object.next();
-
-                if(object.getTimeline().size() <= 0) {
-                    whoIsDone++;
-                }
-            }
+        if (time >= 0) {
+            time+=(1+FactoryProvider.getGameRepository().getTimeToSkip());
         }
 
-        if (whoIsDone >= FactoryProvider.getSolarSystemRepository().getPlanets().size() + FactoryProvider.getSolarSystemRepository().getRockets().size()) {
+        if (time > FactoryProvider.getSolarSystemRepository().getTimeLineArray().length-1 || time < 0) {
+            timeToSkip = DEFAULT_SKIP_SPEED;
+            time = 0;
+
+            FactoryProvider.getSolarSystemRepository().refresh();
             game.setScreen(new LoadingScreen());
         }
     }
@@ -210,7 +224,7 @@ public class GameRepository implements IGameRepository {
         // Pause / Resume day
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             paused = !paused;
-            cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom + " Time on timeline: " + FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName()).getTimeOnTimeLine());
+            cameraZoomLbl.setText("Zoom(Z/X): " + this.camera.zoom + " Time on timeline: " + FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()).getTimeOnTimeLine());
 
         }
 
@@ -220,10 +234,6 @@ public class GameRepository implements IGameRepository {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.O)) {
-            if ((timeToSkip - DEFAULT_SKIP_SPEED_INCREMENT) <= 0) {
-                timeToSkip = 0;
-            }
-
             timeToSkip = timeToSkip - DEFAULT_SKIP_SPEED_INCREMENT;
             speedLabel.setText("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip);
         }
@@ -250,9 +260,9 @@ public class GameRepository implements IGameRepository {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
             found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.SATURN.getName(), SpaceObjectEnum.TITAN.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
-            found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP.getName());
+            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
-            found = FactoryProvider.getSolarSystemRepository().getRocketName(SpaceObjectEnum.SHIP_2.getName());
+            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP_2.getName());
         }
 
         if (found != null) {

@@ -4,18 +4,16 @@ import org.um.dke.titan.domain.Moon;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Rocket;
+import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 
 import java.util.Map;
 
 public interface ISolarSystemRepository {
-    void addPlanet(String name, Planet planet);
 
-    void removePlanet(String name);
+    void init();
 
     Map<String, Planet> getPlanets();
-
-    void setPlanets(Map<String, Planet> planets);
 
     Planet getPlanetByName(String name);
 
@@ -25,23 +23,17 @@ public interface ISolarSystemRepository {
 
     void setRockets(Map<String, Rocket> rockets);
 
-    Rocket getRocketName(String name);
+    Rocket getRocketByName(String name);
 
     void addRocket(String name, Rocket object);
 
-    void initWithGdx();
-
     void preprocessing();
 
-    public StateInterface[][] getTimeLineArray(double totalTime, double dt);
+    StateInterface[] getTimeLineArray(ODESolverInterface solver, double tf, double dt);
 
-    public StateInterface[][] getTimeLineArray();
+    StateInterface[] getTimeLineArray(ODESolverInterface solver, double[] ts);
 
-    void computeTimeLineArray(double totalTime, double dt);
+    StateInterface[] getTimeLineArray();
 
-    void init();
-
-    void computeTimeLineArrayR(double tf, double dt);
-
-    void computeTimeLineArrayV(double tf, double dt);
+    void refresh();
 }

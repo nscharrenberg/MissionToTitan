@@ -18,6 +18,10 @@ public class Moon extends MovingObject {
         this.planet = planet;
     }
 
+    public Moon(String name, float mass, float radius) {
+        super(name, mass, radius, new Vector3D(-1, -1, -1), 1, new Vector3D(-1,-1,-1));
+    }
+
     public Planet getPlanet() {
         return planet;
     }

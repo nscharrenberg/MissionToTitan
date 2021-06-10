@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.ode.functions;
+package org.um.dke.titan.physicsold.ode.functions;
 
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
@@ -8,8 +8,8 @@ import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.RateInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.Rate;
-import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physicsold.ode.Rate;
+import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
@@ -30,14 +30,13 @@ public class ODEFunction implements ODEFunctionInterface {
             throw new IllegalArgumentException("The input passed is not valid");
         }
 
-
         State state = (State) y;
         Vector3dInterface velocity = state.getVelocity();
         MovingObject object = state.getMovingObject();
 
         applyForces(object);
         Vector3dInterface rateAcceleration = object.getForce().mul(1/object.getMass()); // a = F/m
-        Vector3dInterface rateVelocity = velocity.add(rateAcceleration.mul(t)); //v + rateacc * t
+        Vector3dInterface rateVelocity = velocity.add(rateAcceleration.mul(t)); //v + rateacc * h
         return new Rate(rateAcceleration, rateVelocity);
     }
 

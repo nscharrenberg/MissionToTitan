@@ -1,9 +1,7 @@
-package org.um.dke.titan.physics.ode;
+package org.um.dke.titan.physicsold.ode;
 
 import org.junit.Test;
 import org.um.dke.titan.domain.SpaceObjectEnum;
-import org.um.dke.titan.domain.Vector3D;
-import org.um.dke.titan.interfaces.RateInterface;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

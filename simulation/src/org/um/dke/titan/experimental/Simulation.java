@@ -1,11 +1,10 @@
 package org.um.dke.titan.experimental;
 
 import org.um.dke.titan.domain.SpaceObjectEnum;
-import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.ProbeSimulator;
-import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physics.ProbeSimulator;
+import org.um.dke.titan.physicsold.ode.State;
 
 public class Simulation {
     private static StateInterface[][] timeLineArray;
@@ -47,7 +46,7 @@ public class Simulation {
     }
 
     public static void simulate(Vector3dInterface unit, int velocity) {
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, dt);
+        //timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(tf, dt);
 
         Vector3dInterface earthVelocity = ((State)(timeLineArray[SpaceObjectEnum.EARTH.getId()][0])).getVelocity();
 

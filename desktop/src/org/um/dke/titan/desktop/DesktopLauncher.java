@@ -10,8 +10,8 @@ public class DesktopLauncher {
 		config.title = "Mission To  Titan";
 		config.resizable = false;
 		config.vSyncEnabled = true;
-		config.width = 1260;
-		config.height = 720;
+		config.width = 1920;
+		config.height = 1080;
 		config.foregroundFPS = 120;
 		new LwjglApplication(new Game(), config);
 	}

@@ -1,6 +1,5 @@
-package org.um.dke.titan.physics.ode;
+package org.um.dke.titan.physicsold.ode;
 
-import com.badlogic.gdx.utils.Null;
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.RateInterface;
@@ -35,9 +34,9 @@ public class State implements StateInterface {
             throw new NullPointerException();
         }
         Rate r = (Rate) rate;
-
         Rate mul = new Rate(r.getAcceleration().mul(step), r.getVelocity().mul(step));
         State state = new State(position.add(mul.getVelocity()), velocity.add(mul.getAcceleration()),object);
+
         return state;
     }
 

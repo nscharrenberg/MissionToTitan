@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.ode;
+package org.um.dke.titan.physicsold.ode;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +10,9 @@ import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
-import org.um.dke.titan.physics.ode.functions.ODEFunction;
-import org.um.dke.titan.physics.ode.solvers.ODESolver;
-import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
+import org.um.dke.titan.physicsold.ode.functions.ODEFunction;
+import org.um.dke.titan.physicsold.ode.solvers.ODESolver;
+import org.um.dke.titan.physicsold.ode.utils.GdxTestRunner;
 
 import java.util.Arrays;
 

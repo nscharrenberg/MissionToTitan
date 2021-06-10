@@ -11,22 +11,21 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class FileImporter {
     public static String planetsFileName = "data_20200401";
     public static String horizonFileNAme = "horizonData_Sun";
 
-    public static void load() {
+    public static Map<String, Planet> load() {
         JsonReader jsonReader = new JsonReader();
         JsonValue base = jsonReader.parse(Gdx.files.internal(String.format("data/%s.json", planetsFileName)));
 
         JsonValue planets = base.get("planets");
         JsonValue rockets = base.get("rockets");
+
+        Map<String, Planet> planetMap = new HashMap<>();
 
         for (JsonValue planet : planets) {
             SpaceObjectEnum found = SpaceObjectEnum.getByName(planet.get("name").asString());
@@ -42,7 +41,7 @@ public class FileImporter {
                 p.setTexture(found.getTexturePath());
             }
 
-            FactoryProvider.getSolarSystemRepository().addPlanet(found.getName(), p);
+            planetMap.put(found.getName(), p);
 
             if (planet.has("moons")) {
                 for (JsonValue moon : planet.get("moons")) {
@@ -79,6 +78,8 @@ public class FileImporter {
 
             FactoryProvider.getSolarSystemRepository().addRocket(found.getName(), r);
         }
+
+        return planetMap;
     }
 
     public static HashMap<Integer, Vector3dInterface> importHorizon(String filename) throws ParseException {

@@ -1,23 +1,23 @@
-package org.um.dke.titan.physics.ode.solvers;
+package org.um.dke.titan.physicsold.ode.solvers;
 
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.*;
-import org.um.dke.titan.physics.ode.Rate;
-import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physicsold.ode.Rate;
+import org.um.dke.titan.physicsold.ode.State;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ODEVerletSolver implements ODESolverInterface, DataInterface {
+public class ODESolverVerlet implements ODESolverInterface, DataInterface {
     protected ISolarSystemRepository system; // repository for all planets.
     protected List<MovingObject> planets;
     protected StateInterface[][] timelineArray; // 2d array containing all states of all planets.
     protected int currentPlanetIndex;
     protected int size;
 
-    public ODEVerletSolver(){
+    public ODESolverVerlet(){
         this.system = FactoryProvider.getSolarSystemRepository();
     }
 
@@ -42,8 +42,8 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
 
                 if (planet instanceof Rocket) {
                     // updating the MovingObject's (Planet) state
-                    system.getRocketName(planet.getName()).setPosition(state.getPosition());
-                    system.getRocketName(planet.getName()).setVelocity(state.getVelocity());
+                    system.getRocketByName(planet.getName()).setPosition(state.getPosition());
+                    system.getRocketByName(planet.getName()).setVelocity(state.getVelocity());
 
                     j++;
                 } else {
@@ -169,8 +169,8 @@ public class ODEVerletSolver implements ODESolverInterface, DataInterface {
                 State state = (State) timelineArray[j][i];
 
                 // updating the MovingObject's (Planet) state
-                system.getRocketName(rocket.getName()).setPosition(state.getPosition());
-                system.getRocketName(rocket.getName()).setVelocity(state.getVelocity());
+                system.getRocketByName(rocket.getName()).setPosition(state.getPosition());
+                system.getRocketByName(rocket.getName()).setVelocity(state.getVelocity());
                 j++;
             }
         }
