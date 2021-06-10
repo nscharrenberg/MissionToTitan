@@ -118,31 +118,6 @@ public class GameRepository implements IGameRepository {
 
         int whoIsDone = 0;
 
-        // Old Code
-//        for (Planet object : FactoryProvider.getSolarSystemRepository().getPlanets().values()) {
-//            object.render(batch, camera);
-//
-//            if (!paused) {
-//                object.next();
-//
-//                if(object.getTimeline().size() <= 0) {
-//                    whoIsDone++;
-//                }
-//            }
-//        }
-//
-//        for (MovingObject object : FactoryProvider.getSolarSystemRepository().getRockets().values()) {
-//            object.render(batch, camera);
-//
-//            if(!paused) {
-//                object.next();
-//
-//                if(object.getTimeline().size() <= 0) {
-//                    whoIsDone++;
-//                }
-//            }
-//        }
-
         SystemState currentState = (SystemState) FactoryProvider.getSolarSystemRepository().getTimeLineArray()[time];
 
         for (Map.Entry<String, PlanetState> entry : currentState.getPlanets().entrySet()) {

@@ -121,12 +121,12 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
     public void refresh() {
         planets = FileImporter.load();
 
-
         if (ts == null) {
             runSolver(solver, tf, dt);
         } else if (tf == 0 && dt == 0) {
             runSolver(solver, ts);
         }
+
     }
 
 
