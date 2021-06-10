@@ -3,6 +3,8 @@ package org.um.dke.titan.experimental;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.functions.planetfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.planetfunction.SystemState;
 import org.um.dke.titan.physicsold.ode.State;
 
 import java.util.HashMap;
@@ -11,9 +13,9 @@ import java.util.Map;
 public class ErrorCalc {
 
     private HashMap<Integer, Vector3dInterface> map;
-    private StateInterface[][] timeLineArray;
+    private StateInterface[] timeLineArray;
 
-    public ErrorCalc(HashMap<Integer, Vector3dInterface> map, StateInterface[][] timeLineArray) {
+    public ErrorCalc(HashMap<Integer, Vector3dInterface> map, StateInterface[] timeLineArray) {
         this.map = map;
         this.timeLineArray = timeLineArray;
     }
@@ -30,8 +32,14 @@ public class ErrorCalc {
             int key = entry.getKey()/((int)Main.dt);
             Vector3D value = (Vector3D) entry.getValue().mul(1000);
 
-            State planet = (State) timeLineArray[planetId][key];
-            total += relativeVecError(value, (Vector3D) planet.getPosition());
+            System.out.println(key);
+
+            SystemState planets = (SystemState) timeLineArray[key];
+
+            System.out.println(value);
+            System.out.println(planets.getPlanet("Earth").getPosition());
+
+            total += relativeVecError(value, (Vector3D) planets.getPlanet("Earth").getPosition());
         }
 
         return total;

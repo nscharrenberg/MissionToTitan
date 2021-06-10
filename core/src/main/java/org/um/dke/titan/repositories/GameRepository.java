@@ -43,7 +43,7 @@ public class GameRepository implements IGameRepository {
     private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel;
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
-    private boolean paused = false;
+    private boolean paused = true;
     private int time = 0;
 
     @Override
@@ -248,21 +248,25 @@ public class GameRepository implements IGameRepository {
         SpaceObject found = null;
 
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
-            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.EARTH.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.MERCURY.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.SUN.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
-            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.JUPITER.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.VENUS.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
-            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.SATURN.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.EARTH.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
-            found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.EARTH.getName(), SpaceObjectEnum.MOON.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.MOON.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
-            found = FactoryProvider.getSolarSystemRepository().getMoonByName(SpaceObjectEnum.SATURN.getName(), SpaceObjectEnum.TITAN.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.MARS.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
-            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.JUPITER.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
-            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP_2.getName());
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.SATURN.getName());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_9)) {
+            found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.TITAN.getName());
+        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_0)) {
+            found = FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName());
         }
 
         if (found != null) {

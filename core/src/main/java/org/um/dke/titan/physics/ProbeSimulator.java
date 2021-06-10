@@ -124,6 +124,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
             force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
         }
+
+        force = force.add(getEngineForce(i-1, 50000).mul(1));
+
         return step(probeStateArray[i - 1], h);
     }
 
@@ -141,7 +144,40 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
 
 
-    // --------------------- Engine Handling  ---------------------
+
+
+    // --------------------- New Engine Handling  ---------------------
+
+    private Vector3dInterface getEngineForce(int i, double idealSpeed) {
+        return getIdealEngineDirection(i, idealSpeed).mul(1);
+    }
+
+
+    private Vector3dInterface getIdealEngineDirection(int i,double idealSpeed) {
+        return getIdealVector(i, idealSpeed).sub(probeStateArray[i].getVelocity());
+    }
+
+
+    private Vector3dInterface getIdealVector(int i, double idealSpeed) {
+        Vector3D totalVector = (Vector3D) getDestination(i);
+        return  totalVector.mul(idealSpeed/totalVector.norm());
+    }
+
+    /**
+     * returns the position we want to travel to
+     * @return
+     */
+    private Vector3dInterface getDestination(int t) {
+        //double time = 256 * 60*60*24;
+        //int t = (int) (time/h);
+        SystemState systemState = (SystemState) timeLineArray[t];
+
+        return systemState.getPlanet("Mars").getPosition();
+    }
+
+
+
+    // --------------------- Old Engine Handling  ---------------------
 
 
     private boolean[] computeEngineInterval() {

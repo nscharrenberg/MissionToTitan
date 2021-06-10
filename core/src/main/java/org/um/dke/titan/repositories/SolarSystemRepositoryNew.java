@@ -1,6 +1,7 @@
 package org.um.dke.titan.repositories;
 
 import org.um.dke.titan.domain.*;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
@@ -35,9 +36,9 @@ public class SolarSystemRepositoryNew implements ISolarSystemRepository {
 
 
     public void preprocessing() {
-        double tf = 60 * 60 * 25 * 365;
-        double dt = 100;
-        getTimeLineArray(new ODESolver(), tf, dt);
+        tf = 60 * 60 * 25 * 365;
+        dt = 100;
+        getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
     }
 
