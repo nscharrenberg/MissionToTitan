@@ -33,7 +33,7 @@ public class Main {
     static StateInterface[] timeLineArray;
 
     static double tf = 365 * 24 * 60*60;
-    static double dt = 100;
+    static double dt = 50;
 
     public static void main(String[] args) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

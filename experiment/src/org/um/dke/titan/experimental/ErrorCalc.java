@@ -34,8 +34,7 @@ public class ErrorCalc {
 
             SystemState planets = (SystemState) timeLineArray[key];
 
-
-            total += relativeVecError(value, (Vector3D) planets.getPlanet("Earth").getPosition());
+            total += relativeVecError(value, (Vector3D) planets.getPlanet(name).getPosition());
         }
 
         return total;
