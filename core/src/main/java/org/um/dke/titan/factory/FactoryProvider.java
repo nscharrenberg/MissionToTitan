@@ -11,7 +11,7 @@ import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 public class FactoryProvider {
     private static IGameRepository gameRepository = new GameRepository();
     private static ISolarSystemRepository solarSystemRepository = new SolarSystemRepositoryNew();
-    private static ODESolverInterface solver = new ODESolver();
+    private static ODESolverInterface solver = new ODESolverR4();
 
     public static IGameRepository getGameRepository() {
         return FactoryProvider.gameRepository;

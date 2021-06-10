@@ -14,7 +14,6 @@ public class ODESolver implements ODESolverInterface {
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         if(y0 == null)
             throw new NullPointerException();
-
         size = ts.length;
 
         init(y0);
@@ -27,7 +26,6 @@ public class ODESolver implements ODESolverInterface {
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
         if(y0 == null)
             throw new NullPointerException();
-
         size = (int)Math.round(tf/h)+1;
 
         init(y0);
