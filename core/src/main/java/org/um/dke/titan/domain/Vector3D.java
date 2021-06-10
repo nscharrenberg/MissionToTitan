@@ -10,6 +10,9 @@ public class Vector3D implements Vector3dInterface {
     protected double y;
     protected double z;
 
+    public Vector3D() {
+    }
+
     public Vector3D(Vector3 position) {
         this.x = position.x;
         this.y = position.y;
@@ -131,11 +134,11 @@ public class Vector3D implements Vector3dInterface {
 
     @Override
     public String toString() {
-        return "Vector3D{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
+        return "(" +
+                + x +
+                "," + y +
+                "," + z +
+                ')';
     }
 
     @Override
@@ -153,6 +156,7 @@ public class Vector3D implements Vector3dInterface {
         return Objects.hash(x, y, z);
     }
 
+    @Override
     public Vector3D clone() {
         return new Vector3D(x, y, z);
     }

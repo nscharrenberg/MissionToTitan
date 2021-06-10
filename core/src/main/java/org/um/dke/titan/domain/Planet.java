@@ -24,23 +24,17 @@ public class Planet extends MovingObject {
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<MovingObject> timeline, Map<String, Moon> moons) {
+    public Planet(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<Vector3dInterface> timeline, Map<String, Moon> moons) {
         super(name, mass, radius, position, zoomLevel, velocity, timeline);
         this.moons = moons;
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
-        super(name, mass, radius, position, zoomLevel, velocity);
-        this.moons = new HashMap<>();
+    public Planet(String name, float mass, float radius) {
+        super(name, mass, radius, new Vector3D(-1,-1,-1), 1l,new Vector3D(-1,-1,-1));
     }
 
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel, velocity);
-        this.moons = moons;
-    }
-
-    public Planet(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Queue<MovingObject> timeline, Map<String, Moon> moons) {
-        super(name, mass, radius, position, zoomLevel, velocity, timeline);
+    public Planet(String name, float mass, float radius, Map<String, Moon> moons) {
+        super(name, mass, radius, new Vector3D(-1,-1,-1), 1, new Vector3D(-1,-1,-1));
         this.moons = moons;
     }
 

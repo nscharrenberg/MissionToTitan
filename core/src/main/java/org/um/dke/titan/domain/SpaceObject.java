@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
 public class SpaceObject {
@@ -18,22 +19,14 @@ public class SpaceObject {
     protected float mass;
     protected float radius;
     protected Vector3dInterface position;
-    protected transient Texture texture;
-    protected transient float zoomLevel;
-    protected transient Label label;
+    protected Texture texture;
+    protected float zoomLevel;
+    protected Label label;
 
     public SpaceObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
         this.name = name;
         this.mass = mass;
         this.position = position;
-        this.radius = radius;
-        this.zoomLevel = zoomLevel;
-    }
-
-    public SpaceObject(String name, float mass, float radius, Vector3 position, float zoomLevel) {
-        this.name = name;
-        this.mass = mass;
-        this.position = new Vector3D(position);
         this.radius = radius;
         this.zoomLevel = zoomLevel;
     }
@@ -75,10 +68,6 @@ public class SpaceObject {
 
     public Vector3dInterface getPosition() {
         return position;
-    }
-
-    public void setPosition(Vector3 position) {
-        this.position = new Vector3D(position);
     }
 
     public void setPosition(Vector3dInterface position) {

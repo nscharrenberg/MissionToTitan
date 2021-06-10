@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MovingObject extends SpaceObject {
-    protected transient Queue<MovingObject> timeline;
-    protected transient Vector3dInterface force;
-    protected transient Vector3dInterface acceleration;
+    protected Queue<Vector3dInterface> timeline;
+    protected Vector3dInterface force;
+    protected Vector3dInterface acceleration;
     protected Vector3dInterface velocity;
 
     public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity) {
@@ -19,25 +19,13 @@ public class MovingObject extends SpaceObject {
         this.velocity = velocity;
     }
 
-    public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<MovingObject> timeline) {
+    public MovingObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<Vector3dInterface> timeline) {
         super(name, mass, radius, position, zoomLevel);
         this.timeline = timeline;
         this.velocity = velocity;
     }
 
-    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
-        super(name, mass, radius, position, zoomLevel);
-        this.timeline = new LinkedList<>();
-        this.velocity = new Vector3D(velocity);
-    }
-
-    public MovingObject(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity ,Queue<MovingObject> timeline) {
-        super(name, mass, radius, position, zoomLevel);
-        this.timeline = timeline;
-        this.velocity = new Vector3D(velocity);
-    }
-
-    public void add(MovingObject object) {
+    public void add(Vector3dInterface object) {
         this.timeline.offer(object);
     }
 
@@ -45,11 +33,11 @@ public class MovingObject extends SpaceObject {
         this.timeline.poll();
     }
 
-    public Queue<MovingObject> getTimeline() {
+    public Queue<Vector3dInterface> getTimeline() {
         return timeline;
     }
 
-    public void setTimeline(Queue<MovingObject> timeline) {
+    public void setTimeline(Queue<Vector3dInterface> timeline) {
         this.timeline = timeline;
     }
 
@@ -100,7 +88,7 @@ public class MovingObject extends SpaceObject {
             return;
         }
 
-        MovingObject object = this.timeline.remove();
+        Vector3dInterface object = this.timeline.remove();
 
         for (int i = 0; i < FactoryProvider.getGameRepository().getTimeToSkip(); i++) {
 
@@ -113,7 +101,7 @@ public class MovingObject extends SpaceObject {
 
         }
 
-        this.position = object.getPosition();
+        this.position = object;
     }
 
     public int getTimeOnTimeLine() {

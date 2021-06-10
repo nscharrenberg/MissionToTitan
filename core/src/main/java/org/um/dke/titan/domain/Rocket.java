@@ -10,15 +10,7 @@ public class Rocket extends MovingObject {
         super(name, mass, radius, position, zoomLevel, velocity);
     }
 
-    public Rocket(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<MovingObject> timeline) {
-        super(name, mass, radius, position, zoomLevel, velocity, timeline);
-    }
-
-    public Rocket(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity) {
-        super(name, mass, radius, position, zoomLevel, velocity);
-    }
-
-    public Rocket(String name, float mass, float radius, Vector3 position, float zoomLevel, Vector3 velocity, Queue<MovingObject> timeline) {
+    public Rocket(String name, float mass, float radius, Vector3dInterface position, float zoomLevel, Vector3dInterface velocity, Queue<Vector3dInterface> timeline) {
         super(name, mass, radius, position, zoomLevel, velocity, timeline);
     }
 }

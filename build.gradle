@@ -7,15 +7,16 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         google()
+        jcenter()
     }
     dependencies {
-        
-
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.2.0"
     }
 }
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: "idea"
 
     version = '1.0'
     ext {
@@ -31,6 +32,7 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        jcenter()
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
@@ -39,7 +41,6 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java-library"
-
 
     dependencies {
         implementation project(":core")
@@ -54,20 +55,68 @@ project(":desktop") {
 
 project(":core") {
     apply plugin: "java-library"
-
+    apply plugin: "jacoco"
+    apply plugin: "org.sonarqube"
 
     dependencies {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         testImplementation(platform('org.junit:junit-bom:5.7.1'))
-        testImplementation('org.junit.jupiter:junit-jupiter')
+        testImplementation('junit:junit:4.13')
+        compile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testImplementation ('org.mockito:mockito-core:3.+')
     }
 
     test {
-        useJUnitPlatform()
-        testLogging {
-            events "passed", "skipped", "failed"
+        finalizedBy jacocoTestReport
+    }
+
+    sonarqube {
+        properties {
+            property 'sonar.projectKey', 'MissionToTitan'
+            property 'sonar.host.url', 'http://localhost:9000'
+            property 'sonar.projectVersion', project.version
+            property 'sonar.language', 'java'
+            property 'sonar.core.codeCoveragePlugin', 'jacoco'
+            property 'sonar.jacoco.reportPaths', "${buildDir}/jacoco/test.exec"
+            property 'sonar.coverage.jacoco.xmlReportPaths', "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        }
+    }
+    tasks['sonarqube'].dependsOn test
+
+    jacoco {
+        toolVersion = "0.8.6"
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            csv.enabled false
+            html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.5
+                }
+            }
+
+            rule {
+                enabled = false
+                element = 'CLASS'
+                includes = ['org.gradle.*']
+
+                limit {
+                    counter = 'LINE'
+                    value = 'TOTALCOUNT'
+                    maximum = 0.3
+                }
+            }
         }
     }
 }
@@ -87,6 +136,20 @@ project(":simulation") {
 }
 
 project(":simulation2") {
+    apply plugin: "java-library"
+
+
+    dependencies {
+        implementation project(":core")
+        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
+project(":experiment") {
     apply plugin: "java-library"
 
 
