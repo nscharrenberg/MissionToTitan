@@ -47,9 +47,8 @@ public class Main {
     }
 
     public static void run() {
-        System.out.println("******************************** ERROR CALCULATOR********************************\n\n\n\n\n\n");
         importData();
-
+        System.out.println("******************************** ERROR CALCULATOR********************************\n\n\n\n\n\n");
         System.out.println("dt: " + dt);
         euler();
     }
