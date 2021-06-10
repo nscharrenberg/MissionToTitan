@@ -1,11 +1,11 @@
-package org.um.dke.titan.physics.ode.functions;
+package org.um.dke.titan.physicsold.ode.functions;
 
 import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.interfaces.RateInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.Rate;
-import org.um.dke.titan.physics.ode.State;
+import org.um.dke.titan.physicsold.ode.Rate;
+import org.um.dke.titan.physicsold.ode.State;
 
 public class ODEVerletFunction extends ODEFunction {
     public ODEVerletFunction() {

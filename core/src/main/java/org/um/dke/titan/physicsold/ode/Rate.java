@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.ode;
+package org.um.dke.titan.physicsold.ode;
 
 import org.um.dke.titan.interfaces.RateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
@@ -31,6 +31,10 @@ public class Rate implements RateInterface {
 
     public Vector3dInterface getVelocity() {
         return velocity;
+    }
+
+    public Rate mul(double scalar) {
+        return new Rate(acceleration.mul(scalar), velocity.mul(scalar));
     }
 
     @Override

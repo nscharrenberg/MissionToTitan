@@ -1,16 +1,10 @@
-package org.um.dke.titan.physics.ode;
+package org.um.dke.titan.physicsold.ode;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.RateInterface;
-import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.functions.ODEFunction;
-import org.um.dke.titan.physics.ode.utils.GdxTestRunner;
-
-import javax.swing.plaf.synth.SynthTextAreaUI;
-import java.util.*;
+import org.um.dke.titan.physicsold.ode.utils.GdxTestRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;

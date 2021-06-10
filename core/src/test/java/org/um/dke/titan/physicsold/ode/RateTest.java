@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.ode;
+package org.um.dke.titan.physicsold.ode;
 
 import org.testng.annotations.Test;
 import org.um.dke.titan.domain.Vector3D;
