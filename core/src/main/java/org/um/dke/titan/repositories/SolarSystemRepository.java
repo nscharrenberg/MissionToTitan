@@ -11,8 +11,10 @@ import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
+import org.um.dke.titan.utils.Matrix3;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +37,17 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
 
     public void preprocessing() {
-        tf = 60 * 60 * 25 * 365;
-        dt = 100;
-        getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
-        deployRockets(tf, dt);
+//        tf = 60 * 60 * 25 * 365;
+//        dt = 100;
+//        getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
+//        deployRockets(tf, dt);
+        double[][] matrix = {{-1,-2,2}, {2,1,1}, {3,4,5}};
+        System.out.println(Arrays.toString(Matrix3.inverse(matrix)[0]));
+        System.out.println(Arrays.toString(Matrix3.inverse(matrix)[1]));
+        System.out.println(Arrays.toString(Matrix3.inverse(matrix)[2]));
+
+
+
     }
 
     public void init() {
