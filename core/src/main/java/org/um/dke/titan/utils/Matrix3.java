@@ -10,9 +10,10 @@ public class Matrix3 {
     public static double[][] inverse(double[][] matrix) {
         sizeCheck(matrix);
 
-        double[][] cofactor = getCofactor(matrix);
-        cofactor = adjugate(cofactor);
         double determinant = getDeterminant3(matrix);
+        double[][] cofactor = getCofactor(matrix);
+
+        cofactor = adjugate(cofactor);
 
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -24,7 +25,9 @@ public class Matrix3 {
 
     // -------------- inverse helper methods --------------
 
-
+    /**
+     * returns the adjugate of a given matrix
+     */
     private static double[][] adjugate(double[][] matrix) {
 
         double[][] adjugate = new double[3][3];
@@ -160,9 +163,7 @@ public class Matrix3 {
          * returns the determinant of the 2x2 matrix
          */
         public double getDeterminant() {
-
             return minor[0][0] * minor[1][1] - minor[0][1] * minor[1][0];
-
         }
 
     }
