@@ -68,42 +68,42 @@ public class Main {
 
         System.out.println("euler | + average error : " + average );
         System.out.println("earth: " + list.get(0));
-//        System.out.println("sun: " + list.get(1));
-//        System.out.println("titan: " + list.get(2));
-//        System.out.println("saturn: " + list.get(3));
-//        System.out.println("jupiter: " + list.get(4));
-//        System.out.println("moon: " + list.get(5));
-//        System.out.println();
+        System.out.println("sun: " + list.get(1));
+        System.out.println("titan: " + list.get(2));
+        System.out.println("saturn: " + list.get(3));
+        System.out.println("jupiter: " + list.get(4));
+        System.out.println("moon: " + list.get(5));
+        System.out.println();
 
     }
 
     public static void importData() {
         try {
             earth = FileImporter.importHorizon("HorizonData_Earth");
-//            moon = FileImporter.importHorizon("HorizonData_Moon");
-//            sun = FileImporter.importHorizon("HorizonData_Sun");
-//            titan = FileImporter.importHorizon("HorizonData_Titan");
-//            saturn = FileImporter.importHorizon("HorizonData_Saturn");
-//            jupiter = FileImporter.importHorizon("HorizonData_Jupiter");
+            moon = FileImporter.importHorizon("HorizonData_Moon");
+            sun = FileImporter.importHorizon("HorizonData_Sun");
+            titan = FileImporter.importHorizon("HorizonData_Titan");
+            saturn = FileImporter.importHorizon("HorizonData_Saturn");
+            jupiter = FileImporter.importHorizon("HorizonData_Jupiter");
         } catch (ParseException e) { e.printStackTrace(); }
     }
 
     public static List<Double> getAverage() {
         calcEarth = new ErrorCalc(earth, timeLineArray);
-//        calcMoon = new ErrorCalc(moon, timeLineArray);
-//        calcSun = new ErrorCalc(sun, timeLineArray);
-//        calcTitan = new ErrorCalc(titan, timeLineArray);
-//        calcSaturn = new ErrorCalc(saturn, timeLineArray);
-//        calcJupiter = new ErrorCalc(jupiter, timeLineArray);
+        calcMoon = new ErrorCalc(moon, timeLineArray);
+        calcSun = new ErrorCalc(sun, timeLineArray);
+        calcTitan = new ErrorCalc(titan, timeLineArray);
+        calcSaturn = new ErrorCalc(saturn, timeLineArray);
+        calcJupiter = new ErrorCalc(jupiter, timeLineArray);
 
         List<Double> list = new ArrayList<>();
 
-        list.add(calcEarth.averageError(SpaceObjectEnum.EARTH.getId()));
-//        list.add(calcSun.averageError(SpaceObjectEnum.SUN.getId()));
-//        list.add(calcTitan.averageError(SpaceObjectEnum.TITAN.getId()));
-//        list.add(calcSaturn.averageError(SpaceObjectEnum.SATURN.getId()));
-//        list.add(calcJupiter.averageError(SpaceObjectEnum.JUPITER.getId()));
-//        list.add(calcMoon.averageError(SpaceObjectEnum.MOON.getId()));
+        list.add(calcEarth.averageError("Earth"));
+        list.add(calcSun.averageError("Sun"));
+        list.add(calcTitan.averageError("Titan"));
+        list.add(calcSaturn.averageError("Saturn"));
+        list.add(calcJupiter.averageError("Jupiter"));
+        list.add(calcMoon.averageError("Moon"));
         return list;
     }
 

@@ -18,15 +18,9 @@ public class ODESolverR4 extends ODESolver{
         SystemRate k1 = call(f, h, y).mul(h);
         SystemRate k2 = call(f,  0.5*h, y.addMul(0.5, k1)).mul(h);
         SystemRate k3 = call(f, 0.5*h, y.addMul(0.5, k2)).mul(h);
-        SystemRate k4 = call(f, 2*h, y.addMul(1, k3)).mul(h);
+        SystemRate k4 = call(f, h, y.addMul(1, k3)).mul(h);
 
-        System.out.println("y = " + ((SystemState)y).getPlanet("Earth").getPosition());
-        System.out.println("mul = " + k1.addMull(2.0, k2).addMull(2.0, k3).addMull(1.0, k4).getRate("Earth").getVelocity());
-        System.out.println("y.addmul = " + ((SystemState)y.addMul(1/6.0, k1.addMull(2.0, k2).addMull(2.0, k3).addMull(1.0, k4))).getPlanet("Earth").getPosition());
-
-        y.addMul(1/6.0, k1.addMull(2.0, k2).addMull(2.0, k3).addMull(1.0, k4));
-
-        return y;
+        return y.addMul(1/6.0, k1.addMull(2.0, k2).addMull(2.0, k3).addMull(1.0, k4));
     }
 
     private SystemRate call(ODEFunctionInterface f, double t, StateInterface y) {

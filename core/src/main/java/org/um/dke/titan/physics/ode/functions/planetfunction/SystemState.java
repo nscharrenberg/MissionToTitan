@@ -25,6 +25,7 @@ public class SystemState implements StateInterface {
             throw new IllegalArgumentException("A rate must be provided");
         }
 
+
         SystemRate r = (SystemRate)rate;
         SystemRate nextRate = new SystemRate();
         SystemState nextState = new SystemState();
@@ -64,7 +65,6 @@ public class SystemState implements StateInterface {
         PlanetState nextTempState = new PlanetState();
         nextTempState.setPosition(current.getPosition().add(rate.getVelocity()));
         nextTempState.setVelocity(current.getVelocity().add(rate.getAcceleration()));
-
         return nextTempState;
     }
 
@@ -75,6 +75,14 @@ public class SystemState implements StateInterface {
     public void setPlanet(String name, PlanetState planet) {
         this.planets.put(name, planet);
     }
+
+//    private void updatePlanet(String name, PlanetState newState) {
+//        System.out.println(name);
+//        PlanetState planetState = planets.get(name);
+//        planetState.setPosition(newState.getPosition());
+//        planetState.setVelocity(newState.getVelocity());
+//        planetState.setForce(newState.getForce());
+//    }
 
     public PlanetState getPlanet(String name) {
         return this.planets.get(name);
