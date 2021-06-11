@@ -30,24 +30,11 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     double[] ts;
 
 
-    /**
-     * TODO: add function have multiple rockets be added at once.
-     * right now, it wont work with more than 1 rocket.
-     */
-
-
     public void preprocessing() {
-//        tf = 60 * 60 * 25 * 365;
-//        dt = 100;
-//        getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
-//        deployRockets(tf, dt);
-        double[][] matrix = {{-1,-2,2}, {2,1,1}, {3,4,5}};
-        System.out.println(Arrays.toString(Matrix3.inverse(matrix)[0]));
-        System.out.println(Arrays.toString(Matrix3.inverse(matrix)[1]));
-        System.out.println(Arrays.toString(Matrix3.inverse(matrix)[2]));
-
-
-
+        tf = 60 * 60 * 25 * 365 * 10;
+        dt = 220;
+        getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
+        deployRockets(tf, dt);
     }
 
     public void init() {
