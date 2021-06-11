@@ -7,6 +7,7 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ProbeSimulatorInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.functions.mathfunctions.State;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
@@ -119,11 +120,11 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             PlanetState planetState = entry.getValue();
             PlanetState probeState = probeStateArray[i-1];
 
+            System.out.println(probeState.toString());
             force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
         }
 
-        force = force.add(getEngineForce(i-1, 50000).mul(1));
-
+        //force = force.add(getEngineForce(i-1, 50000).mul(1));
         return step(probeStateArray[i - 1], h);
     }
 

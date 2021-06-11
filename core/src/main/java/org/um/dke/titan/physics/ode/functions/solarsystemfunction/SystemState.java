@@ -7,7 +7,10 @@ import org.um.dke.titan.utils.EmptyMapProvider;
 import java.util.Map;
 
 public class SystemState implements StateInterface {
-    private Map<String, PlanetState> planets = EmptyMapProvider.getStateMap();
+    //TODO:
+    //watch out with merging
+    //private Map<String, PlanetState> planets = EmptyMapProvider.getStateMap();
+    private Map<String, PlanetState> planets = EmptyMapProvider.getLanderStateMap();
 
     public SystemState() {}
 
@@ -76,13 +79,13 @@ public class SystemState implements StateInterface {
         this.planets.put(name, planet);
     }
 
-//    private void updatePlanet(String name, PlanetState newState) {
-//        System.out.println(name);
-//        PlanetState planetState = planets.get(name);
-//        planetState.setPosition(newState.getPosition());
-//        planetState.setVelocity(newState.getVelocity());
-//        planetState.setForce(newState.getForce());
-//    }
+    private void updatePlanet(String name, PlanetState newState) {
+        System.out.println(name);
+        PlanetState planetState = planets.get(name);
+        planetState.setPosition(newState.getPosition());
+        planetState.setVelocity(newState.getVelocity());
+        planetState.setForce(newState.getForce());
+    }
 
     public PlanetState getPlanet(String name) {
         return this.planets.get(name);

@@ -6,8 +6,10 @@ import org.um.dke.titan.utils.EmptyMapProvider;
 import java.util.Map;
 
 public class SystemRate implements RateInterface {
-
-    private Map<String, PlanetRate> rates = EmptyMapProvider.getRateMap();
+    //todo:
+    //watch out with merging
+    private Map<String, PlanetRate> rates = EmptyMapProvider.getLanderRateMap();
+    //private Map<String, PlanetRate> rates = EmptyMapProvider.getRateMap();
 
     public SystemRate(Map<String, PlanetRate> rates) {
         this.rates = rates;
