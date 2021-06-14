@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.utils.FindMin;
+import org.um.dke.titan.utils.RotationMatrix;
 
 public class SpaceObject {
     public static final Label.LabelStyle GENERIC_LABEL_STYLE = new Label.LabelStyle(new BitmapFont(), Color.PINK);
@@ -45,9 +47,30 @@ public class SpaceObject {
         batch.begin();
 
         if (texture != null) {
-            TextureRegion tr = new TextureRegion(this.texture);
+            Vector3dInterface v1 = RotationMatrix.rotate(rotation,this.position.getX(),this.position.getY() + texture.getHeight());//top left
+            float x1 = (float)v1.getX(); //top left
+            float y1 = (float)v1.getY(); //top left
+            Vector3dInterface v2 = RotationMatrix.rotate(rotation,this.position.getX() + texture.getWidth(), this.position.getY() + texture.getHeight());
+            float x2 = (float)v2.getX(); //top right
+            float y2 = (float)v2.getY(); //top right
+            Vector3dInterface v3 = RotationMatrix.rotate(rotation, this.position.getX() + texture.getWidth(), this.position.getY());
+            float x3 = (float)v3.getX(); //bottom right
+            float y3 = (float)v3.getY(); //bottom right
+            float minX = (float)this.position.getX(), minY = (float)this.position.getY();
+            if(rotation < 180) {// <180 deg top left & top right
+                minX = FindMin.findMin(x1,x2);
+                minY = FindMin.findMin(y1,y2);
+            } else if(rotation >=180) {// >180 top right & bottom right
+                minX = FindMin.findMin(x2,x3);
+                minY = FindMin.findMin(y2,y3);
+            }
+            System.out.println("X:"+this.position.getX()+", Y:"+this.position.getY()+ ", minX:"+minX+", minY:"+minY);
+            float offsetX = (float)(minX-this.position.getX()), offsetY = (float)(minY-this.position.getY());
+            System.out.println("xOff:"+offsetX+", yOff"+offsetY);
             //rotation is counterclockwise
-            batch.draw(tr, (float)this.position.getX(), (float)this.position.getY(), 300, 300, getDiameter(), getDiameter(), 1, 1, rotation++);
+            TextureRegion tr = new TextureRegion(this.texture);
+            batch.draw(tr, (float)this.position.getX() + offsetX, (float)this.position.getY() + offsetY, 0, 0, getDiameter(), getDiameter(), 1, 1, rotation*-1);
+            rotation++;
         }
         if(rotation >= 359)
             rotation = 0;
