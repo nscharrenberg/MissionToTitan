@@ -28,7 +28,8 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(GdxTestRunner.class)
 public class RotationMatrixText {
-
+    public static final double DELTA = 1e-2;
+    //rotation testing
     /**
      * r:0, x: b n, y: -1
      */
@@ -43,8 +44,8 @@ public class RotationMatrixText {
         double corX = -872341;
         double corY = -1;
 
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
     }
 
     @Test
@@ -58,11 +59,11 @@ public class RotationMatrixText {
         Vector3dInterface newV = RotationMatrix.rotate(degrees,x,y);
         double newX = newV.getX();
         double newY = newV.getY();
-        double corX = -1.52e4;
+        double corX = 1.52e4;
         double corY = 8.73e5;
 
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
     }
     @Test
     /**
@@ -75,11 +76,11 @@ public class RotationMatrixText {
         Vector3dInterface newV = RotationMatrix.rotate(degrees,x,y);
         double newX = newV.getX();
         double newY = newV.getY();
-        double corX = 37;
-        double corY = -1;
+        double corX = -37;
+        double corY = 1;
 
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
     }
 
     /*
@@ -93,10 +94,10 @@ public class RotationMatrixText {
         Vector3dInterface newV = RotationMatrix.rotate(degrees, x, y);
         double newX = newV.getX();
         double newY = newV.getY();
-        double corX = 20.7;
-        double corY = 30.7;
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        double corX = -20.7;
+        double corY = -30.7;
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
     }
 
     /*
@@ -112,8 +113,8 @@ public class RotationMatrixText {
         double newY = newV.getY();
         double corX = 1;
         double corY = -324532457;
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
     }
 
     /*
@@ -128,9 +129,9 @@ public class RotationMatrixText {
         double newX = newV.getX();
         double newY = newV.getY();
         double corX = 6.45;
-        double corY = 16.8;
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        double corY = -16.8;
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
     }
 
 
@@ -147,7 +148,86 @@ public class RotationMatrixText {
         double newY = newV.getY();
         double corX = -456756;
         double corY = -1;
-        assertEquals(corX, newX, 1e-7);
-        assertEquals(corY, newY, 1e-7);
+        assertEquals(corX, newX, DELTA);
+        assertEquals(corY, newY, DELTA);
+    }
+    //Rotation matrix testing
+    @Test
+    public void testRMCaseOne(){
+        double degrees = 0* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{1,0},{0,1}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
+    }
+    @Test
+    public void testRMCaseTwo(){
+        double degrees = 1* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{1,0.0175},{-0.0175,1}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
+    }
+    @Test
+    public void testRMCaseThree(){
+        double degrees = 90* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{0,1},{-1,0}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
+    }
+
+    @Test
+    public void testRMCaseFour(){
+        double degrees = 214* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{-0.829,-0.559},{0.559,-0.829}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
+    }
+    @Test
+    public void testRMCaseFive(){
+        double degrees = 360* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{1,0},{0,1}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
+    }
+    @Test
+    public void testRMCaseSix(){
+        double degrees = 69* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{0.358,0.934},{-0.934,0.358}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
+    }
+    @Test
+    public void testRMCaseSeven(){
+        double degrees = 180* Math.PI/180.0;
+        double[][] m = RotationMatrix.rotationMatrix(degrees);
+        double[][] corM = {{-1,0},{0,-1}};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                assertEquals(corM[i][j], m[i][j], DELTA);
+            }
+        }
     }
 }
