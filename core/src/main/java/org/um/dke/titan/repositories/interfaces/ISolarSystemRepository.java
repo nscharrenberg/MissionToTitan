@@ -1,7 +1,6 @@
 package org.um.dke.titan.repositories.interfaces;
 
 import org.um.dke.titan.domain.Moon;
-import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Rocket;
 import org.um.dke.titan.interfaces.ODESolverInterface;

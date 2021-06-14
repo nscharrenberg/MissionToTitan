@@ -7,8 +7,9 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.physics.ProbeSimulator;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.solvers.NewtonRaphson;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -29,10 +30,17 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
 
     public void preprocessing() {
-        tf = 60 * 60 * 25 * 365;
-        dt = 50;
+        tf = 60 * 60 * 25 * 450;
+        dt = 1000;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
+
+
+        for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
+           NewtonRaphson.get(entry.getValue().getPosition(), ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition());
+        }
+
+
     }
 
     public void init() {
@@ -74,7 +82,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     }
 
     private void runSolver(ODESolverInterface solver, double tf, double dt) {
-        SystemState y0 = getInitialSystemState();
+        org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, tf, dt);
         this.solver = solver;
         this.tf = tf;
@@ -82,7 +90,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     }
 
     private void runSolver(ODESolverInterface solver, double ts[]) {
-        SystemState y0 = getInitialSystemState();
+        org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, ts);
         this.solver = solver;
         this.ts = ts;
@@ -91,7 +99,25 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     private void deployRockets(double tf, double dt) {
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
-            Vector3dInterface[] probeArray = probeSimulator.trajectory(entry.getValue().getPosition(), entry.getValue().getVelocity(), tf, dt);
+            Vector3D velocity = new Vector3D(2217961.651088742,449455.8172107437,410786.67049454193);
+
+            Vector3dInterface[] probeArray = probeSimulator.trajectory(entry.getValue().getPosition(),velocity, tf, dt);
+
+
+            String planetname = "Titan";
+            Vector3D min = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet(planetname).getPosition().sub(probeArray[0]);
+
+            for (int i = 0; i < probeArray.length; i++) {
+                Vector3D probePos = (Vector3D) probeArray[i];
+                Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet(planetname).getPosition();
+
+                if (min.norm() > probePos.dist(planetPos)) {
+                    min = (Vector3D) planetPos.sub(probePos);
+                }
+            }
+
+            System.out.println("MIN: " + min.norm());
+
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {
@@ -102,14 +128,14 @@ public class SolarSystemRepository implements ISolarSystemRepository {
         }
     }
 
-    public SystemState getInitialSystemState() {
+    public org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState getInitialSystemState() {
         Map<String, PlanetState> states = new HashMap<>();
 
         for (Planet planet : planets.values()) {
 
             states.put(planet.getName(), new PlanetState(planet.getPosition(), planet.getVelocity()));
         }
-        return new SystemState(states);
+        return new org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState(states);
     }
 
     public void refresh() {

@@ -68,7 +68,7 @@ public class NewtonRaphsonExample {
 
 
     /**
-     * returns the jacobi matrix with the partial derivatives
+     * returns the jacobi matrix wi th the partial derivatives
      * filled in with the values of vector x
      */
     static double[][] getJacobian(Vector3D x) {

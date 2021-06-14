@@ -1,8 +1,14 @@
 package org.um.dke.titan.physics.ode.solvers;
 
 import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.factory.FactoryProvider;
+import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ProbeSimulator;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.utils.Matrix3;
+
+import java.util.Arrays;
 
 /** test class for computing example multivariable root finding problems
  *  V(n+1) = V(n) - [J]-1 * F(x)
@@ -18,7 +24,13 @@ import org.um.dke.titan.utils.Matrix3;
 
 public class NewtonRaphson {
 
-    static double h = 50;
+    static double h = 1000;
+    static double tf = 60 * 60 * 24 * 450;
+
+
+    static ProbeSimulator probeSimulator = new ProbeSimulator();
+    static StateInterface[] timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
+    static Vector3D pStart;
 
     /**
      * runs V(n+1) = V(n) - [J]-1 * F(x) where:
@@ -27,47 +39,55 @@ public class NewtonRaphson {
      * o F is the column matrix containing all functions f(x1 ... xn).
      *   in the case of the probe, that means the coordinate of the probe (x,y,z)
      */
-    public static Vector3dInterface get(Vector3dInterface position, Vector3dInterface destination, Vector3dInterface velocity) {
+    public static Vector3dInterface get(Vector3dInterface position, Vector3dInterface destination) {
+        System.out.println("running newton raphson:");
         double e = 1e-3; // error convergence bound;
+        pStart = (Vector3D) position;
 
 
         // x1 can be whatever just to initialize, but distance between x1 and xPrev > e
         // for the loop to be able to start
         Vector3D x1 = new Vector3D(1,2,3); // x(n+1)
-
-        Vector3D x = (Vector3D) velocity; // initial guess
+        Vector3D x = new Vector3D(0,0,0); // initial guess
         Vector3D xPrev = x;   //x(n-1)
 
-        //while(x1.sub(xPrev).norm() > e) {
-            double [][] jInverse = Matrix3.inverse(getJacobian(position, velocity));
-            Vector3D F = (Vector3D) destination.sub(position);
+        while(x1.sub(xPrev).norm() > e) {
+            double [][] jInverse = Matrix3.inverse(getJacobian(x));
+            Vector3D F = (Vector3D) F(x);
 
             x1 = (Vector3D) x.sub(Matrix3.multiply(jInverse, F));
 
-            //System.out.println("x = " + x);
-
             xPrev = x;
             x = x1;
-            //System.out.println("x1 = " + x1);
-            //System.out.println("error: " + x1.sub(xPrev).norm());
-        //}
+            System.out.print("difference between new and previous one: " +( getMinDistanceToTitan(x1).norm() - F.norm()));
+            System.out.print("  ||  x1: " + getMinDistanceToTitan(x1).norm() + ". x: " + F.norm());
+            System.out.println("x1: " + x1);
+        }
 
-        return x1.mul(-1);
+        return x1;
+    }
+
+    static Vector3D getMinDistanceToTitan(Vector3dInterface startVelocity) {
+        Vector3D[] probeArray =  (Vector3D[]) probeSimulator.trajectory(pStart, startVelocity, tf, h);
+        String planetname = "Titan";
+        Vector3D min = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet(planetname).getPosition().sub(probeArray[0]).sub(new Vector3D(2574700 + 150000, 0, 0));
+
+        for (int i = 0; i < probeArray.length; i++) {
+            Vector3D probePos = probeArray[i];
+            Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet(planetname).getPosition().sub(new Vector3D(2574700 + 150000, 0, 0));
+
+            if (min.norm() > probePos.dist(planetPos)) {
+                min = (Vector3D) planetPos.sub(probePos);
+            }
+        }
+        return min;
     }
 
     /**
      * column matrix containing all functions f(x1 ... xn)
      */
-    static Vector3dInterface F(Vector3dInterface vector) {
-        double x1 = vector.getX();
-        double x2 = vector.getY();
-        double x3 = vector.getZ();
-
-        double x = 3.0 * x1 - Math.cos(x2 * x3) - 3.0/2.0;
-        double y = 4.0 * (x1*x1) - 625.0 * (x2*x2) + 2*x3 - 1.0;
-        double z = 20 * x3 + Math.exp(-x1*x2) + 9;
-
-        return new Vector3D(x,y,z);
+    static Vector3dInterface F(Vector3dInterface x) {
+        return getMinDistanceToTitan(x);
     }
 
 
@@ -75,12 +95,11 @@ public class NewtonRaphson {
      * returns the jacobi matrix with the partial derivatives
      * filled in with the values of vector x
      */
-    static double[][] getJacobian(Vector3dInterface g, Vector3dInterface v) {
+    static double[][] getJacobian(Vector3dInterface v) {
         double [][] J = new double[3][3];
 
-        /**
-         * TODO: COPIED, PLEASE DO NOT LEAVE IT LIKE THIS DAAN! (that's me)
-         */
+        double h = 2;
+
 
         Vector3D xPlusH = new Vector3D(v.getX() + h, v.getY(), v.getZ());
         Vector3D xMinusH = new Vector3D(v.getX() - h, v.getY(), v.getZ());
@@ -88,19 +107,18 @@ public class NewtonRaphson {
         Vector3D yMinusH = new Vector3D(v.getX(), v.getY() - h, v.getZ());
         Vector3D zPlusH = new Vector3D(v.getX(), v.getY(), v.getZ() + h);
         Vector3D zMinusH = new Vector3D(v.getX(), v.getY(), v.getZ() - h);
-        Vector3dInterface gX = new Vector3D(g.getX(), g.getX(), g.getX());
-        Vector3dInterface gY = new Vector3D(g.getY(), g.getY(), g.getY());
-        Vector3dInterface gZ = new Vector3D(g.getZ(), g.getZ(), g.getZ());
 
-        J[0][0] =  (xPlusH.innerProduct(gX) - xMinusH.innerProduct(gX)) / 2*h;
-        J[0][1] =  (yPlusH.innerProduct(gX) - yMinusH.innerProduct(gX)) / 2*h;
-        J[0][2] =  (zPlusH.innerProduct(gX) - zMinusH.innerProduct(gX)) / 2*h;
-        J[1][0] =  (xPlusH.innerProduct(gY) - xMinusH.innerProduct(gY)) / 2*h;
-        J[1][1] =  (yPlusH.innerProduct(gY) - yMinusH.innerProduct(gY)) / 2*h;
-        J[1][2] =  (zPlusH.innerProduct(gY) - zMinusH.innerProduct(gY)) / 2*h;
-        J[2][0] =  (xPlusH.innerProduct(gZ) - xMinusH.innerProduct(gZ)) / 2*h;
-        J[2][1] =  (yPlusH.innerProduct(gZ) - yMinusH.innerProduct(gZ)) / 2*h;
-        J[2][2] =  (zPlusH.innerProduct(gZ) - zMinusH.innerProduct(gZ)) / 2*h;
+        J[0][0] =  (F(xPlusH).getX() - F(xMinusH).getX()) / 2*h;
+        J[0][1] =  (F(yPlusH).getX() - F(yMinusH).getX()) / 2*h;
+        J[0][2] =  (F(zPlusH).getX() - F(zMinusH).getX()) / 2*h;
+
+        J[1][0] =  (F(xPlusH).getY() - F(xMinusH).getY()) / 2*h;
+        J[1][1] =  (F(yPlusH).getY() - F(yMinusH).getY()) / 2*h;
+        J[1][2] =  (F(zPlusH).getY() - F(zMinusH).getY()) / 2*h;
+
+        J[2][0] =  (F(xPlusH).getZ() - F(xMinusH).getZ()) / 2*h;
+        J[2][1] =  (F(yPlusH).getZ() - F(yMinusH).getZ()) / 2*h;
+        J[2][2] =  (F(zPlusH).getZ() - F(zMinusH).getZ()) / 2*h;
 
         return J;
     }
