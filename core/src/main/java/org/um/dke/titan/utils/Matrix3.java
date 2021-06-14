@@ -1,7 +1,27 @@
 package org.um.dke.titan.utils;
 
 
+import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.interfaces.Vector3dInterface;
+
 public class Matrix3 {
+
+    /**
+     * vector transformation of the vector "vector" by the matrix "matrix"
+     */
+    public static Vector3dInterface multiply(double[][] matrix, Vector3dInterface vector) {
+        sizeCheck(matrix);
+
+        double[] result = new double[3];
+        double[] v = { vector.getX(), vector.getY(), vector.getZ() };
+
+        for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 3; i++)
+                result[j] += matrix[j][i] * v[i];
+
+        return new Vector3D(result[0], result[1], result[2]);
+    }
+
 
     /**
      * return the inverse of a 3x3 matrix
