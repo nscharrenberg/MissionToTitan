@@ -13,6 +13,7 @@ import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class ProbeSimulator implements ProbeSimulatorInterface {
@@ -20,6 +21,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private StateInterface[] timeLineArray;
     private PlanetState[] probeStateArray;
+    private Vector3dInterface[] probeDirections;
     private double h;
     private int size;
 
@@ -28,6 +30,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
 
     private double probeMass = system.getRocketByName(probeName).getMass();
+
+
     private final double probeMassDry = 78000;
     private final double EXHAUST_VELOCITY = 2e4;
     private final double MAXIMUM_THRUST = 3e7;
@@ -64,18 +68,31 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         this.h = h;
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(),tf, h);
         init(p0, v0);
-
         for (int i = 1; i < size; i++)
             probeStateArray[i] = getNextProbeState(i, h);
 
         // converting from probe state to probe position array
         Vector3dInterface[] probePositions = new Vector3D[size];
+
         for (int i = 0; i < size; i++){
             probePositions[i] = probeStateArray[i].getPosition();
+            probeDirections[i] = probeStateArray[i].getVelocity();
         }
         System.out.println(probePositions[0]);
         return probePositions;
     }
+
+
+
+
+
+
+    //--------------------Lander----------------------------
+
+
+
+
+
 
 
 
