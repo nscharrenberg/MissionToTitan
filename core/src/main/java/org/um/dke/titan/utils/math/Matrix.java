@@ -28,7 +28,6 @@ public class Matrix {
         return transpose(this);
     }
 
-
     public Matrix inverse() {
         return inverse(this);
     }
@@ -43,6 +42,18 @@ public class Matrix {
 
     public Matrix cofactor() {
         return cofactor(this);
+    }
+
+    public Matrix add(Matrix other) {
+        return add(this, other);
+    }
+
+    public Matrix substract(Matrix other) {
+        return substract(this, other);
+    }
+
+    public Matrix multiply(Matrix other) {
+        return multiply(this, other);
     }
 
     public int getRows() {
@@ -180,5 +191,42 @@ public class Matrix {
         }
 
         return -1;
+    }
+
+    public static Matrix add(Matrix a, Matrix b) {
+        if (a.getRows() != b.getRows() || a.getColumns() != b.getColumns()) {
+            throw new IllegalStateException("Both Matrices should have the same dimension");
+        }
+
+        Matrix aMatrix = new Matrix(a.getRows(), a.getColumns());
+        for (int i = 0; i < a.getRows(); i++) {
+            for (int j = 0; j < a.getColumns(); j++) {
+                aMatrix.setValueAt(i, j, a.getValueAt(i, j) + b.getValueAt(i, j));
+            }
+        }
+
+        return aMatrix;
+    }
+
+    public static Matrix substract(Matrix a, Matrix b) {
+        return add(a, b.multiply(-1));
+    }
+
+    public static Matrix multiply(Matrix a, Matrix b) {
+        Matrix mMatrix = new Matrix(a.getRows(), b.getColumns());
+
+        for (int i = 0; i < mMatrix.getRows(); i++) {
+            for (int j = 0; j < mMatrix.getColumns(); j++) {
+                double sum = 0.0;
+
+                for (int k = 0; k < a.getColumns(); k++) {
+                    sum += a.getValueAt(i, k) * b.getValueAt(k, j);
+                }
+
+                mMatrix.setValueAt(i, j, sum);
+            }
+        }
+
+        return mMatrix;
     }
 }
