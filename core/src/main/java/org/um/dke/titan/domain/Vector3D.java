@@ -132,7 +132,7 @@ public class Vector3D implements Vector3dInterface {
         return Math.sqrt(Math.pow(x-other.getX(), 2) + Math.pow(y-other.getY(), 2) + Math.pow(z-other.getZ(), 2));
     }
 
-    public double dotProduct(Vector3dInterface other) {
+    public double innerProduct(Vector3dInterface other) {
         return this.x * other.getX()  +  this.y * other.getY()  +  this.z * other.getZ();
     }
 
