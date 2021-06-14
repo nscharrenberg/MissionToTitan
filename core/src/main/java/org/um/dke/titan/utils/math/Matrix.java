@@ -1,5 +1,8 @@
 package org.um.dke.titan.utils.math;
 
+import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.interfaces.Vector3dInterface;
+
 public class Matrix {
     private int rows;
     private int columns;
@@ -22,6 +25,23 @@ public class Matrix {
         this.columns = columns;
 
         this.matrix = new double[rows][columns];
+    }
+
+    public Vector3dInterface toVector() {
+        if (getRows() != 3 && getColumns() != 1) {
+            throw new IllegalStateException("Only able to convert a 3 by 1 matrix to a vector");
+        }
+
+        return new Vector3D(getValueAt(0, 0), getValueAt(1, 0), getValueAt(2, 0));
+    }
+
+    public static Matrix fromVector(Vector3dInterface vector) {
+        Matrix matrix = new Matrix(3, 1);
+        matrix.setValueAt(0, 0, vector.getX());
+        matrix.setValueAt(1, 0, vector.getY());
+        matrix.setValueAt(2, 0, vector.getZ());
+
+        return matrix;
     }
 
     public Matrix transpose() {
