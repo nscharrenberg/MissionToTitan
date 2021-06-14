@@ -14,7 +14,13 @@ import org.junit.runner.RunWith;
  * height: big negative, small negative, -1, 0, 1, small pos, big pos
  *
  * cases:
- *  r:0, w: b n, h
+ *  1. r:0, w: b n, h: -1
+ *  2. r: 1 w: s n, h: b p
+ *  3. r: 90 w: -1 h: s n
+ *  4. r: 214 w: 0 h: s p
+ *  5. r: 360 w: 1 h: b n
+ *  6. r: 69 w: s p h: 0
+ *  7. r 180 w b p h: 1
  */
 public class RotationMatrixText {
 }
