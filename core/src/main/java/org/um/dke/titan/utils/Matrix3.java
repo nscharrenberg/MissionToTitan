@@ -152,7 +152,7 @@ public class Matrix3 {
             throw new IllegalArgumentException("This matrix is not 3x3!");
     }
 
-    static class Minor {
+    private static class Minor {
         double[][] minor;
 
         public Minor(double[][] minor) {
