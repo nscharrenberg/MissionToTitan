@@ -59,8 +59,8 @@ public class RotationMatrixText {
         Vector3dInterface newV = RotationMatrix.rotate(degrees,x,y);
         double newX = newV.getX();
         double newY = newV.getY();
-        double corX = 1.52e4;
-        double corY = 8.73e5;
+        double corX = 15215.953865845378;
+        double corY = 872867.3869196583;
 
         assertEquals(corX, newX, DELTA);
         assertEquals(corY, newY, DELTA);
@@ -95,7 +95,7 @@ public class RotationMatrixText {
         double newX = newV.getX();
         double newY = newV.getY();
         double corX = -20.7;
-        double corY = -30.7;
+        double corY = -30.67439018453655;
         assertEquals(corX, newX, DELTA);
         assertEquals(corY, newY, DELTA);
     }

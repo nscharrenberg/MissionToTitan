@@ -6,7 +6,7 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 public class RotationMatrix {
     /**
      * Rotates any given vector in 2d by degrees counterclockwise
-     * @param degrees to turn counterclockwise
+     * @param degrees to turn clockwise
      * @return a turned vector
      */
     public static Vector3dInterface rotate(double degrees, double x, double y){
