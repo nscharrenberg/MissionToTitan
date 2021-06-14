@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -22,6 +23,7 @@ public class SpaceObject {
     protected Texture texture;
     protected float zoomLevel;
     protected Label label;
+    private int rotation = 0;
 
     public SpaceObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
         this.name = name;
@@ -43,9 +45,12 @@ public class SpaceObject {
         batch.begin();
 
         if (texture != null) {
-            batch.draw(this.texture, (float)this.position.getX(), (float)this.position.getY(), getDiameter(), getDiameter());
+            TextureRegion tr = new TextureRegion(this.texture);
+            //rotation is counterclockwise
+            batch.draw(tr, (float)this.position.getX(), (float)this.position.getY(), 300, 300, getDiameter(), getDiameter(), 1, 1, rotation++);
         }
-
+        if(rotation >= 359)
+            rotation = 0;
         batch.end();
     }
 

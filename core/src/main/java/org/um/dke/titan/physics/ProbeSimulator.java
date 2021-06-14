@@ -21,7 +21,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private StateInterface[] timeLineArray;
     private PlanetState[] probeStateArray;
-    private Vector3dInterface[] probeDirections;
+    //private Vector3dInterface[] probeDirections;
     private double h;
     private int size;
 
@@ -76,7 +76,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
         for (int i = 0; i < size; i++){
             probePositions[i] = probeStateArray[i].getPosition();
-            probeDirections[i] = probeStateArray[i].getVelocity();
+            //probeDirections[i] = probeStateArray[i].getVelocity();
         }
         System.out.println(probePositions[0]);
         return probePositions;
