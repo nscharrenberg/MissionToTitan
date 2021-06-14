@@ -9,11 +9,11 @@ public class RotationMatrix {
      * @param degrees to turn counterclockwise
      * @return a turned vector
      */
-    public static Vector3dInterface rotate(double degrees, double width, double height){
+    public static Vector3dInterface rotate(double degrees, double x, double y){
         double[][] m = rotationMatrix(degrees);
-        double x = width * m[0][0] + height * m[0][1];
-        double y = width * m[1][0] + height * m[1][1];
-        Vector3dInterface newV = new Vector3D(x, y, 0);
+        double newX = x * m[0][0] + y * m[0][1];
+        double newY = x * m[1][0] + y * m[1][1];
+        Vector3dInterface newV = new Vector3D(newX, newY, 0);
         return newV;
     }
 
@@ -24,7 +24,6 @@ public class RotationMatrix {
      */
     public static double[][] rotationMatrix(double degrees) {
         double[][] m = new double[2][2];
-        degrees *= -1;
         m[0][0] = Math.cos(degrees);
         m[0][1] = Math.sin(degrees);
         m[1][0] = -1* m[0][1];
