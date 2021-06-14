@@ -33,13 +33,10 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double MAXIMUM_THRUST = 3e7;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
-
-    /**
-     * TODO: Clean these fields up
-     */
-    private double fuelUsed = 0;
+    private final double radiusTitan = 2575.5e3;
     private final double MASS_FLOW_RATE = 2000;
-    private final double minI = 1051697;
+
+
 
 
     // --------------------- Trajectories  ---------------------
@@ -73,9 +70,10 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
         // converting from probe state to probe position array
         Vector3dInterface[] probePositions = new Vector3D[size];
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++){
             probePositions[i] = probeStateArray[i].getPosition();
-
+        }
+        System.out.println(probePositions[0]);
         return probePositions;
     }
 
@@ -110,7 +108,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private PlanetState getNextProbeState(int i, double h) {
         force = new Vector3D(0,0,0);
 
-
         for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
 
             String planetName = entry.getKey();
@@ -119,10 +116,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
             PlanetState planetState = entry.getValue();
             PlanetState probeState = probeStateArray[i-1];
+            if(probeStateArray[i-1].getPosition().dist(planetState.getPosition())<radiusTitan){
+                probeState.setVelocity(planetState.getVelocity());
+                return probeState;}
+            else
+                force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
 
-            System.out.println(probeState.toString());
-            force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
         }
+
 
         //force = force.add(getEngineForce(i-1, 50000).mul(1));
         return step(probeStateArray[i - 1], h);

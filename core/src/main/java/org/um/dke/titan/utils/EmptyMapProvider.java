@@ -27,7 +27,7 @@ public class EmptyMapProvider {
 
     public static Map<String, PlanetState> getLanderStateMap() {
         Map<String, PlanetState> map = new HashMap<>();
-        //map.put("Earth", new PlanetState());
+        map.put("Titan", new PlanetState());
         return map;
     }
 
@@ -51,7 +51,7 @@ public class EmptyMapProvider {
     public static Map<String, PlanetRate> getLanderRateMap() {
         Map<String, PlanetRate> map = new HashMap();
 
-        //map.put("Earth",   new PlanetRate());
+        map.put("Titan",   new PlanetRate());
 
 
         return map;

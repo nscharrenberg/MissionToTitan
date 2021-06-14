@@ -35,8 +35,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
 
     public void preprocessing() {
-        tf = 60 * 60 * 25 * 365;
-        dt = 100;
+        tf = 60 * 60 * 25 * 10;
+        dt = 0.1;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
     }
