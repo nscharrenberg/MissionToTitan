@@ -25,7 +25,7 @@ public class LanderSimulator{
         //init lander
         landerMass = 6000;//kg
         force = new Vector3D(0,0,0);
-        landerArray = new PlanetState[(int)Math.round(tf/dt)];
+        landerArray = new PlanetState[(int)Math.round(tf/dt) + 1];
         ts = new double[landerArray.length];
         //start landing
         landerArray[0] = y0;
@@ -37,11 +37,12 @@ public class LanderSimulator{
                 landerArray[i] = landerArray[i-1]; //to stop the lander from falling into titan
                 landerArray[i].getPosition().setY(0);
             } else {
-                force = force.add(new Vector3D(0, -g*landerMass, 0));
+                force = force.add(new Vector3D(0, dt*-g*landerMass, 0));
                 landerArray[i] = step(landerArray[i - 1], dt);
+                System.out.println("t: "+ts[i]+" x: " + landerArray[i].getPosition().getX() + " y: " + landerArray[i].getPosition().getY());
             }
 
-            System.out.println("x: " + landerArray[i].getPosition().getX() + " - y: " + landerArray[i].getPosition().getY());
+
         }
     }
 

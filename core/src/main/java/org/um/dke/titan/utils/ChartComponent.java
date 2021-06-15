@@ -14,8 +14,6 @@ public class ChartComponent extends JComponent{
 	private double noXSteps, noYSteps;
 	private double valXStepSize, valYStepSize;
 	private final Color BACKGROUND, GRID, CURVE, AXIS;
-	private int xOffset, yOffset;
-	private boolean gridOn;
 
 	public ChartComponent(double[] xVals, double[] yVals, double chartWidth, double chartHeight, double xStepSize, double yStepSize) {
 		super();
@@ -30,26 +28,15 @@ public class ChartComponent extends JComponent{
 		double maxY = max(yVals);
 		noXSteps = (double) (maxX / xStepSize) + 2;
 		noYSteps = (double) (maxY / yStepSize) + 3;
-		this.xOffset = (int) (chartWidth/2);
-		this.yOffset = (int) (chartHeight/2);
-		this.xStepSize = xOffset / (noXSteps + 1);
-		this.yStepSize = yOffset / (noYSteps + 1);
+		this.xStepSize = chartWidth / (noXSteps + 1);
+		this.yStepSize = chartHeight / (noYSteps + 1);
 		BACKGROUND = Color.white;
 		GRID = Color.LIGHT_GRAY;
 		CURVE = Color.red;
 		AXIS = Color.black;
-		gridOn = true;
 	}
 	
-	private double max (double[] vals) {
-		double minv = abs(minV(vals));
-		double maxv = maxV(vals);
-		return maxv < minv ? minv : maxv;
-	}
-	private double abs(double d) {
-		return d < 0 ? -1*d : d;
-	}
-	private  double maxV(double[] vals) {
+	private double max(double[] vals) {
 		double max = vals[0];
 		for(double n : vals) {
 			if(n > max) {
@@ -58,7 +45,7 @@ public class ChartComponent extends JComponent{
 		}
 		return max;
 	}
-	private  double minV(double[] vals) {
+	private double min(double[] vals) {
 		double min = vals[0];
 		for(double n : vals) {
 			if(n < min) {
@@ -74,70 +61,44 @@ public class ChartComponent extends JComponent{
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(BACKGROUND);
 		g2.fillRect(0, 0, (int)chartWidth, (int)chartHeight);
-		if(gridOn) {
-			paintGrid(g2);
-		}
+		g2.setColor(GRID);
 		int i;
+		for(i = 1; i < noXSteps - 1; i++) {
+			g2.drawLine((int)(xStepSize * (i + 1)), (int)(0 + yStepSize), (int)(xStepSize * (i + 1)), (int)(chartHeight - yStepSize));
+		}
+		for(i = 1; i < noYSteps - 1; i++) {
+			g2.drawLine((int)(0 + xStepSize), (int)(chartHeight - yStepSize - yStepSize * i), (int)(chartWidth - xStepSize), (int)(chartHeight - yStepSize -yStepSize * i));
+		}
+		g2.setColor(AXIS);
         g2.setStroke(new BasicStroke(2));
-        paintAxis(g2);
+		//y-axis
+		g2.drawLine((int)(xStepSize), (int)(yStepSize), (int)(xStepSize), (int)(chartHeight - yStepSize));
+		//x-axis
+		g2.drawLine((int)(xStepSize), (int)(chartHeight - yStepSize), (int)(chartWidth - xStepSize), (int)(chartHeight - yStepSize));
+		//x marks
+		for(i = 0; i < noXSteps - 1; i++) {
+			g2.drawLine((int)(xStepSize * (i + 1)), (int)(chartHeight - yStepSize - 8), (int)(xStepSize * (i + 1)), (int)(chartHeight - yStepSize + 7));
+			g2.drawString(i*(int)(valXStepSize)+"", (int)(xStepSize * (i + 1) - 3), (int)(chartHeight - yStepSize + 18));
+		}
+		i = (int) (noXSteps - 1);
+		g2.drawLine((int)(xStepSize * (i + 1)) - 7, (int)(chartHeight - yStepSize - 8), (int)(xStepSize * (i + 1)), (int)(chartHeight - yStepSize));
+		g2.drawLine((int)(xStepSize * (i + 1)), (int)(chartHeight - yStepSize), (int)(xStepSize * (i + 1)) - 7, (int)(chartHeight - yStepSize + 7));
+		//y marks
+		for(i = 0; i < noYSteps - 1; i++) {
+			g2.drawLine((int)(xStepSize - 8), (int)(chartHeight - yStepSize - yStepSize * i), (int)(xStepSize + 7), (int)(chartHeight - yStepSize -yStepSize * i));
+			g2.drawString(i*(int)(valYStepSize)+"", (int)(xStepSize - 18), (int)(chartHeight - yStepSize - yStepSize * i));
+		}
+		i = (int) (noYSteps - 1);
+		g2.drawLine((int)(xStepSize - 8), (int)(chartHeight - yStepSize - yStepSize * i) + 7, (int)(xStepSize), (int)(chartHeight - yStepSize -yStepSize * i));
+		g2.drawLine((int)(xStepSize), (int)(chartHeight - yStepSize - yStepSize * i), (int)(xStepSize + 7), (int)(chartHeight - yStepSize -yStepSize * i) + 7);
 		g.setColor(CURVE);
 		double prevXVal = xVals[0]/valXStepSize, prevYVal = yVals[0]/valYStepSize;
 		for(i = 1; i < xVals.length; i++) {
 			double xVal = xVals[i]/valXStepSize, yVal = yVals[i]/valYStepSize;
-			g2.drawLine((int)(prevXVal * xStepSize + xStepSize) + xOffset,  (int)(chartHeight - yStepSize*2 - prevYVal * yStepSize + yStepSize) - yOffset, (int)(xVal * xStepSize + xStepSize) + xOffset,  (int)(chartHeight - 2*yStepSize - yVal * yStepSize + yStepSize) - yOffset);
+			g2.drawLine((int)(prevXVal * xStepSize + xStepSize),  (int)(chartHeight - yStepSize*2 - prevYVal * yStepSize + yStepSize), (int)(xVal * xStepSize + xStepSize),  (int)(chartHeight - 2*yStepSize - yVal * yStepSize + yStepSize));
 			//end
 			prevXVal = xVal;
 			prevYVal = yVal;
 		}
-	}
-	
-	public void paintGrid(Graphics2D g2) {
-		int i;
-		g2.setColor(GRID);
-		//y
-		for(i = (int)(-1*(noXSteps - 1)); i < noXSteps - 1; i++) {
-			g2.drawLine((int)(xStepSize * (i + 1)) + xOffset, (int)(yStepSize), (int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - 2*yStepSize));
-		}
-		//x
-		for(i = (int)(-1*(noYSteps - 1)); i < noYSteps - 1; i++) {
-			g2.drawLine((int)(2*xStepSize), (int)(chartHeight - yStepSize - yStepSize * i) - yOffset, (int)(chartWidth - xStepSize), (int)(chartHeight - yStepSize -yStepSize * i) - yOffset);
-		}
-	}
-	
-	public void paintAxis(Graphics2D g2) {
-		int i;
-		g2.setColor(AXIS);
-		//y-axis
-		g2.drawLine((int)(xStepSize) + xOffset, (int)(yStepSize), (int)(xStepSize) + xOffset, (int)(chartHeight - 2*yStepSize));
-		//x-axis
-		g2.drawLine((int)(2*xStepSize), (int)(chartHeight - yStepSize) - yOffset, (int)(chartWidth - xStepSize), (int)(chartHeight - yStepSize) - yOffset);
-		//x marks
-		for(i = (int) (-1*(noXSteps - 1)); i < noXSteps - 1; i++) {
-			g2.drawLine((int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - yStepSize - 8) - yOffset, (int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - yStepSize + 7) - yOffset);
-			g2.drawString(i*(int)(valXStepSize)+"", (int)(xStepSize * (i + 1) - 3) + xOffset, (int)(chartHeight - yStepSize + 18)- yOffset);
-		}
-		//arrow right
-		i = (int) (noXSteps - 1);
-		g2.drawLine((int)(xStepSize * (i + 1) - 7) + xOffset, (int)(chartHeight - yStepSize - 8) - yOffset, (int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - yStepSize) - yOffset);
-		g2.drawLine((int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - yStepSize) - yOffset, (int)(xStepSize * (i + 1)) - 7 + xOffset, (int)(chartHeight - yStepSize + 7)- yOffset);
-		//arrow left
-		i = (int) (-1*(noXSteps));
-		g2.drawLine((int)(xStepSize * (i + 1) + 7) + xOffset, (int)(chartHeight - yStepSize - 8) - yOffset, (int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - yStepSize) - yOffset);
-		g2.drawLine((int)(xStepSize * (i + 1)) + xOffset, (int)(chartHeight - yStepSize) - yOffset, (int)(xStepSize * (i + 1)) + 7 + xOffset, (int)(chartHeight - yStepSize + 7)- yOffset);
-		
-		//y marks
-		for(i = (int) (-1*(noYSteps - 1)); i < noYSteps - 1; i++) {
-			g2.drawLine((int)(xStepSize - 8) + xOffset, (int)(chartHeight - yStepSize - yStepSize * i) - yOffset, (int)(xStepSize + 7) + xOffset, (int)(chartHeight - yStepSize -yStepSize * i) - yOffset);
-			g2.drawString(i*(int)(valYStepSize)+"", (int)(xStepSize - 18) + xOffset, (int)(chartHeight - yStepSize - yStepSize * i) - yOffset);
-		}
-		//arrow top
-		i = (int) (noYSteps - 1);
-		g2.drawLine((int)(xStepSize - 8) + xOffset, (int)(chartHeight - yStepSize - yStepSize * i) + 7 - yOffset, (int)(xStepSize) + xOffset, (int)(chartHeight - yStepSize -yStepSize * i) - yOffset);
-		g2.drawLine((int)(xStepSize) + xOffset, (int)(chartHeight - yStepSize - yStepSize * i) - yOffset, (int)(xStepSize + 7) + xOffset, (int)(chartHeight - yStepSize -yStepSize * i) + 7 - yOffset);
-		//arrow bottom			
-		i = (int) (-1*(noYSteps));
-		g2.drawLine((int)(xStepSize - 8) + xOffset, (int)(chartHeight - yStepSize - yStepSize * i) - 7 - yOffset, (int)(xStepSize) + xOffset, (int)(chartHeight - yStepSize -yStepSize * i) - yOffset);
-		g2.drawLine((int)(xStepSize) + xOffset, (int)(chartHeight - yStepSize - yStepSize * i) - yOffset, (int)(xStepSize + 7) + xOffset, (int)(chartHeight - yStepSize -yStepSize * i) - 7 - yOffset);
-		
 	}
 }
