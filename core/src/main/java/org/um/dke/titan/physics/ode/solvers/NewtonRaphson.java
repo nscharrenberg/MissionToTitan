@@ -8,6 +8,10 @@ import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.utils.Matrix3;
 
+import java.util.Random;
+
+import static java.lang.Double.NaN;
+
 /** test class for computing example multivariable root finding problems
  *  V(n+1) = V(n) - [J]-1 * F(x)
  *
@@ -26,7 +30,7 @@ import org.um.dke.titan.utils.Matrix3;
 
 public class NewtonRaphson {
 
-    static double h = 1000;
+    static double h = 500;
     static double tf = 60 * 60 * 24 * 450;
 
 
@@ -50,7 +54,7 @@ public class NewtonRaphson {
         // x1 can be whatever just to initialize, but distance between x1 and xPrev > e
         // for the loop to be able to start
         Vector3D x1 = new Vector3D(1,2,3); // x(n+1)
-        Vector3D x = new Vector3D(30000,-30000,-600); // initial guess
+        Vector3D x = (Vector3D) randomVector(); // initial guess
         Vector3D xPrev = x;   //x(n-1)
 
         for (int i = 0; i < 200; i++) {
@@ -61,13 +65,17 @@ public class NewtonRaphson {
 
             xPrev = x;
             x = x1;
-            System.out.print("difference between new and previous one: " +( getMinDistanceToTitan(x1).norm() - F.norm()));
-            System.out.print("  ||  x1: " + getMinDistanceToTitan(x1).norm() + ". x: " + F.norm());
-            System.out.println("x1: " + x1);
-
+            System.out.print("x1: " + getMinDistanceToTitan(x1).norm() + ". x: " + F.norm());
             double error = x1.sub(xPrev).norm();
+            System.out.print("  ||  Error: " + error);
+            System.out.println("  ||  x1: " + x1);
+
             if (error < e) {
                 return x1;
+            }
+
+            if (x1.getX() == NaN) {
+                x = (Vector3D) randomVector();
             }
         }
 
@@ -77,11 +85,11 @@ public class NewtonRaphson {
     static Vector3D getMinDistanceToTitan(Vector3dInterface startVelocity) {
         Vector3D[] probeArray =  (Vector3D[]) probeSimulator.trajectory(pStart, startVelocity, tf, h);
         String planetname = "Titan";
-        Vector3D min = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet(planetname).getPosition().sub(probeArray[0]).sub(new Vector3D(2574700 + 150000, 0, 0));
+        Vector3D min = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet(planetname).getPosition().sub(probeArray[0]).sub(new Vector3D(2574700 + 300000, 0, 0));
 
         for (int i = 0; i < probeArray.length; i++) {
             Vector3D probePos = probeArray[i];
-            Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet(planetname).getPosition().sub(new Vector3D(2574700 + 150000, 0, 0));
+            Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet(planetname).getPosition().sub(new Vector3D(2574700 + 300000, 0, 0));
 
             if (min.norm() > probePos.dist(planetPos)) {
                 min = (Vector3D) planetPos.sub(probePos);
@@ -105,7 +113,7 @@ public class NewtonRaphson {
     static double[][] getJacobian(Vector3dInterface v) {
         double [][] J = new double[3][3];
 
-        double h = 2;
+        double h = 1;
 
         Vector3D xPlusH = new Vector3D(v.getX() + h, v.getY(), v.getZ());
         Vector3D xMinusH = new Vector3D(v.getX() - h, v.getY(), v.getZ());
@@ -127,5 +135,15 @@ public class NewtonRaphson {
         J[2][2] =  (F(zPlusH).getZ() - F(zMinusH).getZ()) / 2*h;
 
         return J;
+    }
+
+    static Vector3dInterface randomVector() {
+        Random r = new Random();
+
+        double x = r.nextDouble()* - r.nextDouble();
+        double y = r.nextDouble()* - r.nextDouble();
+        double z = r.nextDouble()* - r.nextDouble();
+
+        return new Vector3D(x,y,z).mul(r.nextInt(60000));
     }
 }
