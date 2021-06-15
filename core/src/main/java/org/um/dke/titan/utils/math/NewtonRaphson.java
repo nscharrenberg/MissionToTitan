@@ -3,6 +3,8 @@ package org.um.dke.titan.utils.math;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
+import java.util.Arrays;
+
 public class NewtonRaphson {
     private static int JACOBIAN_MATRIX_SIZE = 3;
 
@@ -61,7 +63,19 @@ public class NewtonRaphson {
         return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ();
     }
 
-    private double jacobianValue(Vector3dInterface xP, Vector3dInterface xM, Vector3dInterface g, double h) {
-        return (product(xP, g) - product(xM, g)) / (2*h);
+    private double jacobianValue(Vector3dInterface p, Vector3dInterface m, Vector3dInterface g, double h) {
+        return (product(p, g) - product(m, g)) / (2*h);
+    }
+
+    public double getH() {
+        return h;
+    }
+
+    public void setH(double h) {
+        this.h = h;
+    }
+
+    public Matrix getJacobian() {
+        return jacobian;
     }
 }

@@ -187,9 +187,18 @@ public class Matrix {
     }
 
     public static Matrix inverse(Matrix matrix) {
+        double det = matrix.determinant();
+
+        if (det == 0.0) {
+            throw new IllegalStateException("unable to inverse a singular matrix.");
+        }
+
         Matrix cfMatrix = matrix.cofactor();
         Matrix tMatrix = cfMatrix.transpose();
-        double det = matrix.determinant();
+
+
+
+
         return tMatrix.multiply(1.0 / det);
     }
 
