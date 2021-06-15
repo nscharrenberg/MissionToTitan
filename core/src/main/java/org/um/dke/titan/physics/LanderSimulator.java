@@ -32,13 +32,16 @@ public class LanderSimulator{
         ts[0] = 0;
         for(int i = 1; i < landerArray.length; i++){
             ts[i] = i*dt;
-            force = force.add(new Vector3D(0, -g*landerMass, 0));
 
-            landerArray[i] = step(landerArray[i-1], dt);
-
-            if(landerArray[i].getPosition().getY() <= surfaceLevel){
-                landerArray[i].setVelocity(new Vector3D(0,0,0));//to stop the lander from falling into titan
+            if(landerArray[i-1].getPosition().getY() <= surfaceLevel){
+                landerArray[i] = landerArray[i-1]; //to stop the lander from falling into titan
+                landerArray[i].getPosition().setY(0);
+            } else {
+                force = force.add(new Vector3D(0, -g*landerMass, 0));
+                landerArray[i] = step(landerArray[i - 1], dt);
             }
+
+            System.out.println("x: " + landerArray[i].getPosition().getX() + " - y: " + landerArray[i].getPosition().getY());
         }
     }
 
