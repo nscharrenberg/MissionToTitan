@@ -25,7 +25,6 @@ public class SpaceObject {
     protected Texture texture;
     protected float zoomLevel;
     protected Label label;
-    private int rotation = 0;
 
     public SpaceObject(String name, float mass, float radius, Vector3dInterface position, float zoomLevel) {
         this.name = name;
@@ -46,28 +45,9 @@ public class SpaceObject {
 
         batch.begin();
 
-        if(texture.toString().equals("planets/Probe.png")) {
-            double posX = this.position.getX(), posY = this.position.getY();
-            Vector3dInterface bottomLeft = new Vector3D(posX, posY, 0);
-            posX += (this.texture.getWidth()/2.0);
-            posY += (this.texture.getHeight()/2.0);
-            Vector3dInterface center = new Vector3D(posX, posY, 0);
-            Vector3dInterface tmpOffset = center.sub(bottomLeft);
-            Vector3dInterface rotatedOffset = RotationMatrix.rotate(rotation, tmpOffset);
-            Vector3dInterface offset = tmpOffset.sub(rotatedOffset);
-            System.out.println("X:"+this.position.getX()+", Y:"+this.position.getY());
-            float offsetX = (float)(offset.getX()), offsetY = (float)(offset.getY());
-            System.out.println("xOff:"+offsetX+", yOff"+offsetY);
-            //rotation is counterclockwise
-            TextureRegion tr = new TextureRegion(this.texture);
-            batch.draw(tr, (float)(this.position.getX()+offsetX), (float)(this.position.getY()+offsetY), 0, 0, getDiameter(), getDiameter(), 1, 1, -1*rotation);
-            rotation++;
-        }else if (texture != null) {
-            TextureRegion tr = new TextureRegion(this.texture);
-            batch.draw(tr, (float)(this.position.getX() - texture.getWidth()/2.0), (float)(this.position.getY() - texture.getHeight()/2.0), 0, 0, getDiameter(), getDiameter(), 1, 1, 0);
+        if (texture != null) {
+            batch.draw(this.texture, (float)(this.position.getX() - texture.getWidth()/2.0), (float)(this.position.getY() - texture.getHeight()/2.0), getDiameter(), getDiameter());
         }
-        if(rotation >= 359)
-            rotation = 0;
 
         batch.end();
     }
