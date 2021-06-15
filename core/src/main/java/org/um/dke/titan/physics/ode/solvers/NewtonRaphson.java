@@ -8,8 +8,6 @@ import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.utils.Matrix3;
 
-import java.util.Arrays;
-
 /** test class for computing example multivariable root finding problems
  *  V(n+1) = V(n) - [J]-1 * F(x)
  *
@@ -18,6 +16,10 @@ import java.util.Arrays;
  *      { 3x   - cos(y*z) - 3/2
  *  F = { 4x^2 - 625*y^2  + 2*z - 1
  *      { 20*z + e^-x*y   + 9
+ *
+ * @author Daan
+ * src: http://fourier.eng.hmc.edu/e176/lectures/NM/node21.html
+ *      https://math.stackexchange.com/questions/728666/calculate-jacobian-matrix-without-closed-form-or-analytical-form
  *
  */
 
@@ -48,10 +50,10 @@ public class NewtonRaphson {
         // x1 can be whatever just to initialize, but distance between x1 and xPrev > e
         // for the loop to be able to start
         Vector3D x1 = new Vector3D(1,2,3); // x(n+1)
-        Vector3D x = new Vector3D(0,0,0); // initial guess
+        Vector3D x = new Vector3D(30000,-30000,-600); // initial guess
         Vector3D xPrev = x;   //x(n-1)
 
-        while(x1.sub(xPrev).norm() > e) {
+        for (int i = 0; i < 200; i++) {
             double [][] jInverse = Matrix3.inverse(getJacobian(x));
             Vector3D F = (Vector3D) F(x);
 
@@ -62,6 +64,11 @@ public class NewtonRaphson {
             System.out.print("difference between new and previous one: " +( getMinDistanceToTitan(x1).norm() - F.norm()));
             System.out.print("  ||  x1: " + getMinDistanceToTitan(x1).norm() + ". x: " + F.norm());
             System.out.println("x1: " + x1);
+
+            double error = x1.sub(xPrev).norm();
+            if (error < e) {
+                return x1;
+            }
         }
 
         return x1;
@@ -99,7 +106,6 @@ public class NewtonRaphson {
         double [][] J = new double[3][3];
 
         double h = 2;
-
 
         Vector3D xPlusH = new Vector3D(v.getX() + h, v.getY(), v.getZ());
         Vector3D xMinusH = new Vector3D(v.getX() - h, v.getY(), v.getZ());

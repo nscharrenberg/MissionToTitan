@@ -29,7 +29,7 @@ public class NewtonRaphsonExample {
      * o F is the column matrix containing all functions f(x1 ... xn).
      *   in the case of the probe, that means the coordinate of the probe (x,y,z)
      */
-    static Vector3dInterface get() {
+    public static Vector3dInterface get() {
         double e = 1e-9; // error convergence bound;
 
 
