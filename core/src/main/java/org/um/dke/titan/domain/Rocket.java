@@ -28,7 +28,9 @@ public class Rocket extends MovingObject {
         batch.begin();
 
         if (texture != null) {
-            batch.draw(new TextureRegion(this.texture), (float)(this.position.getX() - texture.getWidth()/2.0), (float)(this.position.getY() - texture.getHeight()/2.0), (float)((getDiameter()/texture.getHeight())*texture.getWidth()/2.0), getRadius(), getDiameter(), getDiameter(), 1, 1, rotation);
+            float a = (float)((getDiameter()/texture.getHeight())*texture.getWidth()/2.0);
+            float ab = (float)((getDiameter()-a)/2.0);
+            batch.draw(new TextureRegion(this.texture), (float)(this.position.getX() - texture.getWidth()/2.0 + ab), (float)(this.position.getY() - texture.getHeight()/2.0), a, getRadius(), getDiameter(), getDiameter(), 1, 1, rotation);
             rotation++;
         }
 

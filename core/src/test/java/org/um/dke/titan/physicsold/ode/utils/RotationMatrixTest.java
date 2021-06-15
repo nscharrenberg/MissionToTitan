@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
  *  7. r 180 w b p y: 1
  */
 @RunWith(GdxTestRunner.class)
-public class RotationMatrixText {
+public class RotationMatrixTest {
     public static final double DELTA = 1e-2;
     //rotation testing
     /**
