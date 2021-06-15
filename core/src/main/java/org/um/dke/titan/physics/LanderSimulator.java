@@ -57,7 +57,7 @@ public class LanderSimulator{
 
 
                 landerArray[i] = step(landerArray[i - 1], dt);
-                System.out.println("t: "+ts[i]+" x: " + landerArray[i].getPosition().getX() + " y: " + landerArray[i].getPosition().getY());
+                //System.out.println("t: "+ts[i]+" x: " + landerArray[i].getPosition().getX() + " y: " + landerArray[i].getPosition().getY());
             }
 
 
