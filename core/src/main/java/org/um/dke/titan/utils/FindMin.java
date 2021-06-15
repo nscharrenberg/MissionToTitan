@@ -12,4 +12,13 @@ public class FindMin {
         }
         return (float)min;
     }
+    public static float findMax(double... s){
+        double[] a = Arrays.stream(s).toArray();
+        double max = a[0];
+        for(double d: a){
+            if(d > max)
+                max = d;
+        }
+        return (float)max;
+    }
 }
