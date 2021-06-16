@@ -91,8 +91,13 @@ public class LanderSimulator{
     //----------ENGINE HANDLING--------
 
     public Vector3dInterface mainThruster(double percentage){
+        
         return new Vector3D(0, 1, 0).mul((percentage/100.0)*MAXIMUM_THRUST);
     }
+
+    
+
+
 
 
 
