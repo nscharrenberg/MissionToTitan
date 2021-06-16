@@ -49,12 +49,15 @@ public class LanderSimulator{
                 landerArray[i].getPosition().setY(0);
             } else {
 
-                force = force.add(new Vector3D(0, dt*-g*landerMass, 0));
+                force = force.add(new Vector3D(0, dt*-g*landerMass, 0));// actual application of gravity
 
-                if(landerArray[i-1].getVelocity().getY()<-10){
-                    force = force.add(mainThruster(30));
+                //LANDING LOGIC
+                //1. make lander land smoothly
+                //System.out.println("y: "+ landerArray[i-1].getPosition().getY()+ "y velo: " +landerArray[i-1].getVelocity().getY()+" thrust: "+land(landerArray[i-1].getPosition().getY()));
+                if(((landerArray[i-1].getVelocity().getY() < -100) && (landerArray[i-1].getPosition().getY() > 10000))) {
+                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
                 }
-
+                //----
 
                 landerArray[i] = step(landerArray[i - 1], dt);
                 //System.out.println("t: "+ts[i]+" x: " + landerArray[i].getPosition().getX() + " y: " + landerArray[i].getPosition().getY());
@@ -63,6 +66,22 @@ public class LanderSimulator{
 
         }
         System.out.println("MAXMIUM VELOCITY REACHED: " + maxVelocity());
+    }
+
+    private double land(double y) {
+        double threshhold = 100000;
+        double a, b, c;
+        if(y > threshhold)
+            return 0;
+        if(y < 4000){
+            a = 80;
+            b = -0.0075;
+            return a + b*y;
+        }
+        a = 64.44444444;
+        b = -0.001555555556;
+        c = 1.111111111E-8;
+        return  a + b*y + c*Math.pow(y,2);
     }
 
     private PlanetRate call(double t, PlanetState y) {
