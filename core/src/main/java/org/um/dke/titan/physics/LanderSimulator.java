@@ -1,6 +1,7 @@
 package org.um.dke.titan.physics;
 
 import org.um.dke.titan.domain.Lander;
+import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
@@ -56,6 +57,9 @@ public class LanderSimulator{
                 //System.out.println("y: "+ landerArray[i-1].getPosition().getY()+ "y velo: " +landerArray[i-1].getVelocity().getY()+" thrust: "+land(landerArray[i-1].getPosition().getY()));
                 if(((landerArray[i-1].getVelocity().getY() < -100) && (landerArray[i-1].getPosition().getY() > 10000))) {
                     force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+                }
+                if(((landerArray[i-1].getVelocity().getY() < -10) && (landerArray[i-1].getPosition().getY() < 11000))){
+                    force = force.add(accelerateToVelocity(-10, landerArray[i-1]));
                 }
                 //----
 
@@ -122,33 +126,23 @@ public class LanderSimulator{
 
     //issue with call method using the force field instead of the force provided by the parameter.
     //not sure if i can change that without messing things up
-//    public Vector3dInterface decelerateToVelocity(double desiredVelocity, PlanetState landerState) {
-//        //init values: force is already in landerstate, set it to a var
-//        desiredVelocity*=-1;
-//        double percentage = 1;
-//        Vector3dInterface force = landerState.getForce();
-//        Vector3dInterface engineForce = mainThruster(percentage);
-//
-//        //the y velocity in the next step with no engines
-//        double actualVelocity = step(landerState, dt).getVelocity().getY();
-//
-//        //increase the percentage of power until the velocity on the next step will be smaller than the desired velocity
-//        while(actualVelocity<desiredVelocity){
-//            //increment the percentage; make sure it doesnt go above 100
-//            if(percentage>100){
-//                throw new RuntimeException("Percentage higher than 100");
-//                }
-//            percentage++;
-//            //calculate force by engine
-//            engineForce = mainThruster(percentage);
-//            landerState.setForce(force.add(engineForce));
-//            this.force = landerState.getForce();
-//            actualVelocity = step(landerState, dt).getVelocity().getY();;
-//
-//        }
-//       // System.out.println("ACTUAL VELOCITY: " + actualVelocity + ", DESIRED VELOCITY: " + desiredVelocity +  ", ENGINE FORCE: " + engineForce);
-//        return force;
-//    }
+    public Vector3dInterface accelerateToVelocity(double desiredVelocity, PlanetState landerState){
+        PlanetState newLanderState = step(landerState, dt);
+        Vector3dInterface newForce = newLanderState.getForce();
+
+        double velocity = landerState.getVelocity().getY();
+
+        double desiredAcceleration = (desiredVelocity-velocity)/dt;
+
+        Vector3dInterface desiredForce = new Vector3D(0,0,0);
+        desiredForce.setY(dt*-g*landerMass + landerMass*desiredAcceleration);
+        System.out.println(desiredForce);
+
+
+        return desiredForce;
+    }
+
+
 
     //--------UTILS-------------
     public double maxVelocity(){
