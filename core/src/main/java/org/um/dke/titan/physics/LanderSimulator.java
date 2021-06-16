@@ -42,6 +42,7 @@ public class LanderSimulator{
         landerArray[0] = y0;
         ts[0] = 0;
         for(int i = 1; i < landerArray.length; i++){
+            force = new Vector3D(0,0,0);
             ts[i] = i*dt;
 
             if(landerArray[i-1].getPosition().getY() <= surfaceLevel){
@@ -73,11 +74,6 @@ public class LanderSimulator{
         double a, b, c;
         if(y > threshhold)
             return 0;
-        if(y < 4000){
-            a = 80;
-            b = -0.0075;
-            return a + b*y;
-        }
         a = 64.44444444;
         b = -0.001555555556;
         c = 1.111111111E-8;
