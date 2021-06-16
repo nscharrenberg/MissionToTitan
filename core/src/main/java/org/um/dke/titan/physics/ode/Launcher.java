@@ -9,7 +9,7 @@ public class Launcher {
     public static void main(String[] a){
         // TODO: put in realistic starting parameters
         PlanetState y0 = new PlanetState(new Vector3D(0, 100000, 0), new Vector3D(900, 0, 0));
-        double tf = 20000, dt = 0.01;
+        double tf = 11000, dt = 0.01;
         LanderSimulator ls = new LanderSimulator(y0, tf, dt);
         double[] ts = ls.getTs();
         PlanetState[] landerArray = ls.getLanderArray();
@@ -22,4 +22,5 @@ public class Launcher {
         System.out.println("READY");
         Window w = new Window(1200, 600, ts, x, y);
     }
+
 }

@@ -8,17 +8,19 @@ import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 
 public class LanderSimulator{
     private Lander lander;
-    private double surfaceLevel = 0.0;
+    private double surfaceLevel = 0;
     private PlanetState[] landerArray;
     private double[] ts;
-    private final double landerMass;
+    private final double landerMass = 6000;
     private Vector3dInterface force;
+    private Vector3dInterface[] rotationArray;
     private final double g = 1.352;// m/s^2
 
-    private final double tf, dt;
+    private double tf, dt;
 
     private final double EXHAUST_VELOCITY = 2e4;
     private final double MAXIMUM_THRUST = 8e3;
+    private final double MAXIMUM_SIDE_THRUST = 8e2;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
     private final double radiusTitan = 2575.5e3;
@@ -32,62 +34,30 @@ public class LanderSimulator{
      */
     public LanderSimulator(PlanetState y0, double tf, double dt){
         //init lander
-        this.tf = tf;
-        this.dt = dt;
-        landerMass = 6000;//kg
-        force = new Vector3D(0,0,0);
-        landerArray = new PlanetState[(int)Math.round(tf/dt) + 1];
-        ts = new double[landerArray.length];
-        //start landing
-        landerArray[0] = y0;
-        ts[0] = 0;
+        init(y0, tf, dt);
+
         for(int i = 1; i < landerArray.length; i++){
             force = new Vector3D(0,0,0);
             ts[i] = i*dt;
 
-            if(landerArray[i-1].getPosition().getY() <= surfaceLevel){
+            if(landerArray[i-1].getPosition().getY() <= surfaceLevel) {
                 landerArray[i] = landerArray[i-1]; //to stop the lander from falling into titan
                 landerArray[i].getPosition().setY(0);
-            } else {
-
+            }
+            else {
                 force = force.add(new Vector3D(0, dt*-g*landerMass, 0));// actual application of gravity
 
-                //LANDING LOGIC
-                //1. make lander land smoothly
-                if(landerArray[i-1].getPosition().getY() < 0.05){
-
-                }
-                //System.out.println("y: "+ landerArray[i-1].getPosition().getY()+ "y velo: " +landerArray[i-1].getVelocity().getY()+" thrust: "+land(landerArray[i-1].getPosition().getY()));
-                else if(((landerArray[i-1].getVelocity().getY() < -40) && (landerArray[i-1].getPosition().getY() > 20000))) {
-                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
-                }
-                else if(((landerArray[i-1].getVelocity().getY() < -10) && (landerArray[i-1].getPosition().getY() < 20000) && (landerArray[i-1].getPosition().getY() > 5000))) {
-                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
-                }
-                else if(((landerArray[i-1].getVelocity().getY() < -2.5) && (landerArray[i-1].getPosition().getY() < 5000) && (landerArray[i-1].getPosition().getY() > 1250))) {
-                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
-                }
-                else if(((landerArray[i-1].getVelocity().getY() < -0.625 && (landerArray[i-1].getPosition().getY() < 1250) && (landerArray[i-1].getPosition().getY() > 312.5)))) {
-                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
-                }
-                else if(((landerArray[i-1].getVelocity().getY() < -0.15625 && (landerArray[i-1].getPosition().getY() < 312.5) && (landerArray[i-1].getPosition().getY() > 78.125)))) {
-                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
-                }
-                else if(((landerArray[i-1].getVelocity().getY() < -0.09 && (landerArray[i-1].getPosition().getY() < 79)))) {
-                    force = force.add(mainThruster(2));
-                }
-
-
-
+                controlVerticalVelocity(i);
                 landerArray[i] = step(landerArray[i - 1], dt);
-
-                System.out.println("t: "+ts[i]+" x: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
+                System.out.println("t: "+ts[i]+" vy: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
             }
 
 
         }
         System.out.println("MAXMIUM VELOCITY REACHED: " + maxVelocity());
     }
+
+
 
     private double land(double y) {
         double threshhold = 100000;
@@ -123,11 +93,70 @@ public class LanderSimulator{
         return ts;
     }
 
+    public void init(PlanetState y0, double tf, double dt){
+        this.tf = tf;
+        this.dt = dt;
+        force = new Vector3D(0,0,0);
+        landerArray = new PlanetState[(int)Math.round(tf/dt) + 1];
+        ts = new double[landerArray.length];
+        //start landing
+        landerArray[0] = y0;
+        ts[0] = 0;
+        rotationArray = new Vector3dInterface[(int)Math.round(tf/dt) + 1];
+        rotationArray[0] = new Vector3D(0,1,0);
+    }
+
     //----------ENGINE HANDLING--------
 
     public Vector3dInterface mainThruster(double percentage){
-        
+
         return new Vector3D(0, 1, 0).mul((percentage/100.0)*MAXIMUM_THRUST);
+    }
+
+    public Vector3dInterface topLeftThruster(double percentage){
+        //some rotation handling
+        //in 2 dimensions we can use torque = r*F*sin(theta)
+        //where r is the distance to the center of gravity, F is the force, and theta is the angle between those (which i dont get rn)
+        return new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+    }
+
+    public Vector3dInterface topRightThruster(double percentage){
+        return new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+    }
+
+    public Vector3dInterface bottomLeftThruster(double percentage){
+        return new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+    }
+
+    public Vector3dInterface bottomRightThruster(double percentage){
+        return new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+    }
+
+    public void controlVerticalVelocity(int i){
+        //LANDING LOGIC
+        //1. make lander land smoothly
+        if(landerArray[i-1].getPosition().getY() < 0.05){
+
+        }
+        //System.out.println("y: "+ landerArray[i-1].getPosition().getY()+ "y velo: " +landerArray[i-1].getVelocity().getY()+" thrust: "+land(landerArray[i-1].getPosition().getY()));
+        else if(((landerArray[i-1].getVelocity().getY() < -40) && (landerArray[i-1].getPosition().getY() > 20000))) {
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+        }
+        else if(((landerArray[i-1].getVelocity().getY() < -10) && (landerArray[i-1].getPosition().getY() < 20000) && (landerArray[i-1].getPosition().getY() > 5000))) {
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+        }
+        else if(((landerArray[i-1].getVelocity().getY() < -2.5) && (landerArray[i-1].getPosition().getY() < 5000) && (landerArray[i-1].getPosition().getY() > 1250))) {
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+        }
+        else if(((landerArray[i-1].getVelocity().getY() < -0.625 && (landerArray[i-1].getPosition().getY() < 1250) && (landerArray[i-1].getPosition().getY() > 312.5)))) {
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+        }
+        else if(((landerArray[i-1].getVelocity().getY() < -0.15625 && (landerArray[i-1].getPosition().getY() < 312.5) && (landerArray[i-1].getPosition().getY() > 78.125)))) {
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+        }
+        else if(((landerArray[i-1].getVelocity().getY() < -0.09 && (landerArray[i-1].getPosition().getY() < 79)))) {
+            force = force.add(mainThruster(2));
+        }
     }
 
     
