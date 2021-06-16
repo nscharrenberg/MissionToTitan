@@ -54,14 +54,34 @@ public class LanderSimulator{
 
                 //LANDING LOGIC
                 //1. make lander land smoothly
+                if(landerArray[i-1].getPosition().getY() < 0.05){
+
+                }
                 //System.out.println("y: "+ landerArray[i-1].getPosition().getY()+ "y velo: " +landerArray[i-1].getVelocity().getY()+" thrust: "+land(landerArray[i-1].getPosition().getY()));
-                if(((landerArray[i-1].getVelocity().getY() < -100) && (landerArray[i-1].getPosition().getY() > 10000))) {
+                else if(((landerArray[i-1].getVelocity().getY() < -40) && (landerArray[i-1].getPosition().getY() > 20000))) {
                     force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
                 }
-                //----
+                else if(((landerArray[i-1].getVelocity().getY() < -10) && (landerArray[i-1].getPosition().getY() < 20000) && (landerArray[i-1].getPosition().getY() > 5000))) {
+                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+                }
+                else if(((landerArray[i-1].getVelocity().getY() < -2.5) && (landerArray[i-1].getPosition().getY() < 5000) && (landerArray[i-1].getPosition().getY() > 1250))) {
+                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+                }
+                else if(((landerArray[i-1].getVelocity().getY() < -0.625 && (landerArray[i-1].getPosition().getY() < 1250) && (landerArray[i-1].getPosition().getY() > 312.5)))) {
+                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+                }
+                else if(((landerArray[i-1].getVelocity().getY() < -0.15625 && (landerArray[i-1].getPosition().getY() < 312.5) && (landerArray[i-1].getPosition().getY() > 78.125)))) {
+                    force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+                }
+                else if(((landerArray[i-1].getVelocity().getY() < -0.09 && (landerArray[i-1].getPosition().getY() < 79)))) {
+                    force = force.add(mainThruster(2));
+                }
+
+
 
                 landerArray[i] = step(landerArray[i - 1], dt);
-                //System.out.println("t: "+ts[i]+" x: " + landerArray[i].getPosition().getX() + " y: " + landerArray[i].getPosition().getY());
+
+                System.out.println("t: "+ts[i]+" x: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
             }
 
 
