@@ -58,10 +58,15 @@ public class NewtonRaphson2 {
 
             xPrev = x;
             x = x1;
-            System.out.print("x1: " + getMinDistanceToDestination(x1, destination).norm() + ". x: " + F(x).norm());
+
             double error = x1.sub(xPrev).norm();
-            System.out.print("  ||  Error: " + error);
-            System.out.println("  ||  x1: " + x1);
+
+            //if ( F(x).getV() < 60000)
+            {
+                System.out.print("x1: " + getMinDistanceToDestination(x1, destination).norm() + ". x: " + F(x).norm());
+                System.out.print("  ||  Error: " + error);
+                System.out.println("  ||  x1: " + x1);
+            }
 
             if (error < e) {
                 return x1;
@@ -95,7 +100,7 @@ public class NewtonRaphson2 {
      */
     static Vector4D F(Vector4D x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
-        Vector4D result = getMinDistanceToDestination(x.mul(x.getV()).add(earthVelocity), destinationPoint);
+        Vector4D result = getMinDistanceToDestination(x.getUnit().mul(x.getV()).add(earthVelocity), destinationPoint);
         result.setV(result.getV() - 50000);
         return result;
     }
@@ -108,16 +113,16 @@ public class NewtonRaphson2 {
     static double[][] getJacobian(Vector4D v) {
         double [][] J = new double[4][4];
 
-        double h = 1;
+        double h = 0.3;
 
-        Vector4D xPlusH  = new Vector4D(v.getX() + h, v.getY(), v.getZ(), v.getV());
-        Vector4D xMinusH = new Vector4D(v.getX() - h, v.getY(), v.getZ(), v.getV());
-        Vector4D yPlusH  = new Vector4D(v.getX(), v.getY() + h, v.getZ(), v.getV());
-        Vector4D yMinusH = new Vector4D(v.getX(), v.getY() - h, v.getZ(), v.getV());
-        Vector4D zPlusH  = new Vector4D(v.getX(), v.getY(), v.getZ() + h, v.getV());
-        Vector4D zMinusH = new Vector4D(v.getX(), v.getY(), v.getZ() - h, v.getV());
-        Vector4D vPlusH = new Vector4D(v.getX(), v.getY(), v.getZ(), v.getV() + h);
-        Vector4D vMinusH = new Vector4D(v.getX(), v.getY(), v.getZ(), v.getV() - h);
+        Vector4D xPlusH  = new Vector4D(new Vector3D(v.getX() + h, v.getY(), v.getZ()).getUnit(), v.getV());
+        Vector4D xMinusH = new Vector4D(new Vector3D(v.getX() - h, v.getY(), v.getZ()).getUnit(), v.getV());
+        Vector4D yPlusH  = new Vector4D(new Vector3D(v.getX(), v.getY() + h, v.getZ()).getUnit(), v.getV());
+        Vector4D yMinusH = new Vector4D(new Vector3D(v.getX(), v.getY() - h, v.getZ()).getUnit(), v.getV());
+        Vector4D zPlusH  = new Vector4D(new Vector3D(v.getX(), v.getY(), v.getZ() + h).getUnit(), v.getV());
+        Vector4D zMinusH = new Vector4D(new Vector3D(v.getX(), v.getY(), v.getZ() - h).getUnit(), v.getV());
+        Vector4D vPlusH =  new Vector4D(new Vector3D(v.getX(), v.getY(), v.getZ()).getUnit(), v.getV() + h);
+        Vector4D vMinusH = new Vector4D(new Vector3D(v.getX(), v.getY(), v.getZ()).getUnit(), v.getV() - h);
 
         J[0][0] =  (F(xPlusH).getX() - F(xMinusH).getX()) / 2*h;
         J[0][1] =  (F(yPlusH).getX() - F(yMinusH).getX()) / 2*h;
@@ -150,7 +155,9 @@ public class NewtonRaphson2 {
         double z = r.nextDouble()/6* - r.nextDouble()/6;
         double v = r.nextDouble()*60000;
 
-        return new Vector4D(x,y,z,v);
+        Vector3D unit = new Vector3D(x,y,z);
+
+        return new Vector4D(unit.getUnit(),v);
     }
 
 }

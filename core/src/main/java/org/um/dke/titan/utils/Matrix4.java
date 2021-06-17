@@ -9,11 +9,7 @@ public class Matrix4 {
 
 
     public static void main(String[] args) {
-        double[][] matrix = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}};
-
-        for (int i = 0; i < 4; i++) {
-            System.out.println(Arrays.toString(inverse(matrix)[i]));
-        }
+        Vector3D v = new Vector3D(-3.81974895879342E14, 4.306160517497311E14, -7.04675795964096E14);
     }
 
     public static Vector4D multiply(double[][] matrix, Vector4D vector) {
