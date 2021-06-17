@@ -12,7 +12,7 @@ import java.util.*;
  * @author filre
  */
 public class SquareHandling {
-    public static final double SIDE_LENGTH = 15.00;
+    public static final double SIDE_LENGTH = 150.00;
     /**
      * Comparator that sorts Vectors basd on their x-coordinate
      */
@@ -26,6 +26,7 @@ public class SquareHandling {
             return 0;
         }
     };
+
     /**
      * Comparator that sorts Vectors basd on their y-coordinate
      */
@@ -96,10 +97,9 @@ public class SquareHandling {
                 new Vector3D(cx - halfSide, cy + halfSide, 0)  //bottom left
         };
         Vector3dInterface[] rotatedCorners = new Vector3D[4];
-        int i = 0;
-        for(Vector3dInterface v : oldCorners) {
-            rotatedCorners[i] = rotateAroundCenter(center, v, radian);
-            i++;
+        for(int i = 0; i < oldCorners.length; i++) {
+            Vector3dInterface v = oldCorners[i];
+            rotatedCorners[i] = rotateAroundCenter(v, center, radian);
         }
         return rotatedCorners;
     }
@@ -108,12 +108,24 @@ public class SquareHandling {
      * Rotates a point around a center point
      * @param p The point to be rotated
      * @param c The center point to be rotated around
-     * @param radian The angle in degrees to rotate the point around
+     * @param degree The angle in degrees to rotate the point around
      * @return The rotated point
      */
-    public static Vector3dInterface rotateAroundCenter(Vector3dInterface p, Vector3dInterface c, double radian) {
-        return rotateAroundCenterD(p, c, radianToDegree(radian));
+    public static Vector3dInterface rotateAroundCenter(Vector3dInterface p, Vector3dInterface c, double degree) {
+        //translate to 0,0
+        System.out.println("Original:"+(Vector3D)p);
+        Vector3dInterface translated = new Vector3D(p.getX() - c.getX(), p.getY() - c.getY(), 0);
+        System.out.println("Translated:"+translated);
+        //rotate by degrees
+        Vector3dInterface rotated = new Vector3D(translated.getX() * Math.cos(degree) - translated.getY() * Math.sin(degree),
+                translated.getX() * Math.sin(degree) + translated.getY() * Math.cos(degree), 0);
+        System.out.println("Rotated:"+rotated);
+        //translate back
+        Vector3dInterface translatedBack = new Vector3D(rotated.getX() + c.getX(), rotated.getY() + c.getY(), 0);
+        System.out.println("Translated back:"+translatedBack);
+        return translatedBack;
     }
+
     //--------------------------DEGREES--------------------------------
     /**
      * Converts from degrees to radian
@@ -155,15 +167,9 @@ public class SquareHandling {
      * @return The rotated point
      */
     public static Vector3dInterface rotateAroundCenterD(Vector3dInterface p, Vector3dInterface c, double degree) {
-        //translate to 0,0
-        Vector3dInterface translated = new Vector3D(p.getX() - c.getX(), p.getY() - c.getY(), 0);
-        //rotate by degrees
-        Vector3dInterface rotated = new Vector3D(translated.getX() * Math.cos(degree) - translated.getY() * Math.sin(degree),
-                translated.getX() * Math.sin(degree) + translated.getY() * Math.cos(degree), 0);
-        //translate back
-        Vector3dInterface translatedBack = new Vector3D(rotated.getX() + c.getX(), rotated.getY() + c.getY(), 0);
-        return translatedBack;
+        return rotateAroundCenter(p, c, degreeToRadian(degree));
     }
+
 
     //--------------------------REST-----------------------------------
 
@@ -212,10 +218,8 @@ public class SquareHandling {
         return x;
     }
 
-
-
     /**
-     * Calculates distance from the center to the point
+     * Calculates distance from the center to the point as a vector
      * @param center Center of the square
      * @param x x-coordinate of the point
      * @param y y-coordinate of the point
