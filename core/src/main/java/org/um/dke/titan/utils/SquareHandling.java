@@ -260,4 +260,12 @@ public class SquareHandling {
         double r = (Math.random() * ((max - min) + 1.0)) + min;
         return r;
     }
+
+    public static double evalPoly(double[] param, double x) {
+        double y = 0;
+        for(int i = 0; i < param.length; i++) {
+            y += param[i] * Math.pow(x, i);
+        }
+        return y;
+    }
 }
