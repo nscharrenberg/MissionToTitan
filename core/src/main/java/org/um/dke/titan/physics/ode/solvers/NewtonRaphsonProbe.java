@@ -7,7 +7,6 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.utils.Matrix3;
 
 import java.util.Random;
@@ -15,25 +14,23 @@ import java.util.Random;
 /** test class for computing example multivariable root finding problems
  *  V(n+1) = V(n) - [J]-1 * F(x)
  *
- *
  * @author Daan
+ *
  * src: http://fourier.eng.hmc.edu/e176/lectures/NM/node21.html
  *      https://math.stackexchange.com/questions/728666/calculate-jacobian-matrix-without-closed-form-or-analytical-form
  *
  */
 
 
-public class NewtonRaphson {
+public class NewtonRaphsonProbe {
 
     static double h = 500;
     static double tf = 60 * 60 * 24 * 450;
 
 
-    static ProbeSimulator probeSimulator = new ProbeSimulator();
-    static StateInterface[] timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
-    static Vector3D pStart;
-
+    static final double probeMass = 120000;
     static Vector3D destinationPoint;
+    static PlanetState probeState;
 
     /**
      * runs V(n+1) = V(n) - [J]-1 * F(x) where:
@@ -42,64 +39,67 @@ public class NewtonRaphson {
      * o F is the column matrix containing all functions f(x1 ... xn).
      *   in the case of the probe, that means the coordinate of the probe (x,y,z)
      */
-    public static Vector3dInterface get(Vector3dInterface position, Vector3dInterface destination) {
-        System.out.println("running newton raphson:");
+    public static Vector3dInterface get(PlanetState probe, Vector3dInterface destination) {
         double e = 1e-3; // error convergence bound;
-        pStart = (Vector3D) position;
+
+        probeState = probe;
         destinationPoint = (Vector3D) destination;
+        double speed = probe.getVelocity().norm();
 
 
         // x1 can be whatever just to initialize, but distance between x1 and xPrev > e
         // for the loop to be able to start
         Vector3D x1 = new Vector3D(1,2,3); // x(n+1)
-        Vector3D x = (Vector3D) randomVector(); // initial guess
+        Vector3D x = new Vector3D(0,0,0); // initial guess
         Vector3D xPrev = x;   //x(n-1)
 
-        for (int i = 0; i < 20000; i++) {
+        for (int i = 0; i < 1; i++) {
             double [][] jInverse = Matrix3.inverse(getJacobian(x));
 
             x1 = (Vector3D) x.sub(Matrix3.multiply(jInverse, F(x)));
 
             xPrev = x;
             x = x1;
-            System.out.print("x1: " + getMinDistanceToDestination(x1, destination).norm() + ". x: " + F(x).norm());
+
             double error = x1.sub(xPrev).norm();
+            System.out.print("x1: " + F(x1).norm() + ". x: " + F(x).norm());
             System.out.print("  ||  Error: " + error);
             System.out.println("  ||  x1: " + x1);
 
             if (error < e) {
+                System.out.println("x1 :   " + x1);
                 return x1;
-            }
-
-            if (Double.isNaN(x1.getX())) {
-                x = (Vector3D) randomVector();
             }
         }
 
+        System.out.println("x1 :FUCK   " + x1);
         return x1;
     }
 
-    static Vector3D getMinDistanceToDestination(Vector3dInterface startVelocity, Vector3dInterface destination) {
-        Vector3D[] probeArray =  (Vector3D[]) probeSimulator.trajectory(pStart, startVelocity, tf, h);
-        Vector3D min = (Vector3D) destination.sub(probeArray[0]);
+    /**
+     *  returns the difference between the unit vector of the probe velocity and the direction
+     *  between the probe and the destination
+     */
+    static Vector3dInterface getDifference(Vector3dInterface x,PlanetState probe, Vector3dInterface destination) {
 
-        for (int i = 0; i < probeArray.length; i++) {
-            Vector3D probePos = probeArray[i];
-            Vector3D planetPos = (Vector3D) destination;
+        PlanetState newState = step(probe, h, x);
+        Vector3D distanceUnit = (Vector3D) destination.sub(newState.getPosition()).mul(1/(destination.sub(newState.getPosition()).norm()));
+        Vector3D velocityUnit = (Vector3D)  newState.getVelocity().mul(1/newState.getVelocity().norm());
+        Vector3D sum = (Vector3D) distanceUnit.add(velocityUnit);
 
-            if (min.norm() > probePos.dist(planetPos)) {
-                min = (Vector3D) planetPos.sub(probePos);
-            }
-        }
-        return min;
+        System.out.println(distanceUnit);
+        System.out.println(velocityUnit);
+
+        System.out.println("delta:   " + distanceUnit.sub(velocityUnit));
+        return (sum.mul(1/sum.norm())).sub(velocityUnit);
     }
+
 
     /**
      * column matrix containing all functions f(x1 ... xn)
      */
     static Vector3dInterface F(Vector3dInterface x) {
-        Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
-        return getMinDistanceToDestination(x.mul(50000/x.norm()).add(earthVelocity), destinationPoint);
+        return getDifference(x, probeState, destinationPoint);
     }
 
 
@@ -134,16 +134,26 @@ public class NewtonRaphson {
         return J;
     }
 
-    static Vector3dInterface randomVector() {
-        Random r = new Random();
 
-        double x = r.nextDouble()* - r.nextDouble();
-        double y = r.nextDouble()* - r.nextDouble();
-        double z = r.nextDouble()/6* - r.nextDouble()/6;
 
-        Vector3D rand = new Vector3D(x,y,z);
 
-        return rand.mul(1/rand.norm());
+
+
+
+
+    private static PlanetRate call(double t, PlanetState y, Vector3dInterface addedForce) {
+        Vector3dInterface rateAcceleration = y.getForce().add(addedForce).mul(1 / probeMass); // a = F/m
+        Vector3dInterface rateVelocity = y.getVelocity().add(rateAcceleration.mul(t));
+        return new PlanetRate(rateVelocity, rateAcceleration);
     }
+
+    private static PlanetState step(PlanetState y, double h, Vector3dInterface force) {
+        PlanetRate k1 = call(h, y, force).mul(h);
+        PlanetRate k2 = call(0.5*h, y.addMul(0.5, k1), force).mul(h);
+        PlanetRate k3 = call(0.5*h, y.addMul(0.5, k2), force).mul(h);
+        PlanetRate k4 = call(h, y.addMul(1, k3), force).mul(h);
+        return y.addMul(1/6d, k1.addMul(2, k2).addMul(2, k3).addMul(1, k4));
+    }
+
 
 }

@@ -9,6 +9,8 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.solvers.NewtonRaphsonProbe;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.Map;
@@ -24,7 +26,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     int j = 0;
 
     private String probeName = SpaceObjectEnum.SHIP.getName();
-    private Vector3dInterface force;
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
 
     private double probeMass = system.getRocketByName(probeName).getMass();
@@ -76,7 +77,19 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < size; i++)
             probePositions[i] = probeStateArray[i].getPosition();
 
+
         return probePositions;
+    }
+
+    public PlanetState[] stateTrajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
+        this.h = h;
+        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(),tf, h);
+        init(p0, v0);
+
+        for (int i = 1; i < size; i++)
+            probeStateArray[i] = getNextProbeState(i, h);
+
+        return probeStateArray;
     }
 
 
@@ -87,7 +100,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
 
     private PlanetRate call(double t, PlanetState y) {
-        Vector3dInterface rateAcceleration = force.mul(1 / probeMass); // a = F/m
+        Vector3dInterface rateAcceleration = y.getForce().mul(1 / probeMass); // a = F/m
         Vector3dInterface rateVelocity = y.getVelocity().add(rateAcceleration.mul(t));
         return new PlanetRate(rateVelocity, rateAcceleration);
     }
@@ -104,14 +117,14 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         size = timeLineArray.length;
         probeStateArray = new PlanetState[size];
         probeStateArray[0] = new PlanetState(p0, v0);
-        force = new Vector3D(0,0,0);
+        probeStateArray[0].setForce(new Vector3D(0,0,0));
     }
 
     private PlanetState getNextProbeState(int i, double h) {
-        force = new Vector3D(0,0,0);
+        probeStateArray[i-1].setForce(new Vector3D(0,0,0));
 
 
-        for (Map.Entry<String , PlanetState> entry : ((org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
+        for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
 
             String planetName = entry.getKey();
             Planet planet = system.getPlanetByName(planetName);
@@ -120,7 +133,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             PlanetState planetState = entry.getValue();
             PlanetState probeState = probeStateArray[i-1];
 
-            force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
+            probeState.setForce(probeState.getForce().add(newtonsLaw(probeState, planetState, probeMass, planetMass)));
         }
 
         //force = force.add(getEngineForce(i-1, 50000).mul(1));

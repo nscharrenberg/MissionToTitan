@@ -141,6 +141,10 @@ public class Vector3D implements Vector3dInterface {
                 ')';
     }
 
+    public Vector3dInterface getUnit() {
+        return this.mul(1/this.norm());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

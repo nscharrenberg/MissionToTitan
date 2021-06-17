@@ -125,7 +125,7 @@ public class Matrix3 {
      * @param matrix
      * @return
      */
-    private static double getDeterminant3(double[][] matrix) {
+    public static double getDeterminant3(double[][] matrix) {
         sizeCheck(matrix);
 
         matrix = getExtendedMatrix(matrix);

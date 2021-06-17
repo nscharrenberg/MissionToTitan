@@ -10,6 +10,7 @@ import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.physics.ode.solvers.NewtonRaphson;
+import org.um.dke.titan.physics.ode.solvers.NewtonRaphson2;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -93,23 +94,29 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     private void deployRockets(double tf, double dt) {
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
+            Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition();
 
-            Vector3D velocity = (Vector3D) NewtonRaphson.get(entry.getValue().getPosition(), ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition());
+            Vector3D velocity = (Vector3D) entry.getValue().getVelocity();
 
-            while (velocity.norm() > 100000) {
-                velocity = (Vector3D) NewtonRaphson.get(entry.getValue().getPosition(), ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition());
-            }
+            Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
+            velocity = new Vector3D(8.468197080257811E14,-9.439404347698939E14,1.176566695697609E15);
+            velocity = (Vector3D) velocity.mul(45000/velocity.norm()).add(earthVelocity);
+
+            System.out.println(NewtonRaphson2.get(entry.getValue().getPosition(), destination));
+
+//            while (velocity.norm() > 10000000) {
+//                System.out.println("velocity = " + velocity.norm());
+//                velocity = (Vector3D) NewtonRaphson.get(entry.getValue().getPosition(), destination);
+//            }
 
 
             Vector3dInterface[] probeArray = probeSimulator.trajectory(entry.getValue().getPosition(),velocity, tf, dt);
 
-
-            String planetname = "Titan";
-            Vector3D min = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet(planetname).getPosition().sub(probeArray[0]);
+            Vector3D min = (Vector3D) destination.sub(probeArray[0]);
 
             for (int i = 0; i < probeArray.length; i++) {
                 Vector3D probePos = (Vector3D) probeArray[i];
-                Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet(planetname).getPosition();
+                Vector3D planetPos = destination;
 
                 if (min.norm() > probePos.dist(planetPos)) {
                     min = (Vector3D) planetPos.sub(probePos);
@@ -128,7 +135,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
         }
     }
 
-    public org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState getInitialSystemState() {
+    public SystemState getInitialSystemState() {
         Map<String, PlanetState> states = new HashMap<>();
 
         for (Planet planet : planets.values()) {
