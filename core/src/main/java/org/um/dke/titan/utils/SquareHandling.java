@@ -250,4 +250,14 @@ public class SquareHandling {
         return param;
     }
 
+    /**
+     * Generates a random double out of a selected interval
+     * @param min Minimum value for the random number
+     * @param max Maximum value for the random number
+     * @return A random number
+     */
+    public static double generateRandom(double min, double max) {
+        double r = (Math.random() * ((max - min) + 1.0)) + min;
+        return r;
+    }
 }

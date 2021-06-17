@@ -12,9 +12,17 @@ public class SquarePanel extends JPanel {
     public SquarePanel() {
         super();
         setPreferredSize(new Dimension(500, 500));
+
+        //square
+        double angle = Math.PI/6.0;
+        boolean left = false;
         Vector3dInterface center = new Vector3D(200, 200, 0);
-        Vector3dInterface[] corners = SquareHandling.calculateCorners(center, Math.PI/4.0);
-        s = new SquareComponent(center, corners);
+        Vector3dInterface[] corners = SquareHandling.calculateCorners(center, angle);
+        double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
+        double y = SquareHandling.generateRandom(interval[0], interval[1]);
+        double x = SquareHandling.calculateAccX(center, corners, left, y);
+        Vector3dInterface dist = SquareHandling.calculateDist(center, x, y);
+        s = new SquareComponent(center, corners, x, y, dist);
     }
 
     @Override
@@ -22,4 +30,6 @@ public class SquarePanel extends JPanel {
         super.paintComponent(g);
         s.paintComponent(g);
     }
+
+
 }
