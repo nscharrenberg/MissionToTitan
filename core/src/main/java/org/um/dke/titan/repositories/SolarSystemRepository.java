@@ -95,13 +95,13 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     private void deployRockets(double tf, double dt) {
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
-            Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition().add(new Vector3D(2574700 + 300000, 0, 0));
+            Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition().add(new Vector3D(2574700, 0, 0));
 
             Vector3D velocity = (Vector3D) entry.getValue().getVelocity();
 
             Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
-            velocity = new Vector3D(0.7115301515084869,-0.8148178483505151,0.9199513875669232);
-            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(52500);
+            velocity = new Vector3D(0.5826126600446829,-0.4299266562850228,0.5825598073404192);
+            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(53600);
             velocity = (Vector3D) velocity.add(earthVelocity);
 
 
@@ -118,7 +118,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             for (int i = 0; i < probeArray.length; i++) {
                 Vector3D probePos = (Vector3D) probeArray[i];
-                Vector3D planetPos = destination;
+                Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition().add(new Vector3D(2574700, 0, 0));
 
                 if (min.norm() > probePos.dist(planetPos)) {
                     min = (Vector3D) planetPos.sub(probePos);
@@ -127,7 +127,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             System.out.println("MIN: " + min.norm() + " ::: " + min);
 
-            System.out.println(NewtonRaphson.get(probeStart, destination));
+            //System.out.println(NewtonRaphson.get(probeStart, destination));
 
 
             // adding the rockets to the system state

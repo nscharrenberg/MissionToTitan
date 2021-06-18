@@ -86,7 +86,7 @@ public class NewtonRaphson {
 
         for (int i = 0; i < probeArray.length; i++) {
             Vector3D probePos = probeArray[i];
-            Vector3D planetPos = (Vector3D) destination;
+            Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition().add(new Vector3D(2574700,0,0));
 
             if (min.norm() > probePos.dist(planetPos)) {
                 min = (Vector3D) planetPos.sub(probePos);
@@ -101,15 +101,7 @@ public class NewtonRaphson {
     public static Vector3dInterface F(Vector3dInterface x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
         Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(52500);
-        return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
-    }
-
-    public static Vector3dInterface F(Vector3dInterface x, Vector3D destinationPoint, Vector3dInterface start) {
-        pStart = (Vector3D) start;
-        Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
-        Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(52500);
+        x = unit.mul(53600);
         return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
     }
 
@@ -121,7 +113,7 @@ public class NewtonRaphson {
     static double[][] getJacobian(Vector3dInterface v) {
         double [][] J = new double[3][3];
 
-        double h = 1.5;
+        double h = 1.8;
 
         Vector3D xPlusH = new Vector3D(v.getX() + h, v.getY(), v.getZ());
         Vector3D xMinusH = new Vector3D(v.getX() - h, v.getY(), v.getZ());
@@ -150,7 +142,7 @@ public class NewtonRaphson {
 
         double x = r.nextDouble()* - r.nextDouble();
         double y = r.nextDouble()* - r.nextDouble();
-        double z = r.nextDouble()/6* - r.nextDouble()/6;
+        double z = r.nextDouble()/10* - r.nextDouble()/10;
 
         Vector3D rand = new Vector3D(x,y,z);
 
