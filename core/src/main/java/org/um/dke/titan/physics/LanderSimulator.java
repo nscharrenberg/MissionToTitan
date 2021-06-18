@@ -61,7 +61,7 @@ public class LanderSimulator{
 
 
         }
-        WindGenerator wg = new WindGenerator(MAXIMUM_WIND_FORCE);
+        WindGenerator wg = new WindGenerator(MAXIMUM_WIND_FORCE, dt);
         System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
         System.out.println(massUsed);
     }
@@ -188,8 +188,8 @@ public class LanderSimulator{
      * @param currentAngle
      * @return
      */
-    public double generateWind(double t, Vector3dInterface position, double currentAngle, int i){
-        Vector3dInterface[] wind = wg.getWind(t, position, currentAngle);
+    public double generateWind(Vector3dInterface position, double currentAngle, int i){
+        Vector3dInterface[] wind = wg.getWind(position, currentAngle);
         Vector3dInterface f = wind[0];//force of the wind
         Vector3dInterface r = wind[1];//distance of the wind to the center
         double newAngle = 0;

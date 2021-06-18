@@ -6,8 +6,12 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 public class WindGenerator {
     private final double maxForce;
     private double[] param, paramDerivative;
+    private final double dt;
+    private  double t;
 
-    public WindGenerator(double maxForce) {
+    public WindGenerator(double maxForce, double dt) {
+        this.dt = dt;
+        t = 0;
         this.maxForce = maxForce;
         param = new double[]{
                 /*x0*/12,
@@ -31,12 +35,11 @@ public class WindGenerator {
      * The output has the following order:
      * [0] force
      * [1] distance to center
-     * @param t Time at which the wind function should be evaluated
      * @param center Center point of the square
      * @param angle Angle at which the square is rotated
      * @return An array with the force vector and a distance from the center vector
      */
-    public Vector3dInterface[] getWind(double t, Vector3dInterface center, double angle) {
+    public Vector3dInterface[] getWind(Vector3dInterface center, double angle) {
         Vector3dInterface[] output = new Vector3dInterface[2];
         //need x, random force
         double f = evalPolyInRange(t, param, -10, 10);
@@ -51,6 +54,7 @@ public class WindGenerator {
         output[1] = dist;
         //angle according to derivative
         //TODO : Make the wind (force vector) come in at a random angle between 90 (straight down) and -90 (straight up)
+        t += dt;
         return output;
     }
 
