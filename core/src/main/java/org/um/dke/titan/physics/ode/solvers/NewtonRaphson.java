@@ -63,10 +63,10 @@ public class NewtonRaphson {
             xPrev = x;
             x = x1;
 
-            System.out.print("F(xPrev) : " + F(xPrev) + ". F(x1): " + F(x1) + ".   norm: " + F(x1).norm());
-            double error = F(x1).sub(F(xPrev)).norm();
-            System.out.print("  ||  Error: " + error);
-            System.out.println("  ||  x1: " + x1);
+            Vector3dInterface Fx1 = F(x1);
+            Vector3dInterface FxPrev = F(xPrev);
+            double error = Fx1.sub(FxPrev).norm();
+            FactoryProvider.getTestRepository().checkAndPrint(Fx1.norm(), x1, error, FxPrev, Fx1);
 
             if (error < e) {
                 return x1;
