@@ -19,6 +19,7 @@ public class LanderSimulator{
 
 
     private final double probeSize = 15;
+    private final double MOI = Math.pow(probeSize, 4)/12;
     private double tf, dt;
 
     private final double EXHAUST_VELOCITY = 2e4;
@@ -109,6 +110,9 @@ public class LanderSimulator{
         ts = new double[landerArray.length];
         //start landing
         landerArray[0] = y0;
+        for(int i=0; i<landerArray.length; i++){
+            landerArray[i].setAngularVelocity(0);
+        }
         ts[0] = 0;
     }
 
@@ -184,12 +188,16 @@ public class LanderSimulator{
      * @param currentAngle
      * @return
      */
-    public double rotateLander(double t, Vector3dInterface position, double currentAngle){
+    public double generateWind(double t, Vector3dInterface position, double currentAngle, int i){
         Vector3dInterface[] wind = wg.getWind(t, position, currentAngle);
         Vector3dInterface f = wind[0];//force of the wind
         Vector3dInterface r = wind[1];//distance of the wind to the center
-
         double newAngle = 0;
+
+        //torque, moment of inertia, get us angular acceleration
+        double torque = crossProduct2D(f, r);
+        double angularAccel = torque/MOI;
+        landerArray[i].setAngularVelocity(angularAccel*dt);
         return newAngle;
     }
 
@@ -226,6 +234,7 @@ public class LanderSimulator{
 //        return force;
 //    }
 
+
     //--------UTILS-------------
     public double maxVelocity(){
         double max = Double.MIN_VALUE;
@@ -236,5 +245,9 @@ public class LanderSimulator{
             }
         }
         return max;
+    }
+
+    public static double crossProduct2D(Vector3dInterface one, Vector3dInterface other){
+        return (one.getX()*other.getY()) - (one.getY()*other.getX());
     }
 }

@@ -9,6 +9,9 @@ public class PlanetState {
     private Vector3dInterface velocity;
     private Vector3dInterface force;
     private double angle;
+    private double angularVelocity;
+
+
 
     public PlanetState(Vector3dInterface position, Vector3dInterface velocity) {
         this.position = position;
@@ -71,6 +74,14 @@ public class PlanetState {
 
     public void setAngle(double angle) {
         this.angle = angle;
+    }
+
+    public double getAngularVelocity() {
+        return angularVelocity;
+    }
+
+    public void setAngularVelocity(double angularVelocity) {
+        this.angularVelocity = angularVelocity;
     }
 
     public String toString(){
