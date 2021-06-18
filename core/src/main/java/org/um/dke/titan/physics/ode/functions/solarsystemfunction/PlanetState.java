@@ -8,11 +8,20 @@ public class PlanetState {
     private Vector3dInterface position;
     private Vector3dInterface velocity;
     private Vector3dInterface force;
+    private double angle;
 
     public PlanetState(Vector3dInterface position, Vector3dInterface velocity) {
         this.position = position;
         this.velocity = velocity;
         force = new Vector3D(0,0,0);
+        angle = 0;
+    }
+
+    public PlanetState(Vector3dInterface position, Vector3dInterface velocity, double angle) {
+        this.position = position;
+        this.velocity = velocity;
+        force = new Vector3D(0,0,0);
+        this.angle = angle;
     }
 
     public PlanetState() {
@@ -54,6 +63,14 @@ public class PlanetState {
 
     public void setForce(Vector3dInterface force) {
         this.force = force;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 
     public String toString(){

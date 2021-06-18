@@ -13,18 +13,20 @@ public class LanderSimulator{
     private double[] ts;
     private final double landerMass = 6000;
     private Vector3dInterface force;
-    private Vector3dInterface[] rotationArray;
     private final double g = 1.352;// m/s^2
 
+
+    private final double probeSize = 15;
     private double tf, dt;
 
     private final double EXHAUST_VELOCITY = 2e4;
     private final double MAXIMUM_THRUST = 8e3;
     private final double MAXIMUM_SIDE_THRUST = 8e2;
-    private final double AREA = 4.55;
+    private final double AREA = 1;
     private final double PRESSURE = 100000;
     private final double radiusTitan = 2575.5e3;
     private final double MASS_FLOW_RATE = 2000;
+    private double massUsed = 0;
 
     /**
      *
@@ -49,12 +51,13 @@ public class LanderSimulator{
 
                 controlVerticalVelocity(i);
                 landerArray[i] = step(landerArray[i - 1], dt);
-                System.out.println("t: "+ts[i]+" vy: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
+                //System.out.println("t: "+ts[i]+" vy: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
             }
 
 
         }
-        System.out.println("MAXMIUM VELOCITY REACHED: " + maxVelocity());
+        System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
+        System.out.println(massUsed);
     }
 
 
@@ -93,7 +96,7 @@ public class LanderSimulator{
         return ts;
     }
 
-    public void init(PlanetState y0, double tf, double dt){
+    private void init(PlanetState y0, double tf, double dt){
         this.tf = tf;
         this.dt = dt;
         force = new Vector3D(0,0,0);
@@ -102,33 +105,43 @@ public class LanderSimulator{
         //start landing
         landerArray[0] = y0;
         ts[0] = 0;
-        rotationArray = new Vector3dInterface[(int)Math.round(tf/dt) + 1];
-        rotationArray[0] = new Vector3D(0,1,0);
     }
 
     //----------ENGINE HANDLING--------
 
     public Vector3dInterface mainThruster(double percentage){
-
+        massUsed += calculateMassUsed(percentage);
         return new Vector3D(0, 1, 0).mul((percentage/100.0)*MAXIMUM_THRUST);
+    }
+
+        private double calculateMassUsed(double percentageOfPower){
+        return dt *(percentageOfPower/100)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
+    }
+
+    private double calculateMassUsedSide(double percentageOfPower){
+        return dt *(percentageOfPower/100)*((MAXIMUM_SIDE_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
     }
 
     public Vector3dInterface topLeftThruster(double percentage){
         //some rotation handling
         //in 2 dimensions we can use torque = r*F*sin(theta)
-        //where r is the distance to the center of gravity, F is the force, and theta is the angle between those (which i dont get rn)
+        //where r is the distance to the center of gravity, F is the force, and theta is the angle between those (which i don't get rn)
+        massUsed += calculateMassUsedSide(percentage);
         return new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
     }
 
     public Vector3dInterface topRightThruster(double percentage){
+        massUsed += calculateMassUsedSide(percentage);
         return new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
     }
 
     public Vector3dInterface bottomLeftThruster(double percentage){
+        massUsed += calculateMassUsedSide(percentage);
         return new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
     }
 
     public Vector3dInterface bottomRightThruster(double percentage){
+        massUsed += calculateMassUsedSide(percentage);
         return new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
     }
 
@@ -160,7 +173,9 @@ public class LanderSimulator{
     }
 
     
+    public double rotateLander(double t, Vector3dInterface position, double currentAngle){
 
+    }
 
 
 
