@@ -100,8 +100,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             Vector3D velocity = (Vector3D) entry.getValue().getVelocity();
 
             Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
-            velocity = new Vector3D(0.5826126600446829,-0.4299266562850228,0.5825598073404192);
-            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(53600);
+            velocity = new Vector3D(0.6278788370965885,-0.4469663938915004,0.6539564857916645);
+            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(52000);
             velocity = (Vector3D) velocity.add(earthVelocity);
 
 
@@ -118,7 +118,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             for (int i = 0; i < probeArray.length; i++) {
                 Vector3D probePos = (Vector3D) probeArray[i];
-                Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition().add(new Vector3D(2574700, 0, 0));
+                Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition();
 
                 if (min.norm() > probePos.dist(planetPos)) {
                     min = (Vector3D) planetPos.sub(probePos);

@@ -86,7 +86,7 @@ public class NewtonRaphson {
 
         for (int i = 0; i < probeArray.length; i++) {
             Vector3D probePos = probeArray[i];
-            Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition().add(new Vector3D(2574700,0,0));
+            Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition();
 
             if (min.norm() > probePos.dist(planetPos)) {
                 min = (Vector3D) planetPos.sub(probePos);
@@ -101,7 +101,7 @@ public class NewtonRaphson {
     public static Vector3dInterface F(Vector3dInterface x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
         Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(53600);
+        x = unit.mul(52000);
         return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
     }
 
