@@ -118,9 +118,13 @@ public class LanderSimulator{
 
     //----------ENGINE HANDLING--------
 
-    public Vector3dInterface mainThruster(double percentage){
+    public Vector3dInterface mainThruster(double percentage, PlanetState landerState){
         massUsed += calculateMassUsed(percentage);
-        return new Vector3D(0, 1, 0).mul((percentage/100.0)*MAXIMUM_THRUST);
+        Vector3dInterface c = landerState.getPosition();
+        Vector3dInterface p = new Vector3D(c.getX(), c.getY() - probeSize*0.5, 0);
+        Vector3dInterface f = new Vector3D(0, 1, 0).mul((percentage/100.0)*MAXIMUM_THRUST);
+        f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
+        return f;
     }
 
         private double calculateMassUsed(double percentageOfPower){
@@ -135,8 +139,11 @@ public class LanderSimulator{
         //some rotation handling
         //in 2 dimensions we can use torque = r*F*sin(theta)
         //where r is the distance to the center of gravity, F is the force, and theta is the angle between those (which i don't get rn)
+        Vector3dInterface f = new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+
+        //handleRotation(f, );
         massUsed += calculateMassUsedSide(percentage);
-        return new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        return f;
     }
 
     public Vector3dInterface topRightThruster(double percentage){
@@ -183,25 +190,35 @@ public class LanderSimulator{
 
     /**
      * Outputs the angle at which the lander is being rotated from the wind
-     * @param t
      * @param position
-     * @param currentAngle
      * @return
      */
-    public double generateWind(Vector3dInterface position, double currentAngle, int i){
+    public double generateWind(Vector3dInterface position, int i){
+        double currentAngle = landerArray[i-1].getAngle();
         Vector3dInterface[] wind = wg.getWind(position, currentAngle);
         Vector3dInterface f = wind[0];//force of the wind
         Vector3dInterface r = wind[1];//distance of the wind to the center
         double newAngle = 0;
 
         //torque, moment of inertia, get us angular acceleration
-        double torque = crossProduct2D(f, r);
-        double angularAccel = torque/MOI;
-        landerArray[i].setAngularVelocity(angularAccel*dt);
-        return newAngle;
+        return handleRotation(f, r, i);
     }
 
+    public double handleRotation(Vector3dInterface f, Vector3dInterface r, int i){
+        //torque, moment of inertia, get us angular acceleration
+        double torque = crossProduct2D(f, r);
+        double angularAccel = torque/MOI;
 
+        //current vel = prev vel + acceleration*dt
+        double currentVelocity = landerArray[i-1].getAngularVelocity()+angularAccel*dt;
+        landerArray[i].setAngularVelocity(currentVelocity);
+
+        //displacement = currentVel*dt
+        double deltaTheta = currentVelocity*dt;
+
+        //prev angle + change in angle
+        return landerArray[i-1].getAngle() + deltaTheta;
+    }
 
 
     //issue with call method using the force field instead of the force provided by the parameter.
