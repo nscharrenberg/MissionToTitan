@@ -72,6 +72,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 1; i < size; i++)
             probeStateArray[i] = getNextProbeState(i, h);
 
+        System.out.println("velocity:   " + probeStateArray[74759].getVelocity() + ". speed:   " + probeStateArray[74759].getVelocity().norm());
+
         // converting from probe state to probe position array
         Vector3dInterface[] probePositions = new Vector3D[size];
         for (int i = 0; i < size; i++)

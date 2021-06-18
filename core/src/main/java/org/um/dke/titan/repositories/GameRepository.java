@@ -22,8 +22,8 @@ import org.um.dke.titan.screens.LoadingScreen;
 import java.util.Map;
 
 public class GameRepository implements IGameRepository {
-    private static int DEFAULT_SKIP_SPEED = 250;
-    private static int DEFAULT_SKIP_SPEED_INCREMENT = 10;
+    private static int DEFAULT_SKIP_SPEED = 50;
+    private static int DEFAULT_SKIP_SPEED_INCREMENT = 1;
     private boolean isGdx = true;
     private Game game = null;
     private Viewport viewport;
