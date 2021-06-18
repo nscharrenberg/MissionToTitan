@@ -40,12 +40,7 @@ public class WindGenerator {
         Vector3dInterface[] output = new Vector3dInterface[2];
         //need x, random force
         double f = evalPolyInRange(t, param, -10, 10);
-        boolean left;
-        if(f > 0) {
-            left = true;
-        } else {// force <= 0
-            left = false;
-        }
+        boolean left = isLeft(f);
         Vector3dInterface[] corners = SquareHandling.calculateCorners(center, angle);
         double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
         double y = SquareHandling.generateRandom(interval[0], interval[1]);
@@ -62,5 +57,13 @@ public class WindGenerator {
     public static double evalPolyInRange(double x, double[] param, double min, double max) {
         double y = SquareHandling.evalPoly(param, x);
         return ((x - min)/(max - min));
+    }
+
+    public static boolean isLeft(double f) {
+        if(f > 0) {
+            return true;
+        } else {// force <= 0
+            return false;
+        }
     }
 }

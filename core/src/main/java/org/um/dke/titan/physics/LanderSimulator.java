@@ -5,6 +5,8 @@ import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
+import org.um.dke.titan.utils.SquareHandling;
+import org.um.dke.titan.utils.WindGenerator;
 
 public class LanderSimulator{
     private Lander lander;
@@ -24,9 +26,11 @@ public class LanderSimulator{
     private final double MAXIMUM_SIDE_THRUST = 8e2;
     private final double AREA = 1;
     private final double PRESSURE = 100000;
+    private final double MAXIMUM_WIND_FORCE = 10;
     private final double radiusTitan = 2575.5e3;
     private final double MASS_FLOW_RATE = 2000;
     private double massUsed = 0;
+    private WindGenerator wg;
 
     /**
      *
@@ -56,6 +60,7 @@ public class LanderSimulator{
 
 
         }
+        WindGenerator wg = new WindGenerator(MAXIMUM_WIND_FORCE);
         System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
         System.out.println(massUsed);
     }
@@ -172,9 +177,20 @@ public class LanderSimulator{
         }
     }
 
-    
+    /**
+     * Outputs the angle at which the lander is being rotated from the wind
+     * @param t
+     * @param position
+     * @param currentAngle
+     * @return
+     */
     public double rotateLander(double t, Vector3dInterface position, double currentAngle){
+        Vector3dInterface[] wind = wg.getWind(t, position, currentAngle);
+        Vector3dInterface f = wind[0];//force of the wind
+        Vector3dInterface r = wind[1];//distance of the wind to the center
 
+        double newAngle = 0;
+        return newAngle;
     }
 
 
