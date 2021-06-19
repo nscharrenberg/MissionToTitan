@@ -39,11 +39,12 @@ public class GameRepository implements IGameRepository {
     private static final float MINIMUM_CAMERA_ZOOM = (float)5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
-    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel;
+    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel, timeLabel;
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
     private boolean paused = true;
     private int time = 0;
+
 
     @Override
     public void load() {
@@ -80,12 +81,15 @@ public class GameRepository implements IGameRepository {
         this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
         this.speedLabel = new Label("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.speedLabel.setPosition(15, Gdx.graphics.getHeight() - 125);
+        this.timeLabel = new Label("Current Time: " + this.time, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.timeLabel.setPosition(15, Gdx.graphics.getHeight() - 150);
 
         stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
         stage.addActor(cameraZoomLbl);
         stage.addActor(cameraLbl);
         stage.addActor(speedLabel);
+        stage.addActor(timeLabel);
 
         // Start from Earth
         focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
@@ -137,11 +141,13 @@ public class GameRepository implements IGameRepository {
 
         if (time >= 0) {
             time+=FactoryProvider.getGameRepository().getTimeToSkip();
+            timeLabel.setText("Current Time: " + time);
         }
 
         if (time > FactoryProvider.getSolarSystemRepository().getTimeLineArray().length-1 || time < 0) {
             timeToSkip = DEFAULT_SKIP_SPEED;
             time = 0;
+            timeLabel.setText("Current Time: " + time);
 
             FactoryProvider.getSolarSystemRepository().refresh();
             game.setScreen(new LoadingScreen());
