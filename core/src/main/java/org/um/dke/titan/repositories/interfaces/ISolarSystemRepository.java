@@ -35,4 +35,6 @@ public interface ISolarSystemRepository {
     StateInterface[] getTimeLineArray();
 
     void refresh();
+
+    double getDt();
 }

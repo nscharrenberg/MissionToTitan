@@ -44,10 +44,9 @@ public class SolarSystemRepository implements ISolarSystemRepository {
         planets = FileImporter.load();
     }
 
-
-
-
-
+    public double getDt() {
+        return dt;
+    }
 
     // --------------------- ODE Handling  ---------------------
 

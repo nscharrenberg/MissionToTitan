@@ -19,11 +19,16 @@ import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 public class GameRepository implements IGameRepository {
     private static int DEFAULT_SKIP_SPEED = 50;
     private static int DEFAULT_SKIP_SPEED_INCREMENT = 1;
+    private static int START_YEAR = 2020;
+    private static int START_MONTH = 4;
+    private static int START_DAY = 1;
     private boolean isGdx = true;
     private Game game = null;
     private Viewport viewport;
@@ -39,11 +44,12 @@ public class GameRepository implements IGameRepository {
     private static final float MINIMUM_CAMERA_ZOOM = (float)5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
-    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel;
+    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel, timeLabel;
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
     private boolean paused = true;
     private int time = 0;
+    private Calendar date = Calendar.getInstance();
 
     @Override
     public void load() {
@@ -70,6 +76,8 @@ public class GameRepository implements IGameRepository {
             object.addActor(stage);
         }
 
+        date.set(START_YEAR, Calendar.APRIL, START_DAY);
+
         this.planetChooserLbl = new Label("(1) Sun (2) Earth (3) Jupiter (4) Saturn (5) Luna (6) Titan", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.planetChooserLbl.setPosition(15, Gdx.graphics.getHeight() - 25);
         this.cameraLbl = new Label(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z) , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -80,12 +88,15 @@ public class GameRepository implements IGameRepository {
         this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
         this.speedLabel = new Label("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.speedLabel.setPosition(15, Gdx.graphics.getHeight() - 125);
+        this.timeLabel = new Label("Current Time: " + this.time + "and Date: " + date.getTime(), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.timeLabel.setPosition(15, Gdx.graphics.getHeight() - 150);
 
         stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
         stage.addActor(cameraZoomLbl);
         stage.addActor(cameraLbl);
         stage.addActor(speedLabel);
+        stage.addActor(timeLabel);
 
         // Start from Earth
         focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
@@ -93,8 +104,6 @@ public class GameRepository implements IGameRepository {
 
     @Override
     public void render() {
-
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -137,11 +146,15 @@ public class GameRepository implements IGameRepository {
 
         if (time >= 0) {
             time+=FactoryProvider.getGameRepository().getTimeToSkip();
+            date.add(Calendar.SECOND, (int) (FactoryProvider.getGameRepository().getTimeToSkip() * FactoryProvider.getSolarSystemRepository().getDt()));
+            timeLabel.setText("Current Time: " + time + " and Date: " + date.getTime());
         }
 
         if (time > FactoryProvider.getSolarSystemRepository().getTimeLineArray().length-1 || time < 0) {
             timeToSkip = DEFAULT_SKIP_SPEED;
             time = 0;
+            date.set(2020, Calendar.APRIL, 1);
+            timeLabel.setText("Current Time: " + time + " and Date: " + date.getTime());
 
             FactoryProvider.getSolarSystemRepository().refresh();
             game.setScreen(new LoadingScreen());
