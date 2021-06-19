@@ -136,7 +136,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         // optimal i = 74759
 
         PlanetState probe = probeStateArray[i-1];
-        probe.setForce(probe.getForce().add(getEngineForce(i)));
+        //probe.setForce(probe.getForce().add(getEngineForce(i)));
 
         return step(probe, h);
     }
@@ -180,7 +180,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      */
     private Vector3dInterface findThrustVector(int i) {
         SystemState systemState = (SystemState) timeLineArray[i];
-        PlanetState aimPoint = systemState.getPlanet("Earth");
+        PlanetState aimPoint = systemState.getPlanet("Titan");
         PlanetState probe = probeStateArray[i-1];
         Vector3D vector = (Vector3D) probe.getPosition().sub(aimPoint.getPosition());
         return vector.getUnit();
