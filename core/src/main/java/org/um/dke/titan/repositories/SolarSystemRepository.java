@@ -93,6 +93,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     }
 
     private void deployRockets(double tf, double dt) {
+
+
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
             Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition();
@@ -124,7 +126,6 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             System.out.println("MIN: " + min.norm() + " ::: " + min);
 
 //            System.out.println(NewtonRaphson.get(probeStart, destination));
-
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {
