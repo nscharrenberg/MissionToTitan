@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class GameRepository implements IGameRepository {
     private static int DEFAULT_SKIP_SPEED = 250;
-    private static int DEFAULT_SKIP_SPEED_INCREMENT = 10;
+    private static int DEFAULT_SKIP_SPEED_INCREMENT = 1;
     private boolean isGdx = true;
     private Game game = null;
     private Viewport viewport;
@@ -109,10 +109,6 @@ public class GameRepository implements IGameRepository {
 
         batch.setProjectionMatrix(camera.combined);
 
-        if (isPaused()) {
-            return;
-        }
-
         // TODO: Add Starry Night Background Image
 
         int whoIsDone = 0;
@@ -131,12 +127,16 @@ public class GameRepository implements IGameRepository {
             }
 
             found.render(batch, camera);
-            found.setPosition(entry.getValue().getPosition());
 
+            found.setPosition(entry.getValue().getPosition());
+        }
+
+        if (isPaused()) {
+            return;
         }
 
         if (time >= 0) {
-            time+=(1+FactoryProvider.getGameRepository().getTimeToSkip());
+            time+=FactoryProvider.getGameRepository().getTimeToSkip();
         }
 
         if (time > FactoryProvider.getSolarSystemRepository().getTimeLineArray().length-1 || time < 0) {
