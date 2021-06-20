@@ -33,7 +33,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
     public void preprocessing() {
         tf = 60 * 60 * 24 * 450;
-        dt = 500;
+        dt = 50;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
 
@@ -112,6 +112,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             Vector3dInterface[] probeArray = probeSimulator.trajectory(probeStart,entry.getValue().getVelocity(), tf, dt);
 
             Vector3D min = (Vector3D) destination.sub(probeArray[0]);
+            int minI = 0;
 
             for (int i = 0; i < probeArray.length; i++) {
                 Vector3D probePos = (Vector3D) probeArray[i];
@@ -119,12 +120,13 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
                 if (min.norm() > probePos.dist(planetPos)) {
                     min = (Vector3D) planetPos.sub(probePos);
+                    minI = i;
                 }
             }
 
-            System.out.println("MIN: " + min.norm() + " ::: " + min);
+            System.out.println("MIN: " + (min.norm()-2574700) + " ::: " + minI);
 
-//            System.out.println(NewtonRaphson.get(probeStart, destination));
+            System.out.println(NewtonRaphson.get(probeStart, destination));
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {

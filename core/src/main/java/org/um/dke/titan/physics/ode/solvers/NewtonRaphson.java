@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class NewtonRaphson {
 
-    static double h = 500;
+    static double h = 50;
     static double tf = 60 * 60 * 24 * 450;
 
 
@@ -113,7 +113,7 @@ public class NewtonRaphson {
     static double[][] getJacobian(Vector3dInterface v) {
         double [][] J = new double[3][3];
 
-        double h = 3;
+        double h = 4;
 
         Vector3D xPlusH = new Vector3D(v.getX() + h, v.getY(), v.getZ());
         Vector3D xMinusH = new Vector3D(v.getX() - h, v.getY(), v.getZ());

@@ -136,7 +136,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         // optimal i = 74759
 
         PlanetState probe = probeStateArray[i-1];
-        //probe.setForce(probe.getForce().add(getEngineForce(i)));
+       // probe.setForce(probe.getForce().add(getEngineForce(i)));
 
         return step(probe, h);
     }
@@ -160,8 +160,9 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        if (i > 74700) {
-            return useEngine(1, i);
+        if (i > 74759) {
+           // System.out.println("velocity: " + probeStateArray[i-1].getVelocity().norm());
+            return useEngine(5, i);
         }
         return new Vector3D(0,0,0);
     }
@@ -170,6 +171,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         if(!calculateNewMass(percentageOfPower))
             return new Vector3D(0,0,0);
         Vector3dInterface thrustVector = findThrustVector(index);
+       // System.out.println("probemass: " + system.getRocketByName(probeName).getMass());
         return engineForce(percentageOfPower, thrustVector);
     }
 
@@ -180,10 +182,12 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      */
     private Vector3dInterface findThrustVector(int i) {
         SystemState systemState = (SystemState) timeLineArray[i];
-        PlanetState aimPoint = systemState.getPlanet("Titan");
+        PlanetState aimPoint = systemState.getPlanet("Earth");
         PlanetState probe = probeStateArray[i-1];
         Vector3D vector = (Vector3D) probe.getPosition().sub(aimPoint.getPosition());
-        return vector.getUnit();
+        Vector3D v = (Vector3D) probeStateArray[i-1].getVelocity();
+        return v.getUnit().mul(-1);
+        //return vector.getUnit();
     }
 
     private double calculateMassUsed(double percentageOfPower) {
@@ -198,10 +202,10 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         if (system.getRocketByName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
             system.getRocketByName(probeName).setMass((float) (system.getRocketByName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
             fuelUsed += calculateMassUsed(percentageOfPower);
-            System.out.println("using fuel");
+            //System.out.println("using fuel");
             return true;
         } else {
-            System.out.println("No fuel left!!");
+            //System.out.println("No fuel left!!");
             return false;
         }
     }
