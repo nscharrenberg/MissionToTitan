@@ -1,4 +1,4 @@
-package org.um.dke.titan.physicsold.ode;
+package org.um.dke.titan.utils;
 
 import org.junit.Test;
 import org.um.dke.titan.domain.MovingObject;

@@ -6,7 +6,7 @@
 //import org.um.dke.titan.domain.Vector3D;
 //import org.um.dke.titan.interfaces.Vector3dInterface;
 //import org.um.dke.titan.physics.ode.functions.solarsystemfunction.ODEFunction;
-//import org.um.dke.titan.physicsold.ode.utils.GdxTestRunner;
+//import org.um.dke.titan.utils.GdxTestRunner;
 //
 //import java.util.*;
 //

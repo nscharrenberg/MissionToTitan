@@ -1,10 +1,10 @@
-package org.um.dke.titan.physicsold.ode;
+package org.um.dke.titan.domain;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physicsold.ode.utils.GdxTestRunner;
+import org.um.dke.titan.utils.GdxTestRunner;
 
 import static org.junit.Assert.*;
 

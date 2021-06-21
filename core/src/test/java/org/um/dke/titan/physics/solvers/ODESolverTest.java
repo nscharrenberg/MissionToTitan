@@ -12,7 +12,7 @@
 //import org.um.dke.titan.interfaces.StateInterface;
 //import org.um.dke.titan.physicsold.ode.functions.ODEFunction;
 //import org.um.dke.titan.physicsold.ode.solvers.ODESolver;
-//import org.um.dke.titan.physicsold.ode.utils.GdxTestRunner;
+//import org.um.dke.titan.utils.GdxTestRunner;
 //
 //import java.util.Arrays;
 //

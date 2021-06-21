@@ -5,7 +5,7 @@
 //import org.um.dke.titan.domain.MovingObject;
 //import org.um.dke.titan.domain.Vector3D;
 //import org.um.dke.titan.physicsold.ode.functions.ODEVerletFunction;
-//import org.um.dke.titan.physicsold.ode.utils.GdxTestRunner;
+//import org.um.dke.titan.utils.GdxTestRunner;
 //
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertThrows;
