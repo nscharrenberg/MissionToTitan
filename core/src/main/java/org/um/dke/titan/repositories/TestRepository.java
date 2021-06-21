@@ -12,6 +12,10 @@ public class TestRepository {
 
     public void checkAndPrint(double norm, Vector3dInterface coordinates, double error, Vector3dInterface FxPrev, Vector3dInterface Fx1) {
         if (norm < lowestNorm || !init) {
+            if (norm < 0 && norm > norm + 2575.5e3) {
+                return;
+            }
+
             this.lowestNorm = norm;
             this.closestCoordinates = coordinates;
             this.closestError = error;

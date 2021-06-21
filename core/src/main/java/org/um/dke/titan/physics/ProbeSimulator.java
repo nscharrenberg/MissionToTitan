@@ -10,6 +10,7 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.solvers.Vector4D;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.Map;
@@ -39,9 +40,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double MASS_FLOW_RATE = 2000;
     private final double minI = 503309;
 
-
     // --------------------- Trajectories  ---------------------
-
     @Override
     public Vector3dInterface[] trajectory(Vector3dInterface p0, Vector3dInterface v0, double[] ts) {
         timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(), ts);
@@ -82,10 +81,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return probeStateArray;
     }
 
-
     // --------------------- ODE Handling  ---------------------
-
-
     private PlanetRate call(double t, PlanetState y) {
         Vector3dInterface rateAcceleration = y.getForce().mul(1 / probeMass); // a = F/m
         Vector3dInterface rateVelocity = y.getVelocity().add(rateAcceleration.mul(t));
@@ -142,11 +138,32 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        double firstStart = 47554;
+        double firstStart = 47454;
         double firstEnd = firstStart + 700;
 
         if (i > firstStart && i < firstEnd) { // 503309 dt50 closest point
-            return useEngine(1, i, SpaceObjectEnum.JUPITER.getName());
+            return useEngine(1, i, -90);
+        }
+
+        double secondStart = firstEnd + 1000;
+        double secondEnd = secondStart + 50;
+
+        if (i > secondStart && i < secondEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, -180);
+        }
+
+        secondStart = secondEnd + 1000;
+        secondEnd = secondStart + 250;
+
+        if (i > secondStart && i < secondEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, -90);
+        }
+
+        secondStart = secondEnd + 1000;
+        secondEnd = secondStart + 50;
+
+        if (i > secondStart && i < secondEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, -90);
         }
 
         return new Vector3D(0,0,0);
@@ -163,6 +180,15 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         if(!calculateNewMass(percentageOfPower))
             return new Vector3D(0,0,0);
         Vector3dInterface thrustVector = findThrustVector(index, planetName);
+        return engineForce(percentageOfPower, thrustVector);
+    }
+
+    private Vector3dInterface useEngine(double percentageOfPower, int index, double angle) {
+        if(!calculateNewMass(percentageOfPower))
+            return new Vector3D(0,0,0);
+        PlanetState probe = probeStateArray[index-1];
+        Vector4D newVector = Vector4D.rotate(probe.getForce(), angle);
+        Vector3dInterface thrustVector = new Vector3D(newVector.getX() * newVector.getV(), newVector.getY(), newVector.getZ()* newVector.getV());
         return engineForce(percentageOfPower, thrustVector);
     }
 
@@ -193,8 +219,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
     private boolean calculateNewMass(double percentageOfPower) {
-        if (system.getRocketByName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
-            system.getRocketByName(probeName).setMass((float) (system.getRocketByName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
+        if (probeMass-calculateMassUsed(percentageOfPower)>probeMassDry) {
+            probeMass -= calculateMassUsed(percentageOfPower);
             fuelUsed += calculateMassUsed(percentageOfPower);
 //            System.out.println("using fuel");
             return true;

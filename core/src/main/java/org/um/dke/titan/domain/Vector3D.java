@@ -2,6 +2,7 @@ package org.um.dke.titan.domain;
 
 import com.badlogic.gdx.math.Vector3;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ode.solvers.Vector4D;
 
 import java.util.Objects;
 
