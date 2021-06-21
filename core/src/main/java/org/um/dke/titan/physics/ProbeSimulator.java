@@ -124,11 +124,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
             String planetName = entry.getKey();
             Planet planet = system.getPlanetByName(planetName);
-
-            if (planet == null) {
-                continue;
-            }
-
             double planetMass = planet.getMass();
 
             PlanetState planetState = entry.getValue();
@@ -164,7 +159,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        if (i > 74700) {
+        if (i > 503295) {
             return useEngine(1, i);
         }
         return new Vector3D(0,0,0);

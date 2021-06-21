@@ -84,10 +84,13 @@ public class PlanetState {
         this.angularVelocity = angularVelocity;
     }
 
-    public String toString(){
-        Vector3D s = (Vector3D) position;
-        Vector3D v = (Vector3D) velocity;
-        Vector3D f = (Vector3D) force;
-        return "[{s: " + s.getX() + ", " + s.getY() + ", " + s.getZ() + "}, {v: " + v.getX() + ", " + v.getY() + ", " + v.getZ()+ "}";
+    @Override
+    public String toString() {
+        return "\n\"x\": "   + position.getX() + ",\n" +
+                "\"y\": "  + position.getY() + ",\n" +
+                "\"z\": "  + position.getZ() + ",\n" +
+                "\"vx\": " + velocity.getX() + ",\n" +
+                "\"vy\": " + velocity.getY() + ",\n" +
+                "\"vz\": " + velocity.getZ() + "\n";
     }
 }

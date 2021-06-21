@@ -63,7 +63,7 @@ public class NewtonRaphson {
             xPrev = x;
             x = x1;
 
-            System.out.print("F(xPrev) : " + F(xPrev) + ". F(x1): " + F(x1) + ".   norm: " + (F(x1).norm() - 2574700));
+            System.out.print("F(xPrev) : " + F(xPrev) + ". F(x1): " + F(x1) + ".   norm: " + ((F(x1).norm()) -2574700));
             double error = F(x1).sub(F(xPrev)).norm();
             System.out.print("  ||  Error: " + error);
             System.out.println("  ||  x1: " + x1);
@@ -101,7 +101,7 @@ public class NewtonRaphson {
     public static Vector3dInterface F(Vector3dInterface x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
         Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(40000);
+        x = unit.mul(40020);
         return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
     }
 
@@ -113,7 +113,7 @@ public class NewtonRaphson {
     static double[][] getJacobian(Vector3dInterface v) {
         double [][] J = new double[3][3];
 
-        double h = 3;
+        double h = 2;
 
         Vector3D xPlusH = new Vector3D(v.getX() + h, v.getY(), v.getZ());
         Vector3D xMinusH = new Vector3D(v.getX() - h, v.getY(), v.getZ());

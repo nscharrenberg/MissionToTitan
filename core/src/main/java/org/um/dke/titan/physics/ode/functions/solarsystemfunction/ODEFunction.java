@@ -20,8 +20,7 @@ public class ODEFunction implements ODEFunctionInterface {
             throw new IllegalArgumentException("The time should be higher than 0");
         }
 
-        org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState systemState = (org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState) y;
-
+        SystemState systemState = (SystemState) y;
 
         resetForces(systemState.getPlanets());
 
@@ -52,7 +51,7 @@ public class ODEFunction implements ODEFunctionInterface {
      * @param state - the PlanetState you want to apply a force to
      * @param name - The name of the object
      */
-    protected void applyForces(org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState universe, PlanetState state, String name) {
+    protected void applyForces(SystemState universe, PlanetState state, String name) {
         if (state == null) {
             throw new IllegalArgumentException("State can not be null");
         }
