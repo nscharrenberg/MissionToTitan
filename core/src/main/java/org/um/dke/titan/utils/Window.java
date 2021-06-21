@@ -15,6 +15,7 @@ public class Window extends JFrame{
 		right = new JLabel("y-position over time                                                               ");
 		panelX = new ChartPanel4(tVals, xVals, chartWidth, chartHeight, 2000, 10);
 		panelY = new ChartPanel(tVals, yVals, chartWidth, chartHeight, 700, 5000);
+
 		panelTheta = new ChartPanel(tVals, theta, chartWidth, chartHeight, 700, 1);
 		panel = new JPanel(new GridLayout(1,3));
 		panel2 = new JPanel(new BorderLayout());

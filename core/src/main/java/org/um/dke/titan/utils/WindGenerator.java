@@ -44,7 +44,7 @@ public class WindGenerator {
     public Vector3dInterface[] getWind(Vector3dInterface center, double angle) {
         Vector3dInterface[] output = new Vector3dInterface[2];
         //need x, random force
-        double f = evalPolyInRange(t, param, -10, 10);
+        double f = Math.sin(t)*0.01;//evalPolyInRange(t, param, -10, 10);
         boolean left = isLeft(f);
         Vector3dInterface[] corners = SquareHandling.calculateCorners(center, angle);
         double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
@@ -79,6 +79,6 @@ public class WindGenerator {
      * @return
      */
     public static double formatAngle(double radians) {
-        return radians % (Math.PI * 2);
+        return Math.abs(radians % (Math.PI * 2));
     }
 }
