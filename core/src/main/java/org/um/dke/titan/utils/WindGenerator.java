@@ -62,7 +62,7 @@ public class WindGenerator {
             interval[1] = interval[0];
             interval[0] = tmp;
         }
-        double y = interval[0]+0.01;//SquareHandling.generateRandom(interval[0], interval[1]);//(Math.abs(Math.sin(t))*(interval[1]-interval[0])) +interval[0];//
+        double y = (Math.abs(Math.sin(t))*(interval[1]-interval[0])) +interval[0];//SquareHandling.generateRandom(interval[0], interval[1]);//(Math.abs(Math.sin(t))*(interval[1]-interval[0])) +interval[0];//
         double x = SquareHandling.calculateAccX(center, corners, left, y);
         Vector3dInterface force = new Vector3D(f*dt, 0, 0);
         output[0] = force;
