@@ -55,4 +55,14 @@ public class PlanetState {
     public void setForce(Vector3dInterface force) {
         this.force = force;
     }
+
+    @Override
+    public String toString() {
+        return "\n\"x\": "   + position.getX() + ",\n" +
+                "\"y\": "  + position.getY() + ",\n" +
+                "\"z\": "  + position.getZ() + ",\n" +
+                "\"vx\": " + velocity.getX() + ",\n" +
+                "\"vy\": " + velocity.getY() + ",\n" +
+                "\"vz\": " + velocity.getZ() + "\n";
+    }
 }

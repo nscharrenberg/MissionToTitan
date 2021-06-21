@@ -74,6 +74,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < size; i++)
             probePositions[i] = probeStateArray[i].getPosition();
 
+//        System.out.println(probeStateArray[458941]);
 
         return probePositions;
     }
