@@ -24,6 +24,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     private Map<String, Planet> planets;
     private Map<String, Rocket> rockets;
 
+
     private StateInterface[] timeLineArray;
     private ODESolverInterface solver;
     private double dt;
@@ -36,7 +37,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
         dt = 500;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
-
+        deployLander(tf, dt);
     }
 
     public void init() {
@@ -125,6 +126,21 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             System.out.println("MIN: " + min.norm() + " ::: " + min);
 
 //            System.out.println(NewtonRaphson.get(probeStart, destination));
+
+            // adding the rockets to the system state
+            for (int i = 0; i < timeLineArray.length; i++) {
+                PlanetState state = new PlanetState();
+                state.setPosition(probeArray[i]);
+                ((SystemState)timeLineArray[i]).setPlanet(entry.getKey(), state);
+            }
+            //start a lander
+        }
+    }
+
+    private void deployLander(double tf, double dt) {
+        for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
+            ProbeSimulator probeSimulator = new ProbeSimulator();
+            Vector3dInterface[] probeArray = probeSimulator.trajectory(entry.getValue().getPosition(), entry.getValue().getVelocity(), tf, dt);
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {

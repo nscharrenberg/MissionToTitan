@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.utils.FindMin;
+import org.um.dke.titan.utils.RotationMatrix;
 
 public class SpaceObject {
     public static final Label.LabelStyle GENERIC_LABEL_STYLE = new Label.LabelStyle(new BitmapFont(), Color.PINK);
@@ -43,7 +46,7 @@ public class SpaceObject {
         batch.begin();
 
         if (texture != null) {
-            batch.draw(this.texture, (float)this.position.getX(), (float)this.position.getY(), getDiameter(), getDiameter());
+            batch.draw(this.texture, (float)(this.position.getX() - texture.getWidth()/2.0), (float)(this.position.getY() - texture.getHeight()/2.0), getDiameter(), getDiameter());
         }
 
         batch.end();
