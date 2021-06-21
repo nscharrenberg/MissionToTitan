@@ -65,7 +65,7 @@ public class NewtonRaphson {
 
             Vector3dInterface fx1 = F(x1);
             double error = fx1.sub(F(xPrev)).norm();
-            FactoryProvider.getTestRepository().checkAndPrint(((F(x1).norm()) -2575.5e3), x1, error,  F(xPrev), fx1);
+            FactoryProvider.getTestRepository().checkAndPrint(((F(x1).norm()) - 2575.5e3), x1, error,  F(xPrev), fx1);
 
             if (error < e) {
                 return x1;
@@ -100,7 +100,7 @@ public class NewtonRaphson {
     public static Vector3dInterface F(Vector3dInterface x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
         Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(40020);
+        x = unit.mul(40000);
         return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
     }
 

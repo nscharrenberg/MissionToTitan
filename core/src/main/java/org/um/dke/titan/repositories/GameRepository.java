@@ -106,7 +106,7 @@ public class GameRepository implements IGameRepository {
 
 
         // TODO: REMOVE THIS
-        time = 502600;
+//        time = 502600;
     }
 
     @Override
@@ -147,7 +147,7 @@ public class GameRepository implements IGameRepository {
             found.setPosition(entry.getValue().getPosition());
 
             if (found.getName().equals(SpaceObjectEnum.SHIP.getName())) {
-                velocityLabel.setText("Speed: " + entry.getValue().getVelocity().norm());
+                velocityLabel.setText("Speed: " + entry.getValue().getVelocity());
             }
         }
 

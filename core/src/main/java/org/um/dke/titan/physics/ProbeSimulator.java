@@ -146,13 +146,11 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        double firstEnd = minI + 110;
-        if (i > minI-40 && i < firstEnd) { // 503309 dt50 closest point
-            return useEngine(70, i, SpaceObjectEnum.EARTH.getName());
-        }
+        double firstStart = 36550;
+        double firstEnd = firstStart + 1800;
 
-        if (i > firstEnd+1 && i < firstEnd+5) {
-            return useEngine(70, i, SpaceObjectEnum.TITAN.getName());
+        if (i > firstStart && i < firstEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, SpaceObjectEnum.JUPITER.getName());
         }
 
         return new Vector3D(0,0,0);
@@ -171,7 +169,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         Vector3dInterface thrustVector = findThrustVector(index, planetName);
         return engineForce(percentageOfPower, thrustVector);
     }
-
 
     /**
      * returns the position we want to travel to
@@ -203,10 +200,10 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         if (system.getRocketByName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
             system.getRocketByName(probeName).setMass((float) (system.getRocketByName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
             fuelUsed += calculateMassUsed(percentageOfPower);
-            System.out.println("using fuel");
+//            System.out.println("using fuel");
             return true;
         } else {
-            System.out.println("No fuel left!!");
+//            System.out.println("No fuel left!!");
             return false;
         }
     }
