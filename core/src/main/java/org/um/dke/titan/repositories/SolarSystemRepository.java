@@ -7,9 +7,9 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ProbeSimulator;
+import org.um.dke.titan.physics.ode.probe.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
-import org.um.dke.titan.physics.ode.solvers.NewtonRaphson;
+import org.um.dke.titan.physics.ode.probe.NewtonRaphson;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -101,8 +101,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
             //velocity = new Vector3D(0.4257580681316204,-0.1255899174838238,0.6790064383709731); working on 500dt
-            velocity = new Vector3D(0.6341552250552641,-0.26132257976791734,0.9100385508767742);
-            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(42000);
+            velocity = new Vector3D(0.673546195291854,-0.29162344950533786,0.9446722086549811);
+            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(42500);
             velocity = (Vector3D) velocity.add(earthVelocity);
 
             System.out.println(velocity);

@@ -1,12 +1,10 @@
-package org.um.dke.titan.physics.ode.solvers;
+package org.um.dke.titan.physics.ode.probe;
 
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ProbeSimulator;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
+import org.um.dke.titan.physics.ode.probe.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.utils.Matrix3;
 
@@ -100,7 +98,7 @@ public class NewtonRaphson {
     public static Vector3dInterface F(Vector3dInterface x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
         Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(42000);
+        x = unit.mul(43300);
         return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
     }
 

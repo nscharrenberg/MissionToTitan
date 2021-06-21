@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics;
+package org.um.dke.titan.physics.ode.probe;
 
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.SpaceObjectEnum;

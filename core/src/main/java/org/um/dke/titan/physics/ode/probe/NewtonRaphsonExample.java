@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.ode.solvers;
+package org.um.dke.titan.physics.ode.probe;
 
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;

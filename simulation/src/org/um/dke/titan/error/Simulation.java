@@ -4,7 +4,7 @@ import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ProbeSimulator;
+import org.um.dke.titan.physics.ode.probe.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 
