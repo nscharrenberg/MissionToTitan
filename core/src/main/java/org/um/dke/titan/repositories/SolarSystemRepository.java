@@ -31,7 +31,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
     public void runPhysics() {
         tf = 60 * 60 * 24 * 450;
-        dt = 500;
+        dt = 50;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
     }
@@ -71,10 +71,6 @@ public class SolarSystemRepository implements ISolarSystemRepository {
         return timeLineArray;
     }
 
-    public StateInterface[] getTimeLineArray() {
-        return timeLineArray;
-    }
-
     private void runSolver(ODESolverInterface solver, double tf, double dt) {
         SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, tf, dt);
@@ -92,7 +88,6 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
     private void deployRockets(double tf, double dt) {
 
-
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
             Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition();//.add(new Vector3D(-0.3, 0.7, 0).getUnit().mul(2574700 + 300000));
@@ -101,8 +96,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
             //velocity = new Vector3D(0.4257580681316204,-0.1255899174838238,0.6790064383709731); working on 500dt
-            velocity = new Vector3D(0.673546195291854,-0.29162344950533786,0.9446722086549811);
-            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(42500);
+            velocity = new Vector3D(0.5979983770225301,-0.41522775759194325,0.05921359817599511);
+            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(40020);
             velocity = (Vector3D) velocity.add(earthVelocity);
 
             System.out.println(velocity);
@@ -128,7 +123,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             System.out.println("MIN: " + (min.norm()-2574700) + " ::: " + minI);
 
-            System.out.println(NewtonRaphson.get(probeStart, destination));
+//            System.out.println(NewtonRaphson.get(probeStart, destination));
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {
@@ -176,6 +171,10 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
     public Moon getMoonByName(String planetName, String moonName) {
         return this.planets.get(planetName).getMoons().get(moonName);
+    }
+
+    public StateInterface[] getTimeLineArray() {
+        return timeLineArray;
     }
 
     public Map<String, Rocket> getRockets() {
