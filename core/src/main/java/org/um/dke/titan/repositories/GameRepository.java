@@ -100,6 +100,10 @@ public class GameRepository implements IGameRepository {
 
         // Start from Earth
         focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
+
+
+        // TODO: REMOVE THIS
+        time = 450000;
     }
 
     @Override
