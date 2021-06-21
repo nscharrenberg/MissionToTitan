@@ -112,17 +112,14 @@ public class SquareHandling {
      * @return The rotated point
      */
     public static Vector3dInterface rotateAroundCenter(Vector3dInterface p, Vector3dInterface c, double degree) {
+
         //translate to 0,0
-        System.out.println("Original:"+(Vector3D)p);
         Vector3dInterface translated = new Vector3D(p.getX() - c.getX(), p.getY() - c.getY(), 0);
-        System.out.println("Translated:"+translated);
         //rotate by degrees
         Vector3dInterface rotated = new Vector3D(translated.getX() * Math.cos(degree) - translated.getY() * Math.sin(degree),
                 translated.getX() * Math.sin(degree) + translated.getY() * Math.cos(degree), 0);
-        System.out.println("Rotated:"+rotated);
         //translate back
         Vector3dInterface translatedBack = new Vector3D(rotated.getX() + c.getX(), rotated.getY() + c.getY(), 0);
-        System.out.println("Translated back:"+translatedBack);
         return translatedBack;
     }
 
@@ -257,7 +254,7 @@ public class SquareHandling {
      * @return A random number
      */
     public static double generateRandom(double min, double max) {
-        double r = (Math.random() * ((max - min) + 1.0)) + min;
+        double r = (Math.random() * ((max - min))) + min;
         return r;
     }
 

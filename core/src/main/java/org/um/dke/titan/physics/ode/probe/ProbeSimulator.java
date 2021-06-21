@@ -1,4 +1,4 @@
-package org.um.dke.titan.physics.ode.probe;
+package org.um.dke.titan.physics;
 
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.SpaceObjectEnum;
@@ -7,9 +7,9 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ProbeSimulatorInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetRate;
-import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.Map;
@@ -140,13 +140,33 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        double firstStart = 70800;
-        double firstEnd = firstStart + 6000;
+        double firstStart = 47454;
+        double firstEnd = firstStart + 700;
 
         if (i > firstStart && i < firstEnd) { // 503309 dt50 closest point
-            return useEngine(0.1, i, "Earth");
+            return useEngine(1, i, -90);
         }
 
+        double secondStart = firstEnd + 1000;
+        double secondEnd = secondStart + 50;
+
+        if (i > secondStart && i < secondEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, -180);
+        }
+
+        secondStart = secondEnd + 1000;
+        secondEnd = secondStart + 250;
+
+        if (i > secondStart && i < secondEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, -90);
+        }
+
+        secondStart = secondEnd + 1000;
+        secondEnd = secondStart + 50;
+
+        if (i > secondStart && i < secondEnd) { // 503309 dt50 closest point
+            return useEngine(1, i, -90);
+        }
 
         return new Vector3D(0,0,0);
     }
@@ -162,6 +182,15 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         if(!calculateNewMass(percentageOfPower))
             return new Vector3D(0,0,0);
         Vector3dInterface thrustVector = findThrustVector(index, planetName);
+        return engineForce(percentageOfPower, thrustVector);
+    }
+
+    private Vector3dInterface useEngine(double percentageOfPower, int index, double angle) {
+        if(!calculateNewMass(percentageOfPower))
+            return new Vector3D(0,0,0);
+        PlanetState probe = probeStateArray[index-1];
+        Vector4D newVector = Vector4D.rotate(probe.getForce(), angle);
+        Vector3dInterface thrustVector = new Vector3D(newVector.getX() * newVector.getV(), newVector.getY(), newVector.getZ()* newVector.getV());
         return engineForce(percentageOfPower, thrustVector);
     }
 

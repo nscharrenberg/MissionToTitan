@@ -23,7 +23,7 @@ import java.util.Random;
 public class NewtonRaphson {
 
     static double h = 500;
-    static double tf = 60 * 60 * 24 * 900;
+    static double tf = 60 * 60 * 24 * 1500;
 
 
     static ProbeSimulator probeSimulator = new ProbeSimulator();
