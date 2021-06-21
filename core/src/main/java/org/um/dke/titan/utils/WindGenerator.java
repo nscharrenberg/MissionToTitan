@@ -43,7 +43,12 @@ public class WindGenerator {
     public Vector3dInterface[] getWind(Vector3dInterface center, double angle) {
         Vector3dInterface[] output = new Vector3dInterface[2];
         //need x, random force
-        double f = Math.sin(t)*0.01;//evalPolyInRange(t, param, -10, 10);
+        double f = Math.sin(t)*0.1*dt;//evalPolyInRange(t, param, -10, 10);
+        double randomNum = Math.random();
+        if(randomNum<0.7){
+            f = 0;
+        }
+        else f*=SquareHandling.generateRandom(0.75, 1.25);
         boolean left = isLeft(f);
         Vector3dInterface[] corners = SquareHandling.calculateCorners(center, angle);
         double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
