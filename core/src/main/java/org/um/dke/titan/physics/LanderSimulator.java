@@ -54,14 +54,17 @@ public class LanderSimulator{
             else {
                 force = force.add(new Vector3D(0, dt*-g*landerMass, 0));// actual application of gravity
 
+
+
                 controlVerticalVelocity(i);
                 landerArray[i] = step(landerArray[i - 1], dt);
+                landerArray[i].setAngle(generateWind(landerArray[i-1].getPosition(), i));
+
                 //System.out.println("t: "+ts[i]+" vy: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
             }
 
 
         }
-        WindGenerator wg = new WindGenerator(MAXIMUM_WIND_FORCE, dt);
         System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
         System.out.println(massUsed);
     }
@@ -110,24 +113,27 @@ public class LanderSimulator{
         ts = new double[landerArray.length];
         //start landing
         landerArray[0] = y0;
-        for(int i=0; i<landerArray.length; i++){
-            landerArray[i].setAngularVelocity(0);
-        }
+        wg = new WindGenerator(MAXIMUM_WIND_FORCE, dt);
         ts[0] = 0;
     }
 
     //----------ENGINE HANDLING--------
 
-    public Vector3dInterface mainThruster(double percentage, PlanetState landerState){
+    public Vector3dInterface mainThruster(double percentage, int i){
+        PlanetState landerState = landerArray[i];
         massUsed += calculateMassUsed(percentage);
+
         Vector3dInterface c = landerState.getPosition();
         Vector3dInterface p = new Vector3D(c.getX(), c.getY() - probeSize*0.5, 0);
         Vector3dInterface f = new Vector3D(0, 1, 0).mul((percentage/100.0)*MAXIMUM_THRUST);
+        Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
+
         f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
+        handleRotation(f, r, i-1);
         return f;
     }
 
-        private double calculateMassUsed(double percentageOfPower){
+    private double calculateMassUsed(double percentageOfPower){
         return dt *(percentageOfPower/100)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
     }
 
@@ -135,30 +141,66 @@ public class LanderSimulator{
         return dt *(percentageOfPower/100)*((MAXIMUM_SIDE_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
     }
 
-    public Vector3dInterface topLeftThruster(double percentage){
+    public Vector3dInterface topLeftThruster(double percentage, int i){
         //some rotation handling
         //in 2 dimensions we can use torque = r*F*sin(theta)
         //where r is the distance to the center of gravity, F is the force, and theta is the angle between those (which i don't get rn)
-        Vector3dInterface f = new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        PlanetState landerState = landerArray[i];
 
-        //handleRotation(f, );
+        Vector3dInterface c = landerState.getPosition();
+        Vector3dInterface p = new Vector3D(c.getX() - probeSize*0.5, c.getY() + probeSize*0.5, 0);
+        Vector3dInterface f = new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
+
+        f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
+
+        handleRotation(f, r, i);
         massUsed += calculateMassUsedSide(percentage);
         return f;
     }
 
-    public Vector3dInterface topRightThruster(double percentage){
+    public Vector3dInterface topRightThruster(double percentage, int i){
         massUsed += calculateMassUsedSide(percentage);
-        return new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        PlanetState landerState = landerArray[i];
+
+        Vector3dInterface c = landerState.getPosition();
+        Vector3dInterface p = new Vector3D(c.getX() + probeSize*0.5, c.getY() + probeSize*0.5, 0);
+        Vector3dInterface f = new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
+
+        f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
+
+        handleRotation(f, r, i);
+        return f;
     }
 
-    public Vector3dInterface bottomLeftThruster(double percentage){
+    public Vector3dInterface bottomLeftThruster(double percentage, int i){
         massUsed += calculateMassUsedSide(percentage);
-        return new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        PlanetState landerState = landerArray[i];
+
+        Vector3dInterface c = landerState.getPosition();
+        Vector3dInterface p = new Vector3D(c.getX() - probeSize*0.5, c.getY() - probeSize*0.5, 0);
+        Vector3dInterface f = new Vector3D(1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
+
+        f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
+
+        handleRotation(f, r, i);
+        return f;
     }
 
-    public Vector3dInterface bottomRightThruster(double percentage){
+    public Vector3dInterface bottomRightThruster(double percentage, int i){
         massUsed += calculateMassUsedSide(percentage);
-        return new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        PlanetState landerState = landerArray[i];
+        Vector3dInterface c = landerState.getPosition();
+        Vector3dInterface p = new Vector3D(c.getX() + probeSize*0.5, c.getY() - probeSize*0.5, 0);
+        Vector3dInterface f = new Vector3D(-1, 0 , 0).mul((percentage/100.0)*MAXIMUM_SIDE_THRUST);
+        Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
+
+        f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
+
+        handleRotation(f, r, i);
+        return f;
     }
 
     public void controlVerticalVelocity(int i){
@@ -169,22 +211,22 @@ public class LanderSimulator{
         }
         //System.out.println("y: "+ landerArray[i-1].getPosition().getY()+ "y velo: " +landerArray[i-1].getVelocity().getY()+" thrust: "+land(landerArray[i-1].getPosition().getY()));
         else if(((landerArray[i-1].getVelocity().getY() < -40) && (landerArray[i-1].getPosition().getY() > 20000))) {
-            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY())), i-1));
         }
         else if(((landerArray[i-1].getVelocity().getY() < -10) && (landerArray[i-1].getPosition().getY() < 20000) && (landerArray[i-1].getPosition().getY() > 5000))) {
-            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY())), i-1));
         }
         else if(((landerArray[i-1].getVelocity().getY() < -2.5) && (landerArray[i-1].getPosition().getY() < 5000) && (landerArray[i-1].getPosition().getY() > 1250))) {
-            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY())), i-1));
         }
         else if(((landerArray[i-1].getVelocity().getY() < -0.625 && (landerArray[i-1].getPosition().getY() < 1250) && (landerArray[i-1].getPosition().getY() > 312.5)))) {
-            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY())), i-1));
         }
         else if(((landerArray[i-1].getVelocity().getY() < -0.15625 && (landerArray[i-1].getPosition().getY() < 312.5) && (landerArray[i-1].getPosition().getY() > 78.125)))) {
-            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY()))));
+            force = force.add(mainThruster(Math.abs(land(landerArray[i - 1].getPosition().getY())), i-1));
         }
         else if(((landerArray[i-1].getVelocity().getY() < -0.09 && (landerArray[i-1].getPosition().getY() < 79)))) {
-            force = force.add(mainThruster(2));
+            force = force.add(mainThruster(2, i-1));
         }
     }
 

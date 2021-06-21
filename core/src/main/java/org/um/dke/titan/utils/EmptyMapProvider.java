@@ -32,7 +32,7 @@ public class EmptyMapProvider {
     }
 
     public static Map<String, PlanetRate> getRateMap() {
-        Map<String, PlanetRate> map = new HashMap();
+        Map<String, PlanetRate> map = new HashMap<>();
 
         map.put("Sun", new PlanetRate());
         map.put("Mercury", new PlanetRate());
@@ -49,13 +49,11 @@ public class EmptyMapProvider {
     }
 
     public static Map<String, PlanetRate> getLanderRateMap() {
-        Map<String, PlanetRate> map = new HashMap();
+        Map<String, PlanetRate> map = new HashMap<>();
 
         map.put("Titan",   new PlanetRate());
 
 
         return map;
     }
-
-
 }
