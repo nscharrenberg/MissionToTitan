@@ -147,7 +147,7 @@ public class GameRepository implements IGameRepository {
             found.setPosition(entry.getValue().getPosition());
 
             if (found.getName().equals(SpaceObjectEnum.SHIP.getName())) {
-                velocityLabel.setText("Speed: " + entry.getValue().getVelocity());
+                velocityLabel.setText("Speed: " + entry.getValue().getVelocity().norm());
             }
         }
 
