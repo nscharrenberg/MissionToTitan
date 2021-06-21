@@ -4,6 +4,8 @@ import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class WindGenerator {
     private final double maxForce;
@@ -50,24 +52,26 @@ public class WindGenerator {
 //            sign*=-1;
 //        }
 
-        double f = sign*SquareHandling.generateRandom(0,2);
-
-
+        double f = Math.sin(t);
 
         boolean left = isLeft(f);
         Vector3dInterface[] corners = SquareHandling.calculateCorners(center, angle);
         double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
-        double y = SquareHandling.generateRandom(interval[0], interval[1]);
+        if(interval[0] > interval[1]) {
+            double tmp = interval[1];
+            interval[1] = interval[0];
+            interval[0] = tmp;
+        }
+        double y = interval[0]+0.01;//SquareHandling.generateRandom(interval[0], interval[1]);//(Math.abs(Math.sin(t))*(interval[1]-interval[0])) +interval[0];//
         double x = SquareHandling.calculateAccX(center, corners, left, y);
         Vector3dInterface force = new Vector3D(f*dt, 0, 0);
         output[0] = force;
         Vector3dInterface dist = SquareHandling.calculateDist(center, x, y);
         output[1] = dist;
-        //angle according to derivative
-        //TODO : Make the wind (force vector) come in at a random angle between 90 (straight down) and -90 (straight up)
         t += dt;
         return output;
     }
+
 
     public static double evalPolyInRange(double x, double[] param, double min, double max) {
         double y = SquareHandling.evalPoly(param, x);
