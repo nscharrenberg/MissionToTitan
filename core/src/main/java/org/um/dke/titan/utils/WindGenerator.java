@@ -54,7 +54,7 @@ public class WindGenerator {
         double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
         double y = SquareHandling.generateRandom(interval[0], interval[1]);
         double x = SquareHandling.calculateAccX(center, corners, left, y);
-        Vector3dInterface force = new Vector3D(f, 0, 0);
+        Vector3dInterface force = new Vector3D(f*dt, 0, 0);
         output[0] = force;
         Vector3dInterface dist = SquareHandling.calculateDist(center, x, y);
         output[1] = dist;
