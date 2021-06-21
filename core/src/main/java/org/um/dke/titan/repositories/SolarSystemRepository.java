@@ -108,13 +108,14 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             Vector3D probeStart = (Vector3D) entry.getValue().getPosition();
 
-            Vector3dInterface[] probeArray = probeSimulator.trajectory(probeStart,velocity, tf, dt);
+            probeSimulator.trajectory(probeStart,velocity, tf, dt);
+            PlanetState[] probeArray = probeSimulator.stateTrajectory();
 
-            Vector3D min = (Vector3D) destination.sub(probeArray[0]);
+            Vector3D min = (Vector3D) destination.sub(probeArray[0].getPosition());
             int minI = 0;
 
             for (int i = 0; i < probeArray.length; i++) {
-                Vector3D probePos = (Vector3D) probeArray[i];
+                Vector3D probePos = (Vector3D) probeArray[i].getPosition();
                 Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition();
 
                 if (min.norm() > probePos.dist(planetPos)) {
@@ -130,7 +131,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {
                 PlanetState state = new PlanetState();
-                state.setPosition(probeArray[i]);
+                state.setPosition(probeArray[i].getPosition());
+                state.setVelocity(probeArray[i].getVelocity());
                 ((SystemState)timeLineArray[i]).setPlanet(entry.getKey(), state);
             }
         }
@@ -145,8 +147,12 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             for (int i = 0; i < timeLineArray.length; i++) {
                 PlanetState state = new PlanetState();
                 state.setPosition(probeArray[i]);
+                state.setVelocity(new Vector3D(0,0,0));
                 ((SystemState)timeLineArray[i]).setPlanet(entry.getKey(), state);
             }
+
+            System.out.println(((SystemState)timeLineArray[458941]).getPlanets());
+
         }
     }
 

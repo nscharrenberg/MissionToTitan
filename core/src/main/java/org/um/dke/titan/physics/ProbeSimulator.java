@@ -78,14 +78,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return probePositions;
     }
 
-    public PlanetState[] stateTrajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
-        this.h = h;
-        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(),tf, h);
-        init(p0, v0);
-
-        for (int i = 1; i < size; i++)
-            probeStateArray[i] = getNextProbeState(i, h);
-
+    public PlanetState[] stateTrajectory() {
         return probeStateArray;
     }
 
@@ -135,7 +128,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         // optimal i = 74759
 
         PlanetState probe = probeStateArray[i-1];
-        probe.setForce(probe.getForce().add(getEngineForce(i)));
+        //probe.setForce(probe.getForce().add(getEngineForce(i)));
 
         return step(probe, h);
     }
@@ -159,8 +152,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        if (i > 503295) {
-            return useEngine(1, i);
+        if (i > 503300) { // 503309 dt50 closest point
+            return useEngine(100, i);
         }
         return new Vector3D(0,0,0);
     }
@@ -182,7 +175,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         PlanetState aimPoint = systemState.getPlanet("Earth");
         PlanetState probe = probeStateArray[i-1];
         Vector3D vector = (Vector3D) probe.getPosition().sub(aimPoint.getPosition());
-        return vector.getUnit();
+        return ((Vector3D)probe.getVelocity()).getUnit().mul(-1);
+        //return vector.getUnit();
     }
 
     private double calculateMassUsed(double percentageOfPower) {
@@ -200,7 +194,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             System.out.println("using fuel");
             return true;
         } else {
-            System.out.println("No fuel left!!");
+            //System.out.println("No fuel left!!");
             return false;
         }
     }
