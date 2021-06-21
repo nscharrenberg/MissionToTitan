@@ -16,11 +16,10 @@ public class WindGenerator {
         t = 0;
         this.maxForce = maxForce;
         param = new double[]{
-                /*x0*/12,
-                /*x1*/0.7,
-                /*x2*/4,
-                /*x3*/1.1,
-                /*x4*/89
+                /*x0*/5,
+                /*x1*/0.2,
+                /*x2*/-0.2,
+                /*x3*/0.1
         };
         paramDerivative = new double[param.length - 1];
         for(int i = 1; i < param.length; i++) {
