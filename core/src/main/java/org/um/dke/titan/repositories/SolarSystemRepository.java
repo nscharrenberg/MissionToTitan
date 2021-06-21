@@ -9,6 +9,7 @@ import org.um.dke.titan.physics.ode.functions.solarsystemfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
 import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.solvers.NewtonRaphson;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -126,7 +127,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             System.out.println("MIN: " + (min.norm()-2574700) + " ::: " + minI);
 
-            //System.out.println(NewtonRaphson.get(probeStart, destination));
+            System.out.println(NewtonRaphson.get(probeStart, destination));
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {

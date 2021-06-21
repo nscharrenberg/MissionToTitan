@@ -106,7 +106,7 @@ public class GameRepository implements IGameRepository {
 
 
         // TODO: REMOVE THIS
-        time = 450000;
+        time = 502600;
     }
 
     @Override

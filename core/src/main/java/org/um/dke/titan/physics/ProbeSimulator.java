@@ -143,18 +143,18 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return r.mul(gravConst/modr3); // full formula together
     }
 
-
-
-
-
-
-
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        if (i > minI && i < minI + 40) { // 503309 dt50 closest point
-            return useEngine(50, i, SpaceObjectEnum.EARTH.getName());
+        double firstEnd = minI + 110;
+        if (i > minI-40 && i < firstEnd) { // 503309 dt50 closest point
+            return useEngine(70, i, SpaceObjectEnum.EARTH.getName());
         }
+
+        if (i > firstEnd+1 && i < firstEnd+5) {
+            return useEngine(70, i, SpaceObjectEnum.TITAN.getName());
+        }
+
         return new Vector3D(0,0,0);
     }
 
