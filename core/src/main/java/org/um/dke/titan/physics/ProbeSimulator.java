@@ -83,9 +83,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
 
-
-
-
     // --------------------- ODE Handling  ---------------------
 
 
@@ -104,6 +101,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     }
 
     private void init(Vector3dInterface p0, Vector3dInterface v0) {
+        probeMass = 400000;
         size = timeLineArray.length;
         probeStateArray = new PlanetState[size];
         probeStateArray[0] = new PlanetState(p0, v0);
@@ -112,8 +110,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     private PlanetState getNextProbeState(int i, double h) {
         probeStateArray[i-1].setForce(new Vector3D(0,0,0));
-
-
         for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
             String planetName = entry.getKey();
             Planet planet = system.getPlanetByName(planetName);
@@ -146,8 +142,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        double firstStart = 36550;
-        double firstEnd = firstStart + 1800;
+        double firstStart = 47554;
+        double firstEnd = firstStart + 700;
 
         if (i > firstStart && i < firstEnd) { // 503309 dt50 closest point
             return useEngine(1, i, SpaceObjectEnum.JUPITER.getName());
