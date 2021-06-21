@@ -53,27 +53,9 @@ public class LanderSimulator{
             }
             else {
                 force = force.add(new Vector3D(0, dt*-g*landerMass, 0));// actual application of gravity
-                //thrust(i);
+                thrust(i);
+
             }
-
-            if(landerArray[i-1].getPosition().getY() <= surfaceLevel) {
-                landerArray[i] = landerArray[i-1]; //to stop the lander from falling into titan
-                landerArray[i].getPosition().setY(0);
-            }
-            else {
-                force = force.add(new Vector3D(0, dt*-g*landerMass, 0));// actual application of gravity
-
-
-
-                controlVerticalVelocity(i);
-                landerArray[i] = step(landerArray[i - 1]);
-                landerArray[i].setAngle(generateWind(landerArray[i-1].getPosition(), i));
-
-                //force = force.add(topLeftThruster(10, i));
-                //System.out.println("t: "+ts[i]+" vy: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
-            }
-
-
         }
         System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
         System.out.println(massUsed);
@@ -84,98 +66,57 @@ public class LanderSimulator{
 
         //1. generate the wind
         //we take position and angle of previous state, as a basis to compute the new state
-        Vector3dInterface[] output = wg.getWind(landerArray[i - 1].getPosition(), landerArray[i - 1].getAngle());
+        Vector3dInterface[] output = new Vector3dInterface[2];
+
+        output = wg.getWind(landerArray[i - 1].getPosition(), landerArray[i - 1].getAngle());
+
         //2. apply force to lander basically angle step
         Vector3dInterface f = output[0], r = output[1];
         //--
+
         //torque, moment of inertia, get us angular acceleration
+        //EFFECT FROM WIND
         double torque = crossProduct2D(f, r);
         double angularAccel = torque/MOI;
         //from ang acc calculate ang velo
         //ang acc * dt + prev ang velo
+
         double currAngVelo = angularAccel * dt + landerArray[i - 1].getAngularVelocity();//for i
         //compute change of angle
         double deltaTheta = currAngVelo * dt;
         double newTheta = WindGenerator.formatAngle(landerArray[i -1].getAngle() + deltaTheta);
-        //--
+
+        double goalTheta = 0;
+        Vector3dInterface p = new Vector3D(0,0,0);
+
+        if(newTheta<Math.PI){
+            p = new Vector3D(landerArray[i-1].getPosition().getX() - probeSize*0.5, landerArray[i-1].getPosition().getY() + probeSize*0.5, 0);
+        }
+        else{
+            p = new Vector3D(landerArray[i-1].getPosition().getX() - probeSize*0.5, landerArray[i-1].getPosition().getY() - probeSize*0.5, 0);
+        }
+
+        double neededDeltaTheta = newTheta - goalTheta;
+
+        double neededVelocity = neededDeltaTheta/dt;
+
+        double neededAcceleration = neededVelocity/dt;
+
+        double neededTorque = neededAcceleration*MOI;
+
+        Vector3dInterface neededForce = p.mul(1/neededTorque);
+        System.out.println(neededForce);
         //3. step
         landerArray[i] = step(landerArray[i - 1]);
         landerArray[i].setAngle(newTheta);
         landerArray[i].setAngularVelocity(currAngVelo);
 
         //------REACT------
-        Vector3dInterface[] rotation = rotationHandling(i);
-        torque = crossProduct2D(rotation[0],rotation[1]);
-        angularAccel = torque/MOI;
-        currAngVelo = angularAccel * dt + landerArray[i].getAngularVelocity();
-        newTheta = WindGenerator.formatAngle(landerArray[i].getAngle() + deltaTheta);
 
 
-        landerArray[i].setAngle(newTheta);
-        landerArray[i].setAngularVelocity(currAngVelo);
+
 
     }
-
-    private Vector3dInterface[] rotationHandling(int i){
-        Vector3dInterface[] output = new Vector3dInterface[2];
-        //goals: - theta as close to zero as possible
-        double steps = Math.PI/8;
-        if(landerArray[i].getAngle() > 7*steps) {
-            //take shortest path, but thrust differs based on prev angular velocity
-            if(landerArray[i].getAngularVelocity() <= 0){// counterclockwise spin
-                //apply thrust clockwise
-                output = clockwiseThruster(rotateThrust[0], i);
-            } else {
-                output = counterclockwiseThruster(rotateThrust[0]/2.0, i);
-            }
-        } else if(landerArray[i].getAngle() > 6*steps) {//270 degrees
-            if(landerArray[i].getAngularVelocity() <= 0){// counterclockwise spin
-                output = clockwiseThruster(rotateThrust[1], i);
-            } else {
-                output = counterclockwiseThruster(rotateThrust[1]/2.0, i);
-            }
-        } else if(landerArray[i].getAngle() > 5*steps) {
-            if(landerArray[i].getAngularVelocity() <= 0){// counterclockwise spin
-                output = clockwiseThruster(rotateThrust[2], i);
-            } else {
-                output = counterclockwiseThruster(rotateThrust[2]/2.0, i);
-            }
-        } else if(landerArray[i].getAngle() > 4*steps) {//180 degrees
-            if(landerArray[i].getAngularVelocity() <= 0){// counterclockwise spin
-                output = clockwiseThruster(rotateThrust[3], i);
-            } else {
-                output = counterclockwiseThruster(rotateThrust[3]/2.0, i);
-            }
-        } else if(landerArray[i].getAngle() > 3*steps) {
-            if(landerArray[i].getAngularVelocity() >= 0){// counterclockwise spin
-                output = counterclockwiseThruster(rotateThrust[3], i);
-            } else {
-                output = clockwiseThruster(rotateThrust[3]/2.0, i);
-            }
-        }else if(landerArray[i].getAngle() > 2*steps) {//90 degrees
-            if(landerArray[i].getAngularVelocity() >= 0){// counterclockwise spin
-                output = counterclockwiseThruster(rotateThrust[2], i);
-            } else {
-                output = clockwiseThruster(rotateThrust[2]/2.0, i);
-            }
-        }else if(landerArray[i].getAngle() > 1*steps) {
-            if(landerArray[i].getAngularVelocity() >= 0){// counterclockwise spin
-                output = counterclockwiseThruster(rotateThrust[1], i);
-            } else {
-                output = clockwiseThruster(rotateThrust[1]/2.0, i);
-            }
-        }else if(landerArray[i].getAngle() > 0*steps) {
-            if(landerArray[i].getAngularVelocity() >= 0){// counterclockwise spin
-                output = counterclockwiseThruster(rotateThrust[0], i);
-            } else {
-                output = clockwiseThruster(rotateThrust[0]/2.0, i);
-            }
-        }
-        output[0] = new Vector3D(0,0,0);
-        output[1] = new Vector3D(0,0,0);
-        return output;
-    }
-
 
 
     private double land(double y) {
