@@ -44,7 +44,7 @@ public class GameRepository implements IGameRepository {
     private static final float MINIMUM_CAMERA_ZOOM = (float)5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
-    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel, timeLabel;
+    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel, timeLabel, speedLabel;
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
     private boolean paused = true;
@@ -90,6 +90,8 @@ public class GameRepository implements IGameRepository {
         this.speedLabel.setPosition(15, Gdx.graphics.getHeight() - 125);
         this.timeLabel = new Label("Current Time: " + this.time + "and Date: " + date.getTime(), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.timeLabel.setPosition(15, Gdx.graphics.getHeight() - 150);
+        this.speedLabel = new Label("Probe Velocity: " + 0, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.speedLabel.setPosition(15, Gdx.graphics.getHeight() - 175);
 
         stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
@@ -97,6 +99,7 @@ public class GameRepository implements IGameRepository {
         stage.addActor(cameraLbl);
         stage.addActor(speedLabel);
         stage.addActor(timeLabel);
+        stage.addActor(speedLabel);
 
         // Start from Earth
         focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
@@ -142,6 +145,10 @@ public class GameRepository implements IGameRepository {
             found.render(batch, camera);
 
             found.setPosition(entry.getValue().getPosition());
+
+            if (found.getName().equals(SpaceObjectEnum.SHIP.getName())) {
+
+            }
         }
 
         if (isPaused()) {

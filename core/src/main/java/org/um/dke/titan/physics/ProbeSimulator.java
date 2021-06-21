@@ -174,9 +174,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         SystemState systemState = (SystemState) timeLineArray[i];
         PlanetState aimPoint = systemState.getPlanet("Earth");
         PlanetState probe = probeStateArray[i-1];
-        Vector3D vector = (Vector3D) probe.getPosition().sub(aimPoint.getPosition());
-        return ((Vector3D)probe.getVelocity()).getUnit().mul(-1);
-        //return vector.getUnit();
+        Vector3D vector = (Vector3D) aimPoint.getPosition().sub(probe.getPosition());
+        return vector.getUnit();
     }
 
     private double calculateMassUsed(double percentageOfPower) {
