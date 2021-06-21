@@ -4,7 +4,7 @@ import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.probe.ProbeSimulator;
+import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
 
 import java.util.Random;
@@ -23,7 +23,7 @@ import java.util.Random;
 public class NewtonRaphson {
 
     static double h = 500;
-    static double tf = 60 * 60 * 24 * 1500;
+    static double tf = 60 * 60 * 24 * 450;
 
 
     static ProbeSimulator probeSimulator = new ProbeSimulator();

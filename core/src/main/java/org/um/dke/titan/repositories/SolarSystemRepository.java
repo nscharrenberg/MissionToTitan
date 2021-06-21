@@ -4,10 +4,9 @@ import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
-import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.physics.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystem.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
-import org.um.dke.titan.physics.ode.probe.ProbeSimulator;
 import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
 import org.um.dke.titan.utils.probe.math.NewtonRaphson;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
@@ -31,7 +30,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
 
     public void runPhysics() {
-        tf = 60 * 60 * 24 * 900;
+        tf = 60 * 60 * 24 * 450;
         dt = 500;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
