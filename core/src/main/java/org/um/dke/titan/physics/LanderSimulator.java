@@ -70,11 +70,11 @@ public class LanderSimulator{
                 double newTheta = WindGenerator.formatAngle(landerArray[i -1].getAngle() + deltaTheta);
                 //--
                 //3. step
+                controlVerticalVelocity(i);
                 landerArray[i] = step(landerArray[i - 1]);
                 landerArray[i].setAngle(newTheta);
                 landerArray[i].setAngularVelocity(currAngVelo);
-                System.out.println(currAngVelo);
-                //thrust(i);
+                thrust(i);
             }
             /*
             if(landerArray[i-1].getPosition().getY() <= surfaceLevel) {
@@ -96,47 +96,39 @@ public class LanderSimulator{
 
             */
         }
-        System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
-        System.out.println(massUsed);
+
     }
 
     public void thrust(int i){
         double theta = landerArray[i].getAngle();//get a sign from this
+        if(Double.isNaN(theta))
+            theta = 0.0;
         double omega = landerArray[i].getAngularVelocity();//strength of the thrust from this
-        double percentage = Math.abs(omega) *10;
-        if(percentage > 100.0) {
-            percentage = 100.0;
-        }
-        double sign;
+        double percentage = calculatePercentage(theta, omega);
         Vector3dInterface[] rotation;
         if(theta < Math.PI) {
             rotation = counterclockwiseThruster(percentage, i);
         } else {
             rotation = clockwiseThruster(percentage, i);
         }
-
+        double newTheta = calculateAngle(rotation[0], rotation[1], i);
+        if(Double.isNaN(newTheta))
+            newTheta = 0.0;
+        landerArray[i].setAngle(newTheta);
     }
 
-    public double forceToDeltaTheta(Vector3dInterface f, Vector3dInterface r, int i) {
-        
+    private double calculatePercentage(double theta, double omega) {
+        double sinVal = 0.001*Math.sin(theta);
+        double linVal = -0.001*omega;
+        return Math.abs(sinVal + linVal);
     }
 
-    private Vector3dInterface[] rotationHandling(int i){
-        //goals: - theta as close to zero as possible
-        double percentage;
-        double theta = landerArray[i].getAngle();
-        percentage = 100*Math.sin(theta/2);
-        System.out.println(theta + " " + percentage);
-        Vector3dInterface c = landerArray[i].getPosition();
-        if(theta < Math.PI) {
-            Vector3dInterface p = new Vector3D(c.getX() - probeSize*0.5, c.getY() + probeSize*0.5, 0);
-            Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
-            return new Vector3dInterface[]{clockwiseThruster(percentage, i), r};
-        } else {
-            Vector3dInterface p = new Vector3D(c.getX() - probeSize*0.5, c.getY() - probeSize*0.5, 0);
-            Vector3dInterface r = SquareHandling.calculateDist(c, p.getX(), p.getY());
-            return new Vector3dInterface[]{counterclockwiseThruster(percentage, i), r};
-        }
+    public double calculateAngle(Vector3dInterface f, Vector3dInterface r, int i) {
+        double torque = crossProduct2D(f, r);
+        double newAlpha = torque/MOI;
+        double newOmega = newAlpha * dt + landerArray[i].getAngularVelocity();
+        double newTheta = newOmega * dt + landerArray[i].getAngle();
+        return newTheta;
     }
 
 
