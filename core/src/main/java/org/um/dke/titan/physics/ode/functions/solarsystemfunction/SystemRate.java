@@ -8,8 +8,8 @@ import java.util.Map;
 public class SystemRate implements RateInterface {
     //todo:
     //watch out with merging
-    private Map<String, PlanetRate> rates = EmptyMapProvider.getLanderRateMap();
-    //private Map<String, PlanetRate> rates = EmptyMapProvider.getRateMap();
+    //private Map<String, PlanetRate> rates = EmptyMapProvider.getLanderRateMap();
+    private Map<String, PlanetRate> rates = EmptyMapProvider.getRateMap();
 
     public SystemRate(Map<String, PlanetRate> rates) {
         this.rates = rates;

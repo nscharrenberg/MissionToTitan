@@ -3,6 +3,8 @@ package org.um.dke.titan.utils;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
+import java.util.Arrays;
+
 public class WindGenerator {
     private final double maxForce;
     private double[] param, paramDerivative;

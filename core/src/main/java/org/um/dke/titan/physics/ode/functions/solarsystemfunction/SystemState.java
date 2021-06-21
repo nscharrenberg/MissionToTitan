@@ -9,8 +9,8 @@ import java.util.Map;
 public class SystemState implements StateInterface {
     //TODO:
     //watch out with merging
-    //private Map<String, PlanetState> planets = EmptyMapProvider.getStateMap();
-    private Map<String, PlanetState> planets = EmptyMapProvider.getLanderStateMap();
+    private Map<String, PlanetState> planets = EmptyMapProvider.getStateMap();
+    //private Map<String, PlanetState> planets = EmptyMapProvider.getLanderStateMap();
 
     public SystemState() {}
 
