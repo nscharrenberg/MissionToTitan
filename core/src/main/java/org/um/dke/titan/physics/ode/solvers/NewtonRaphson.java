@@ -24,8 +24,10 @@ import java.util.Random;
 
 
 public class NewtonRaphson {
+
     static double h = 500;
     static double tf = 60 * 60 * 24 * 1500;
+
 
     static ProbeSimulator probeSimulator = new ProbeSimulator();
     static StateInterface[] timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray();
@@ -98,7 +100,7 @@ public class NewtonRaphson {
     public static Vector3dInterface F(Vector3dInterface x) {
         Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
         Vector3D unit = (Vector3D) x.mul(1/x.norm());
-        x = unit.mul(45000);
+        x = unit.mul(42000);
         return getMinDistanceToDestination(x.add(earthVelocity), destinationPoint);
     }
 

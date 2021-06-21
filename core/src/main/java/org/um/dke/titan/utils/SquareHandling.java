@@ -6,15 +6,15 @@ import org.um.dke.titan.interfaces.Vector3dInterface;
 import java.util.*;
 
 /**
- * This class cotains all the logic to calculate the corners of a square with a center point in space,
+ * This class contains all the logic to calculate the corners of a square with a center point in space,
  * rotate the square, rotate points around a center, calculate points on the perimeter of the square,
  * etc, etc, etc.
- * @author filre
+ * @author filip
  */
 public class SquareHandling {
     public static final double SIDE_LENGTH = 150.00;
     /**
-     * Comparator that sorts Vectors basd on their x-coordinate
+     * Comparator that sorts Vectors based on their x-coordinate
      */
     public static final Comparator<Vector3dInterface> xComp = new Comparator<Vector3dInterface>() {
         public int compare(Vector3dInterface o1, Vector3dInterface o2) {
@@ -28,7 +28,7 @@ public class SquareHandling {
     };
 
     /**
-     * Comparator that sorts Vectors basd on their y-coordinate
+     * Comparator that sorts Vectors based on their y-coordinate
      */
     public static final Comparator<Vector3dInterface> yComp = new Comparator<Vector3dInterface>() {
         public int compare(Vector3dInterface o1, Vector3dInterface o2) {

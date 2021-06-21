@@ -91,6 +91,8 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     }
 
     private void deployRockets(double tf, double dt) {
+
+
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
             Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition();//.add(new Vector3D(-0.3, 0.7, 0).getUnit().mul(2574700 + 300000));
@@ -102,6 +104,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
             velocity = new Vector3D(0.5331673668755899,-0.4826485176052594,0.7011439929332274);
             velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(45000);
             velocity = (Vector3D) velocity.add(earthVelocity);
+
             System.out.println(velocity);
 
             Vector3D probeStart = (Vector3D) entry.getValue().getPosition();
@@ -124,7 +127,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             System.out.println("MIN: " + (min.norm()-2575.5e3) + " ::: " + minI);
 
-//            System.out.println(NewtonRaphson.get(probeStart, destination));
+            System.out.println(NewtonRaphson.get(probeStart, destination));
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {
@@ -133,6 +136,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
                 state.setVelocity(probeArray[i].getVelocity());
                 ((SystemState)timeLineArray[i]).setPlanet(entry.getKey(), state);
             }
+
         }
     }
 
