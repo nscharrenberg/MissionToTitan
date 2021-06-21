@@ -84,12 +84,18 @@ public class LanderSimulator{
 
         //1. generate the wind
         //we take position and angle of previous state, as a basis to compute the new state
-        Vector3dInterface[] output = wg.getWind(landerArray[i - 1].getPosition(), landerArray[i - 1].getAngle());
+        Vector3dInterface[] output = new Vector3dInterface[2];
+        if(i == 200000){
+            output = new Vector3dInterface[]{new Vector3D(1, 0, 0), new Vector3D(landerArray[i - 1].getPosition().getX() - probeSize*0.5, landerArray[i - 1].getPosition().getY() + probeSize*0.5, 0)};
+        } else {
+            output = new Vector3dInterface[]{new Vector3D(0, 0, 0), new Vector3D(landerArray[i - 1].getPosition().getX() - probeSize*0.5, landerArray[i - 1].getPosition().getY() + probeSize*0.5, 0)};
+        }
+        //wg.getWind(landerArray[i - 1].getPosition(), landerArray[i - 1].getAngle());
         //2. apply force to lander basically angle step
         Vector3dInterface f = output[0], r = output[1];
         //--
         //torque, moment of inertia, get us angular acceleration
-        double torque = crossProduct2D(f, r);
+        double torque = crossProduct2D(f, r) - airResistance(landerArray[i - 1].getAngularVelocity());
         double angularAccel = torque/MOI;
         //from ang acc calculate ang velo
         //ang acc * dt + prev ang velo
@@ -104,7 +110,7 @@ public class LanderSimulator{
         landerArray[i].setAngularVelocity(currAngVelo);
 
         //------REACT------
-        Vector3dInterface[] rotation = rotationHandling(i);
+        /*Vector3dInterface[] rotation = rotationHandling(i);
         torque = crossProduct2D(rotation[0],rotation[1]);
         angularAccel = torque/MOI;
         currAngVelo = angularAccel * dt + landerArray[i].getAngularVelocity();
@@ -112,8 +118,21 @@ public class LanderSimulator{
 
 
         landerArray[i].setAngle(newTheta);
-        landerArray[i].setAngularVelocity(currAngVelo);
+        landerArray[i].setAngularVelocity(currAngVelo);*/
 
+    }
+
+    /**
+     * https://www.grc.nasa.gov/www/k-12/VirtualAero/BottleRocket/airplane/falling.html
+     * @param velocity
+     * @return
+     */
+    private double airResistance(double velocity) {
+        double drag = 100*1.05; //no unit
+        double airDensity = 1.1605; //kg / m^3
+        double area = probeSize; //m since 2d
+
+        return  Math.pow(velocity, 2)*(drag*airDensity*area)/2.0;
     }
 
     private Vector3dInterface[] rotationHandling(int i){
