@@ -1,8 +1,10 @@
 package org.um.dke.titan.utils;
+import org.um.dke.titan.utils.lander.chart.ChartPanel;
+import org.um.dke.titan.utils.lander.chart.ChartPanel4;
+
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class Window extends JFrame{
 	private JPanel panelX, panelY, panel, panel2, panel3;

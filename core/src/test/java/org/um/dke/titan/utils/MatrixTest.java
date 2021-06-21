@@ -1,13 +1,8 @@
 package org.um.dke.titan.utils;
 
 import org.junit.Test;
-import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Vector3D;
-import org.um.dke.titan.interfaces.ODEFunctionInterface;
-import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.utils.math.Matrix;
-import org.um.dke.titan.utils.math.NewtonRaphson;
 
 import static org.junit.Assert.*;
 

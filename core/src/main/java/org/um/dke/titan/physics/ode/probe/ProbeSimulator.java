@@ -7,9 +7,9 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.ProbeSimulatorInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetRate;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 
 import java.util.Map;
@@ -31,13 +31,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private final double MAXIMUM_THRUST = 3e7;
     private final double AREA = 4.55;
     private final double PRESSURE = 100000;
-
-    /**
-     * TODO: Clean these fields up
-     */
-    private double fuelUsed = 0;
-    private final double MASS_FLOW_RATE = 2000;
-    private final double minI = 503309;
 
 
     // --------------------- Trajectories  ---------------------
@@ -201,11 +194,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private boolean calculateNewMass(double percentageOfPower) {
         if (probeMass-calculateMassUsed(percentageOfPower)>probeMassDry) {
             probeMass -= calculateMassUsed(percentageOfPower);
-            fuelUsed += calculateMassUsed(percentageOfPower);
-//            System.out.println("using fuel");
             return true;
         } else {
-//            System.out.println("No fuel left!!");
             return false;
         }
     }

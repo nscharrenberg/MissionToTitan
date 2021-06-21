@@ -5,8 +5,8 @@ import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.probe.ProbeSimulator;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
 
 public class Simulation {
     private static StateInterface[] timeLineArray;

@@ -2,6 +2,7 @@ package org.um.dke.titan.utils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.um.dke.titan.interfaces.Vector3dInterface;
+import org.um.dke.titan.utils.lander.math.RotationMatrix;
 
 import static org.junit.Assert.assertEquals;
 

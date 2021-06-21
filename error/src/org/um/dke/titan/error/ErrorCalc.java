@@ -35,7 +35,7 @@ public class ErrorCalc {
             int key = entry.getKey()/((int)Main.dt);
             Vector3D value = (Vector3D) entry.getValue().mul(1000);
 
-            org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState planets = (org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState) timeLineArray[key];
+            org.um.dke.titan.physics.ode.functions.solarsystem.SystemState planets = (org.um.dke.titan.physics.ode.functions.solarsystem.SystemState) timeLineArray[key];
 
             total += relativeVecError(value, (Vector3D) planets.getPlanet(name).getPosition());
         }

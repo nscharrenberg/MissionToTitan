@@ -2,7 +2,11 @@ package org.um.dke.titan.physics.ode.solvers;
 
 import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.StateInterface;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemRate;
+import org.um.dke.titan.physics.ode.functions.solarsystem.SystemRate;
+
+/**
+ * Runge-kutta solver
+ */
 
 public class ODESolverR4 extends ODESolver{
 

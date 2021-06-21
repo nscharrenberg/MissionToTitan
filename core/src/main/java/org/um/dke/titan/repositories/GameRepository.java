@@ -14,13 +14,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
 
 public class GameRepository implements IGameRepository {
@@ -54,7 +53,7 @@ public class GameRepository implements IGameRepository {
     @Override
     public void load() {
         FactoryProvider.getSolarSystemRepository().init();
-        FactoryProvider.getSolarSystemRepository().preprocessing();
+        FactoryProvider.getSolarSystemRepository().runPhysics();
     }
 
     @Override

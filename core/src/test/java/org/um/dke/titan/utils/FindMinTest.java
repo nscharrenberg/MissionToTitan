@@ -1,7 +1,7 @@
 package org.um.dke.titan.utils;
 
 import org.junit.Test;
-import org.um.dke.titan.utils.FindMin;
+import org.um.dke.titan.utils.lander.math.FindMin;
 
 import static org.junit.Assert.assertEquals;
 

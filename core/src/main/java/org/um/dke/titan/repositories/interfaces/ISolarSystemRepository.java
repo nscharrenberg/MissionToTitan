@@ -26,7 +26,7 @@ public interface ISolarSystemRepository {
 
     void addRocket(String name, Rocket object);
 
-    void preprocessing();
+    void runPhysics();
 
     StateInterface[] getTimeLineArray(ODESolverInterface solver, double tf, double dt);
 

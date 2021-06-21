@@ -4,6 +4,9 @@ import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 
+/**
+ * Euler Solver
+ */
 
 public class ODESolver implements ODESolverInterface {
 
