@@ -40,7 +40,7 @@ public class WindGenerator {
      * @param angle Angle at which the square is rotated
      * @return An array with the force vector and a distance from the center vector
      */
-    public Vector3dInterface[] getWind(Vector3dInterface center, double angle) {
+    public Vector3dInterface[] getWind(Vector3dInterface center, double angle, double dt) {
         Vector3dInterface[] output = new Vector3dInterface[2];
         //need x, random force
         double f = Math.sin(t)*0.01;//evalPolyInRange(t, param, -10, 10);
@@ -49,7 +49,7 @@ public class WindGenerator {
         double[] interval = SquareHandling.exposedSide(center, corners, angle, left);
         double y = SquareHandling.generateRandom(interval[0], interval[1]);
         double x = SquareHandling.calculateAccX(center, corners, left, y);
-        Vector3dInterface force = new Vector3D(f, 0, 0);
+        Vector3dInterface force = new Vector3D(f*dt, 0, 0);
         output[0] = force;
         Vector3dInterface dist = SquareHandling.calculateDist(center, x, y);
         output[1] = dist;
