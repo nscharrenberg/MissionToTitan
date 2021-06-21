@@ -37,7 +37,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
      */
     private double fuelUsed = 0;
     private final double MASS_FLOW_RATE = 2000;
-    private final double minI = 1051697;
+    private final double minI = 503309;
 
 
     // --------------------- Trajectories  ---------------------
@@ -128,7 +128,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         // optimal i = 74759
 
         PlanetState probe = probeStateArray[i-1];
-        //probe.setForce(probe.getForce().add(getEngineForce(i)));
+        probe.setForce(probe.getForce().add(getEngineForce(i)));
 
         return step(probe, h);
     }
@@ -152,8 +152,8 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     // --------------------- New Engine Handling  ---------------------
 
     private Vector3dInterface getEngineForce(int i) {
-        if (i > 503300) { // 503309 dt50 closest point
-            return useEngine(100, i);
+        if (i > minI && i < minI + 40) { // 503309 dt50 closest point
+            return useEngine(50, i, SpaceObjectEnum.EARTH.getName());
         }
         return new Vector3D(0,0,0);
     }
@@ -165,21 +165,34 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         return engineForce(percentageOfPower, thrustVector);
     }
 
+    private Vector3dInterface useEngine(double percentageOfPower, int index, String planetName) {
+        if(!calculateNewMass(percentageOfPower))
+            return new Vector3D(0,0,0);
+        Vector3dInterface thrustVector = findThrustVector(index, planetName);
+        return engineForce(percentageOfPower, thrustVector);
+    }
+
 
     /**
      * returns the position we want to travel to
      * @return
      */
     private Vector3dInterface findThrustVector(int i) {
-        SystemState systemState = (SystemState) timeLineArray[i];
-        PlanetState aimPoint = systemState.getPlanet("Earth");
-        PlanetState probe = probeStateArray[i-1];
+        return findThrustVector(i, SpaceObjectEnum.EARTH.getName());
+    }
+
+    private Vector3dInterface findThrustVector(int index, String planetName){
+        SystemState systemState = (SystemState) timeLineArray[index];
+        PlanetState aimPoint = systemState.getPlanet(planetName);
+        PlanetState probe = probeStateArray[index-1];
+
         Vector3D vector = (Vector3D) aimPoint.getPosition().sub(probe.getPosition());
+        vector.mul(1/vector.norm());
         return vector.getUnit();
     }
 
     private double calculateMassUsed(double percentageOfPower) {
-        return h *(percentageOfPower/100.0)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
+        return (percentageOfPower/100.0)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
     }
 
     private Vector3dInterface engineForce(double percentageOfPower, Vector3dInterface thrustVector) {
@@ -193,12 +206,10 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             System.out.println("using fuel");
             return true;
         } else {
-            //System.out.println("No fuel left!!");
+            System.out.println("No fuel left!!");
             return false;
         }
     }
-
-
 
     // --------------------- Old Engine Handling  ---------------------
 
