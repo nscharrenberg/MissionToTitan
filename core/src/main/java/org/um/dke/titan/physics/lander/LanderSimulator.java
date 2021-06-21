@@ -1,14 +1,13 @@
-package org.um.dke.titan.physics;
+package org.um.dke.titan.physics.lander;
 
 import org.um.dke.titan.domain.Lander;
 import org.um.dke.titan.domain.Vector3D;
 import org.um.dke.titan.interfaces.Vector3dInterface;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetRate;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.utils.SquareHandling;
-import org.um.dke.titan.utils.WindGenerator;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetRate;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
+import org.um.dke.titan.utils.lander.math.SquareHandling;
+import org.um.dke.titan.utils.lander.math.WindGenerator;
 
-import java.util.Arrays;
 
 public class LanderSimulator{
     private Lander lander;
