@@ -57,9 +57,10 @@ public class LanderSimulator{
 
 
                 controlVerticalVelocity(i);
-                landerArray[i] = step(landerArray[i - 1], dt);
+                landerArray[i] = step(landerArray[i - 1]);
                 landerArray[i].setAngle(generateWind(landerArray[i-1].getPosition(), i));
 
+                force = force.add(topLeftThruster(10, i));
                 //System.out.println("t: "+ts[i]+" vy: " + landerArray[i-1].getVelocity().getY() + " y: " + landerArray[i-1].getPosition().getY());
             }
 
@@ -67,6 +68,34 @@ public class LanderSimulator{
         }
         System.out.println("MAXIMUM VELOCITY REACHED: " + maxVelocity());
         System.out.println(massUsed);
+    }
+
+    public void thrust(int i){
+        //0. create state i
+
+        //1. generate the wind
+        //we take position and angle of previous state, as a basis to compute the new state
+        Vector3dInterface[] output = wg.getWind(landerArray[i - 1].getPosition(), landerArray[i - 1].getAngle());
+        //2. apply force to lander basically angle step
+        Vector3dInterface f = output[0], r = output[1];
+        //--
+        //torque, moment of inertia, get us angular acceleration
+        double torque = crossProduct2D(f, r);
+        double angularAccel = torque/MOI;
+        //from ang acc calculate ang velo
+        //ang acc * dt + prev ang velo
+        double currAngVelo = angularAccel * dt + landerArray[i - 1].getAngularVelocity();//for i
+        //compute change of angle
+        double deltaTheta = currAngVelo * dt;
+        double newTheta = landerArray[i -1].getAngle() + deltaTheta;
+        //--
+        //3. step
+        landerArray[i] = step(landerArray[i - 1]);
+        landerArray[i].setAngle(newTheta);
+        landerArray[i].setAngularVelocity(currAngVelo);
+
+        //------REACT------
+        
     }
 
 
@@ -88,11 +117,11 @@ public class LanderSimulator{
         return new PlanetRate(rateVelocity, rateAcceleration);
     }
 
-    private PlanetState step(PlanetState y, double h) {
-        PlanetRate k1 = call(h, y).mul(h);
-        PlanetRate k2 = call(0.5*h, y.addMul(0.5, k1)).mul(h);
-        PlanetRate k3 = call(0.5*h, y.addMul(0.5, k2)).mul(h);
-        PlanetRate k4 = call(h, y.addMul(1, k3)).mul(h);
+    private PlanetState step(PlanetState y) {
+        PlanetRate k1 = call(dt, y).mul(dt);
+        PlanetRate k2 = call(0.5*dt, y.addMul(0.5, k1)).mul(dt);
+        PlanetRate k3 = call(0.5*dt, y.addMul(0.5, k2)).mul(dt);
+        PlanetRate k4 = call(dt, y.addMul(1, k3)).mul(dt);
         return y.addMul(1/6d, k1.addMul(2, k2).addMul(2, k3).addMul(1, k4));
     }
 
@@ -154,7 +183,6 @@ public class LanderSimulator{
 
         f = SquareHandling.rotateAroundCenter(f, c, landerState.getAngle());
 
-        handleRotation(f, r, i);
         massUsed += calculateMassUsedSide(percentage);
         return f;
     }
@@ -231,7 +259,8 @@ public class LanderSimulator{
     }
 
     /**
-     * Outputs the angle at which the lander is being rotated from the wind
+     * Outputs the angle out of the interval [0, 2* Pi]
+     * at which the lander is being rotated from the wind
      * @param position
      * @return
      */
@@ -240,10 +269,9 @@ public class LanderSimulator{
         Vector3dInterface[] wind = wg.getWind(position, currentAngle);
         Vector3dInterface f = wind[0];//force of the wind
         Vector3dInterface r = wind[1];//distance of the wind to the center
-        double newAngle = 0;
 
         //torque, moment of inertia, get us angular acceleration
-        return handleRotation(f, r, i);
+        return WindGenerator.formatAngle(handleRotation(f, r, i));
     }
 
     public double handleRotation(Vector3dInterface f, Vector3dInterface r, int i){

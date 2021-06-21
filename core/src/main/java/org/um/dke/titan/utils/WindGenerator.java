@@ -72,4 +72,13 @@ public class WindGenerator {
             return false;
         }
     }
+
+    /**
+     * This method takes any angle and formats it into a value between 0 and 2* pi
+     * @param radians
+     * @return
+     */
+    public static double formatAngle(double radians) {
+        return radians % (Math.PI * 2);
+    }
 }
