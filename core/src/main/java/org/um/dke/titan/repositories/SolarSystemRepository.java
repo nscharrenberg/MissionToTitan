@@ -7,8 +7,11 @@ import org.um.dke.titan.interfaces.StateInterface;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.ODEFunction;
 import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
 import org.um.dke.titan.physics.ProbeSimulator;
+import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.solvers.NewtonRaphson;
+import org.um.dke.titan.physics.ode.solvers.NewtonRaphson2;
+import org.um.dke.titan.physics.ode.solvers.Vector4D;
 import org.um.dke.titan.repositories.interfaces.ISolarSystemRepository;
 import org.um.dke.titan.utils.FileImporter;
 
@@ -28,17 +31,12 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     double[] ts;
 
 
-    /**
-     * TODO: add function have multiple rockets be added at once.
-     * right now, it wont work with more than 1 rocket.
-     */
-
-
     public void preprocessing() {
-        tf = 60 * 60 * 25 * 365;
-        dt = 100;
+        tf = 60 * 60 * 24 * 450;
+        dt = 500;
         getTimeLineArray(FactoryProvider.getSolver(), tf, dt);
         deployRockets(tf, dt);
+
     }
 
     public void init() {
@@ -46,10 +44,9 @@ public class SolarSystemRepository implements ISolarSystemRepository {
         planets = FileImporter.load();
     }
 
-
-
-
-
+    public double getDt() {
+        return dt;
+    }
 
     // --------------------- ODE Handling  ---------------------
 
@@ -80,7 +77,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     }
 
     private void runSolver(ODESolverInterface solver, double tf, double dt) {
-        SystemState y0 = getInitialSystemState();
+        org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, tf, dt);
         this.solver = solver;
         this.tf = tf;
@@ -88,16 +85,46 @@ public class SolarSystemRepository implements ISolarSystemRepository {
     }
 
     private void runSolver(ODESolverInterface solver, double ts[]) {
-        SystemState y0 = getInitialSystemState();
+        org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState y0 = getInitialSystemState();
         timeLineArray = solver.solve(new ODEFunction(), y0, ts);
         this.solver = solver;
         this.ts = ts;
     }
 
     private void deployRockets(double tf, double dt) {
+
+
         for (Map.Entry<String, Rocket> entry: this.rockets.entrySet()) {
             ProbeSimulator probeSimulator = new ProbeSimulator();
-            Vector3dInterface[] probeArray = probeSimulator.trajectory(entry.getValue().getPosition(), entry.getValue().getVelocity(), tf, dt);
+            Vector3D destination = (Vector3D) ((SystemState)timeLineArray[0]).getPlanet("Titan").getPosition();
+
+            Vector3D velocity = (Vector3D) entry.getValue().getVelocity();
+
+            Vector3D earthVelocity = new Vector3D(5.427193405797901e+03, -2.931056622265021e+04, 6.575428158157592e-01);
+            velocity = new Vector3D(0.4257580681316204,-0.1255899174838238,0.6790064383709731);
+            velocity = (Vector3D) velocity.mul(1/velocity.norm()).mul(40000);
+            velocity = (Vector3D) velocity.add(earthVelocity);
+            System.out.println(velocity);
+
+
+            Vector3D probeStart = (Vector3D) entry.getValue().getPosition();
+
+            Vector3dInterface[] probeArray = probeSimulator.trajectory(probeStart,entry.getValue().getVelocity(), tf, dt);
+
+            Vector3D min = (Vector3D) destination.sub(probeArray[0]);
+
+            for (int i = 0; i < probeArray.length; i++) {
+                Vector3D probePos = (Vector3D) probeArray[i];
+                Vector3D planetPos = (Vector3D) ((SystemState)timeLineArray[i]).getPlanet("Titan").getPosition();
+
+                if (min.norm() > probePos.dist(planetPos)) {
+                    min = (Vector3D) planetPos.sub(probePos);
+                }
+            }
+
+            System.out.println("MIN: " + min.norm() + " ::: " + min);
+
+//            System.out.println(NewtonRaphson.get(probeStart, destination));
 
             // adding the rockets to the system state
             for (int i = 0; i < timeLineArray.length; i++) {
@@ -115,7 +142,7 @@ public class SolarSystemRepository implements ISolarSystemRepository {
 
             states.put(planet.getName(), new PlanetState(planet.getPosition(), planet.getVelocity()));
         }
-        return new SystemState(states);
+        return new org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState(states);
     }
 
     public void refresh() {

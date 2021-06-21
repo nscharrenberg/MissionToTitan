@@ -1,16 +1,19 @@
 package org.um.dke.titan.error;
 
+import org.um.dke.titan.domain.Vector3D;
+import org.um.dke.titan.interfaces.Vector3dInterface;
+
 import java.util.Random;
 
 public class Individual {
 
-    int interval;
-    int percentage;
-    int fitness;
+    int speed;
+    Vector3D vector;
+    double fitness;
 
-    public Individual(int interval, int percentage) {
-        this.interval = interval;
-        this.percentage = percentage;
+    public Individual(Vector3dInterface vector, int speed) {
+        this.vector = (Vector3D) vector;
+        this.speed = speed;
     }
 
     public void mutate() {
@@ -19,28 +22,16 @@ public class Individual {
     }
 
     public void determineFitness() {
-        fitness = Simulation.run(interval, percentage);
+        fitness = Simulation.run(vector, speed);
     }
 
 
-    public int getInterval() {
-        return interval;
-    }
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public int getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
-
-    public int getFitness() {
+    public double getFitness() {
         return fitness;
     }
 
+    @Override
+    public String toString() {
+        return "fit: " + fitness;
+    }
 }

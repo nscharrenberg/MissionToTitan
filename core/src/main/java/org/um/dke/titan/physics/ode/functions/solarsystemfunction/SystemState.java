@@ -17,14 +17,10 @@ public class SystemState implements StateInterface {
 
     @Override
     public StateInterface addMul(double step, RateInterface rate) {
-        if (step < 0) {
+        if (step < 0)
             throw new IllegalArgumentException("Step must be higher or equal to 0");
-        }
-
-        if (rate == null) {
+        if (rate == null)
             throw new IllegalArgumentException("A rate must be provided");
-        }
-
 
         SystemRate r = (SystemRate)rate;
         SystemRate nextRate = new SystemRate();
@@ -67,6 +63,7 @@ public class SystemState implements StateInterface {
         nextTempState.setVelocity(current.getVelocity().add(rate.getAcceleration()));
         return nextTempState;
     }
+
 
     public void setPlanets(Map<String, PlanetState> planets) {
         this.planets = planets;

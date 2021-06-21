@@ -23,7 +23,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
     private int size;
 
     private String probeName = SpaceObjectEnum.SHIP.getName();
-    private Vector3dInterface force;
     private ISolarSystemRepository system = FactoryProvider.getSolarSystemRepository();
 
     private double probeMass = system.getRocketByName(probeName).getMass();
@@ -75,7 +74,19 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         for (int i = 0; i < size; i++)
             probePositions[i] = probeStateArray[i].getPosition();
 
+
         return probePositions;
+    }
+
+    public PlanetState[] stateTrajectory(Vector3dInterface p0, Vector3dInterface v0, double tf, double h) {
+        this.h = h;
+        timeLineArray = FactoryProvider.getSolarSystemRepository().getTimeLineArray(FactoryProvider.getSolver(),tf, h);
+        init(p0, v0);
+
+        for (int i = 1; i < size; i++)
+            probeStateArray[i] = getNextProbeState(i, h);
+
+        return probeStateArray;
     }
 
 
@@ -86,7 +97,7 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
 
     private PlanetRate call(double t, PlanetState y) {
-        Vector3dInterface rateAcceleration = force.mul(1 / probeMass); // a = F/m
+        Vector3dInterface rateAcceleration = y.getForce().mul(1 / probeMass); // a = F/m
         Vector3dInterface rateVelocity = y.getVelocity().add(rateAcceleration.mul(t));
         return new PlanetRate(rateVelocity, rateAcceleration);
     }
@@ -103,11 +114,11 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
         size = timeLineArray.length;
         probeStateArray = new PlanetState[size];
         probeStateArray[0] = new PlanetState(p0, v0);
-        force = new Vector3D(0,0,0);
+        probeStateArray[0].setForce(new Vector3D(0,0,0));
     }
 
     private PlanetState getNextProbeState(int i, double h) {
-        force = new Vector3D(0,0,0);
+        probeStateArray[i-1].setForce(new Vector3D(0,0,0));
 
 
         for (Map.Entry<String , PlanetState> entry : ((SystemState)timeLineArray[i-1]).getPlanets().entrySet()) {
@@ -119,12 +130,15 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
             PlanetState planetState = entry.getValue();
             PlanetState probeState = probeStateArray[i-1];
 
-            force = force.add(newtonsLaw(probeState, planetState, probeMass, planetMass));
+            probeState.setForce(probeState.getForce().add(newtonsLaw(probeState, planetState, probeMass, planetMass)));
         }
 
-        force = force.add(getEngineForce(i-1, 50000).mul(1));
+        // optimal i = 74759
 
-        return step(probeStateArray[i - 1], h);
+        PlanetState probe = probeStateArray[i-1];
+        probe.setForce(probe.getForce().add(getEngineForce(i)));
+
+        return step(probe, h);
     }
 
     /**
@@ -145,31 +159,51 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 
     // --------------------- New Engine Handling  ---------------------
 
-    private Vector3dInterface getEngineForce(int i, double idealSpeed) {
-        return getIdealEngineDirection(i, idealSpeed).mul(1);
+    private Vector3dInterface getEngineForce(int i) {
+        if (i > 74700) {
+            return useEngine(1, i);
+        }
+        return new Vector3D(0,0,0);
     }
 
-
-    private Vector3dInterface getIdealEngineDirection(int i,double idealSpeed) {
-        return getIdealVector(i, idealSpeed).sub(probeStateArray[i].getVelocity());
+    private Vector3dInterface useEngine(double percentageOfPower, int index) {
+        if(!calculateNewMass(percentageOfPower))
+            return new Vector3D(0,0,0);
+        Vector3dInterface thrustVector = findThrustVector(index);
+        return engineForce(percentageOfPower, thrustVector);
     }
 
-
-    private Vector3dInterface getIdealVector(int i, double idealSpeed) {
-        Vector3D totalVector = (Vector3D) getDestination(i);
-        return  totalVector.mul(idealSpeed/totalVector.norm());
-    }
 
     /**
      * returns the position we want to travel to
      * @return
      */
-    private Vector3dInterface getDestination(int t) {
-        //double time = 256 * 60*60*24;
-        //int t = (int) (time/h);
-        SystemState systemState = (SystemState) timeLineArray[t];
+    private Vector3dInterface findThrustVector(int i) {
+        SystemState systemState = (SystemState) timeLineArray[i];
+        PlanetState aimPoint = systemState.getPlanet("Earth");
+        PlanetState probe = probeStateArray[i-1];
+        Vector3D vector = (Vector3D) probe.getPosition().sub(aimPoint.getPosition());
+        return vector.getUnit();
+    }
 
-        return systemState.getPlanet("Mars").getPosition();
+    private double calculateMassUsed(double percentageOfPower) {
+        return h *(percentageOfPower/100.0)*((MAXIMUM_THRUST+PRESSURE*AREA)/EXHAUST_VELOCITY);
+    }
+
+    private Vector3dInterface engineForce(double percentageOfPower, Vector3dInterface thrustVector) {
+        return thrustVector.mul(MAXIMUM_THRUST*(percentageOfPower/100));
+    }
+
+    private boolean calculateNewMass(double percentageOfPower) {
+        if (system.getRocketByName(probeName).getMass()-calculateMassUsed(percentageOfPower)>probeMassDry) {
+            system.getRocketByName(probeName).setMass((float) (system.getRocketByName(probeName).getMass() - calculateMassUsed(percentageOfPower)));
+            fuelUsed += calculateMassUsed(percentageOfPower);
+            System.out.println("using fuel");
+            return true;
+        } else {
+            System.out.println("No fuel left!!");
+            return false;
+        }
     }
 
 
@@ -190,7 +224,6 @@ public class ProbeSimulator implements ProbeSimulatorInterface {
 //
 //    /**
 //     *  returns the unit vector of the desired thrust angle
-//     *  TODO: fix this
 //     */
 //    private Vector3dInterface findThrustVector(int index, int planetID){
 //        State probe = (State) probeStateArray[index];

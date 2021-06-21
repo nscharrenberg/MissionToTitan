@@ -49,8 +49,8 @@ public class SystemRate implements RateInterface {
             nextPlanetRate.setVelocity(planetRate.getVelocity().add(r.getRate(entry.getKey()).getVelocity().mul(step)));
             nextRate.rates.put(entry.getKey(), nextPlanetRate);
         }
-
         return nextRate;
     }
+
 }
 

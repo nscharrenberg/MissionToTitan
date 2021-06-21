@@ -10,7 +10,7 @@ import java.util.Random;
 public class Main {
     static Individual[] population;
     static final int MUTATION_RATE = 10;
-    static final int POPULATION_SIZE = 90;
+    static final int POPULATION_SIZE = 50;
     static final int GENERATIONS = 50;
     static Individual min;
     static Random r;
