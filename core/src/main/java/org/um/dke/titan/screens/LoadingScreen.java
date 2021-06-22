@@ -68,7 +68,7 @@ public class LoadingScreen extends ScreenAdapter {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FactoryProvider.getSolarSystemRepository().preprocessing();
+                FactoryProvider.getSolarSystemRepository().runPhysics();
 
                 Gdx.app.postRunnable(new Runnable() {
                     @Override

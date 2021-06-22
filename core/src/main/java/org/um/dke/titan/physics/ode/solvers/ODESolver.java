@@ -4,6 +4,9 @@ import org.um.dke.titan.interfaces.ODEFunctionInterface;
 import org.um.dke.titan.interfaces.ODESolverInterface;
 import org.um.dke.titan.interfaces.StateInterface;
 
+/**
+ * Euler Solver
+ */
 
 public class ODESolver implements ODESolverInterface {
 
@@ -14,7 +17,6 @@ public class ODESolver implements ODESolverInterface {
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double[] ts) {
         if(y0 == null)
             throw new NullPointerException();
-
         size = ts.length;
 
         init(y0);
@@ -27,7 +29,6 @@ public class ODESolver implements ODESolverInterface {
     public StateInterface[] solve(ODEFunctionInterface f, StateInterface y0, double tf, double h) {
         if(y0 == null)
             throw new NullPointerException();
-
         size = (int)Math.round(tf/h)+1;
 
         init(y0);
@@ -38,7 +39,7 @@ public class ODESolver implements ODESolverInterface {
 
     @Override
     public StateInterface step(ODEFunctionInterface f, double t, StateInterface y, double h) {
-        return y.addMul(h,f.call(h,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
+        return y.addMul(h,f.call(1,y)); // y[i+h] = y[i] + h * f.call(t[i], y[i])
     }
 
     private void init(StateInterface y0) {

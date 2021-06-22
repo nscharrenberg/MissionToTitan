@@ -1,7 +1,6 @@
 package org.um.dke.titan.repositories.interfaces;
 
 import org.um.dke.titan.domain.Moon;
-import org.um.dke.titan.domain.MovingObject;
 import org.um.dke.titan.domain.Planet;
 import org.um.dke.titan.domain.Rocket;
 import org.um.dke.titan.interfaces.ODESolverInterface;
@@ -27,7 +26,7 @@ public interface ISolarSystemRepository {
 
     void addRocket(String name, Rocket object);
 
-    void preprocessing();
+    void runPhysics();
 
     StateInterface[] getTimeLineArray(ODESolverInterface solver, double tf, double dt);
 
@@ -36,4 +35,6 @@ public interface ISolarSystemRepository {
     StateInterface[] getTimeLineArray();
 
     void refresh();
+
+    double getDt();
 }

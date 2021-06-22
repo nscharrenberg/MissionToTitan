@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import org.um.dke.titan.factory.FactoryProvider;
 import org.um.dke.titan.interfaces.Vector3dInterface;
 
 public class SpaceObject {
@@ -43,7 +42,7 @@ public class SpaceObject {
         batch.begin();
 
         if (texture != null) {
-            batch.draw(this.texture, (float)this.position.getX(), (float)this.position.getY(), getDiameter(), getDiameter());
+            batch.draw(this.texture, (float)(this.position.getX() - texture.getWidth()/2.0), (float)(this.position.getY() - texture.getHeight()/2.0), getDiameter(), getDiameter());
         }
 
         batch.end();
