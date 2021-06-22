@@ -132,6 +132,7 @@ public class Vector3D implements Vector3dInterface {
         return Math.sqrt(Math.pow(x-other.getX(), 2) + Math.pow(y-other.getY(), 2) + Math.pow(z-other.getZ(), 2));
     }
 
+
     @Override
     public String toString() {
         return "(" +
@@ -139,6 +140,10 @@ public class Vector3D implements Vector3dInterface {
                 "," + y +
                 "," + z +
                 ')';
+    }
+
+    public Vector3dInterface getUnit() {
+        return this.mul(1/this.norm());
     }
 
     @Override

@@ -14,16 +14,20 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.um.dke.titan.domain.*;
 import org.um.dke.titan.factory.FactoryProvider;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.PlanetState;
-import org.um.dke.titan.physics.ode.functions.solarsystemfunction.SystemState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.PlanetState;
+import org.um.dke.titan.physics.ode.functions.solarsystem.SystemState;
 import org.um.dke.titan.repositories.interfaces.IGameRepository;
 import org.um.dke.titan.screens.LoadingScreen;
 
+import java.util.Calendar;
 import java.util.Map;
 
 public class GameRepository implements IGameRepository {
-    private static int DEFAULT_SKIP_SPEED = 250;
-    private static int DEFAULT_SKIP_SPEED_INCREMENT = 10;
+    private static int DEFAULT_SKIP_SPEED = 50;
+    private static int DEFAULT_SKIP_SPEED_INCREMENT = 1;
+    private static int START_YEAR = 2020;
+    private static int START_MONTH = 4;
+    private static int START_DAY = 1;
     private boolean isGdx = true;
     private Game game = null;
     private Viewport viewport;
@@ -39,16 +43,17 @@ public class GameRepository implements IGameRepository {
     private static final float MINIMUM_CAMERA_ZOOM = (float)5;
     private static final float CAMERA_MOVE_SPEED = (float)1000;
 
-    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel;
+    private Label planetFocusLbl, cameraZoomLbl, cameraLbl, planetChooserLbl, speedLabel, timeLabel, velocityLabel;
 
     private int timeToSkip = DEFAULT_SKIP_SPEED;
     private boolean paused = true;
     private int time = 0;
+    private Calendar date = Calendar.getInstance();
 
     @Override
     public void load() {
         FactoryProvider.getSolarSystemRepository().init();
-        FactoryProvider.getSolarSystemRepository().preprocessing();
+        FactoryProvider.getSolarSystemRepository().runPhysics();
     }
 
     @Override
@@ -70,6 +75,8 @@ public class GameRepository implements IGameRepository {
             object.addActor(stage);
         }
 
+        date.set(START_YEAR, Calendar.APRIL, START_DAY);
+
         this.planetChooserLbl = new Label("(1) Sun (2) Earth (3) Jupiter (4) Saturn (5) Luna (6) Titan", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.planetChooserLbl.setPosition(15, Gdx.graphics.getHeight() - 25);
         this.cameraLbl = new Label(String.format("Move (Arrow Keys): X(%s), Y(%s), Z(%s)", this.camera.position.x, this.camera.position.y, this.camera.position.z) , new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -80,21 +87,29 @@ public class GameRepository implements IGameRepository {
         this.cameraZoomLbl.setPosition(15, Gdx.graphics.getHeight() - 75);
         this.speedLabel = new Label("Speed: Faster(P) or Slower (O) or default(I): " + this.timeToSkip, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         this.speedLabel.setPosition(15, Gdx.graphics.getHeight() - 125);
+        this.timeLabel = new Label("Current Time: " + this.time + "and Date: " + date.getTime(), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.timeLabel.setPosition(15, Gdx.graphics.getHeight() - 150);
+        this.velocityLabel = new Label("Probe Velocity: " + 0, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        this.velocityLabel.setPosition(15, Gdx.graphics.getHeight() - 175);
 
         stage.addActor(planetChooserLbl);
         stage.addActor(planetFocusLbl);
         stage.addActor(cameraZoomLbl);
         stage.addActor(cameraLbl);
         stage.addActor(speedLabel);
+        stage.addActor(timeLabel);
+        stage.addActor(velocityLabel);
 
         // Start from Earth
         focusToPlanet(FactoryProvider.getSolarSystemRepository().getRocketByName(SpaceObjectEnum.SHIP.getName()));
+
+
+        // TODO: REMOVE THIS
+//        time = 502600;
     }
 
     @Override
     public void render() {
-
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -108,10 +123,6 @@ public class GameRepository implements IGameRepository {
         }
 
         batch.setProjectionMatrix(camera.combined);
-
-        if (isPaused()) {
-            return;
-        }
 
         // TODO: Add Starry Night Background Image
 
@@ -131,17 +142,29 @@ public class GameRepository implements IGameRepository {
             }
 
             found.render(batch, camera);
+
             found.setPosition(entry.getValue().getPosition());
 
+            if (found.getName().equals(SpaceObjectEnum.SHIP.getName())) {
+                velocityLabel.setText("Speed: " + entry.getValue().getVelocity().norm());
+            }
+        }
+
+        if (isPaused()) {
+            return;
         }
 
         if (time >= 0) {
-            time+=(1+FactoryProvider.getGameRepository().getTimeToSkip());
+            time+=FactoryProvider.getGameRepository().getTimeToSkip();
+            date.add(Calendar.SECOND, (int) (FactoryProvider.getGameRepository().getTimeToSkip() * FactoryProvider.getSolarSystemRepository().getDt()));
+            timeLabel.setText("Current Time: " + time + " and Date: " + date.getTime());
         }
 
         if (time > FactoryProvider.getSolarSystemRepository().getTimeLineArray().length-1 || time < 0) {
             timeToSkip = DEFAULT_SKIP_SPEED;
             time = 0;
+            date.set(2020, Calendar.APRIL, 1);
+            timeLabel.setText("Current Time: " + time + " and Date: " + date.getTime());
 
             FactoryProvider.getSolarSystemRepository().refresh();
             game.setScreen(new LoadingScreen());
@@ -258,7 +281,8 @@ public class GameRepository implements IGameRepository {
             found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.MOON.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
             found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.MARS.getName());
-        } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_7)) {
             found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.JUPITER.getName());
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_8)) {
             found = FactoryProvider.getSolarSystemRepository().getPlanetByName(SpaceObjectEnum.SATURN.getName());
